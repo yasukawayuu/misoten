@@ -5,6 +5,7 @@ using UnityEngine;
 public class GarbageManager : MonoBehaviour
 {
     [SerializeField] GameObject Garbage;
+
     void Start()
     {
         StartCoroutine("Spawn");

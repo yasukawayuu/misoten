@@ -17,6 +17,8 @@ public class CharacterController : MonoBehaviour
     private float _scale = 1.0f;
     SpriteRenderer _spriteRenderer;
 
+    [SerializeField]bool _canMove;
+
 
     void Start()
     {
@@ -30,7 +32,8 @@ public class CharacterController : MonoBehaviour
 
     void Update()
     {
-        Move();
+        if(_canMove)
+            Move();
     }
 
     void FixedUpdate()
@@ -41,7 +44,7 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Garbage(Clone)" && _isNoraml)
+        if (collision.gameObject.tag == "Garbage" && _isNoraml)
         {
             Destroy(collision.gameObject);
             _scale += 0.5f;
@@ -85,6 +88,6 @@ public class CharacterController : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         _isNoraml = true;
-        _spriteRenderer.color = Color.white;
+        _spriteRenderer.color = new Color(0.7600026f,1.0f,0.0f);
     }
 }
