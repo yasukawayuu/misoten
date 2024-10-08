@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Prototype/Scenes/PrototypeTitle.unity
+    guid: 63a7318de0969d84cad04716fd3c0c30
+  - enabled: 1
+    path: Assets/Prototype/Scenes/Marimo.io.unity
+    guid: 840301058cdfacd4ba14e8abc9e38d02
   m_configObjects: {}
