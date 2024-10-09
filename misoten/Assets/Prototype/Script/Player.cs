@@ -52,8 +52,8 @@ public class Player : MonoBehaviour
 
         Vector3 currentPos = transform.position;
 
-        currentPos.x = Mathf.Clamp(currentPos.x, -150.0f, 150.0f);
-        currentPos.y = Mathf.Clamp(currentPos.y, -150.0f, 150.0f);
+        currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
+        currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
 
         transform.position = currentPos;
     }
