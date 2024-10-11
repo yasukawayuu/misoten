@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -75,6 +76,12 @@ public class Player : MonoBehaviour
             _point += 1;
             StartCoroutine("Clean");
         }
+        else if(collision.gameObject.tag == "Garbage" && !_isNoraml)
+        {
+            SceneManager.LoadScene("PrototypeTitle");
+        }
+
+        
     }
 
     private void Move()
