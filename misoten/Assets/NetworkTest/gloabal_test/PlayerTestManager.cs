@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class PlayerTestManager : MonoBehaviour
 {
     private int id;
     private string playerName = "Anonymous";

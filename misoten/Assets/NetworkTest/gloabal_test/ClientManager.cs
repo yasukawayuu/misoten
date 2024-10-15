@@ -21,13 +21,13 @@ public class PlayerManager : MonoBehaviour
     private string username = "Anonymous";
 
     // 他のプレイヤー情報を格納
-    private Dictionary<int, Player> otherPlayers = new Dictionary<int, Player>();
+    private Dictionary<int, PlayerTestManager> otherPlayers = new Dictionary<int, PlayerTestManager>();
 
     // プレイヤーのPrefab（事前に作成しておく）
     public GameObject playerPrefab;
 
     // 自分のプレイヤーオブジェクト
-    private Player localPlayer;
+    private PlayerTestManager localPlayer;
 
     void Start()
     {
@@ -136,7 +136,7 @@ public class PlayerManager : MonoBehaviour
 
         // 自分のプレイヤーを生成
         GameObject playerObj = Instantiate(playerPrefab, new Vector3(msg.x, msg.y, 0), Quaternion.identity);
-        localPlayer = playerObj.GetComponent<Player>();
+        localPlayer = playerObj.GetComponent<PlayerTestManager>();
         localPlayer.SetID(yourID);
         localPlayer.SetName(username); // 初期名前はローカルで設定されたもの
 
@@ -202,7 +202,7 @@ public class PlayerManager : MonoBehaviour
     void AddNewPlayer(int id, string name, float x, float y)
     {
         GameObject playerObj = Instantiate(playerPrefab, new Vector3(x, y, 0), Quaternion.identity);
-        Player player = playerObj.GetComponent<Player>();
+        PlayerTestManager player = playerObj.GetComponent<PlayerTestManager>();
         player.SetID(id);
         player.SetName(name);
         otherPlayers.Add(id, player);

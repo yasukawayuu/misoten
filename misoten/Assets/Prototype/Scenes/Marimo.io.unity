@@ -1033,7 +1033,7 @@ GameObject:
   - component: {fileID: 2093199406}
   - component: {fileID: 2093199407}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: Player2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
