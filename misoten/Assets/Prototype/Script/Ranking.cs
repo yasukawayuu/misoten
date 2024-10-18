@@ -17,11 +17,10 @@ public class Ranking : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { 
-        _rangking.text = 
+    {
+        _rangking.text =
             "ƒ‰ƒ“ƒLƒ“ƒO\n" +
-            _players[0].Name.PadRight(20) +  _players[0].Point.ToString().PadLeft(10) + "\n" +
-            _players[1].Name.PadRight(20) +  _players[1].Point.ToString().PadLeft(10) + "\n";
+            _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n";
     }
 
     private void FixedUpdate()

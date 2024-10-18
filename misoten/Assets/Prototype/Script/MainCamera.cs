@@ -20,6 +20,7 @@ public class MainCamera : MonoBehaviour
         cameraPos.z = -10;
         Camera.main.gameObject.transform.position = cameraPos;
 
+        Camera.main.orthographicSize = _target.transform.localScale.x * 5;
     }
 
 }

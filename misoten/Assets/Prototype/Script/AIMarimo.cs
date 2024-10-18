@@ -6,14 +6,11 @@ public class AIMarimo : MonoBehaviour
 {
     Rigidbody2D rigid2d;
     Vector2 direction;  // AIが移動する方向
-    private float moveTimer = 0.0f; // 移動時間を計測するタイマー
-    [SerializeField] float changeDirectionTime = 2.0f; // 一定時間ごとに方向を変える
     [SerializeField] float speed = 1.0f;   // 移動速度
     [SerializeField] float detectionRange = 5f;   // ターゲットを検出する範囲
     private float _scale = 1.0f;   // 大きさ
     bool _isNoraml = true;   // 通常状態フラグ
     SpriteRenderer _spriteRenderer;
-    [SerializeField] bool _canMove = true;   // 移動可能フラグ
 
     int _point = 0;   // 得点
     [SerializeField] string _name = "AI";   // 名前
@@ -32,23 +29,11 @@ public class AIMarimo : MonoBehaviour
     {
         this.rigid2d = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        SetNewDirection(); // 最初の移動方向を設定
+        StartCoroutine("MarimoAIMove");
     }
 
     void Update()
     {
-        if (_canMove)
-        {
-            moveTimer += Time.deltaTime;
-            if (moveTimer >= changeDirectionTime)
-            {
-                SetNewDirection(); // 一定時間ごとに新しい方向を設定
-                moveTimer = 0f;
-            }
-
-            Move(); // 移動
-        }
-
         Vector3 currentPos = transform.position;
         currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
         currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
@@ -90,12 +75,12 @@ public class AIMarimo : MonoBehaviour
         {
             // ターゲットの方向に移動
             Vector2 targetDirection = (target.position - transform.position).normalized;
-            rigid2d.AddForce(targetDirection * speed);
+            rigid2d.AddForce(targetDirection * 1000.0f * speed);
         }
         else
         {
             // ランダムな方向に移動
-            rigid2d.AddForce(direction * speed);
+            rigid2d.AddForce(direction * 1000.0f * speed);
         }
     }
 
@@ -145,5 +130,15 @@ public class AIMarimo : MonoBehaviour
         yield return new WaitForSeconds(5f);
         _isNoraml = true;
         _spriteRenderer.color = new Color(0.0f, 0.6906614f, 1.0f);
+    }
+
+    private IEnumerator MarimoAIMove()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(2f);
+            SetNewDirection(); // 一定時間ごとに新しい方向を設定
+            Move();
+        }
     }
 }

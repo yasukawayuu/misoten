@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     [SerializeField]bool _canMove;
 
     int _point = 0;
-    [SerializeField] string _name = " ";
+    [SerializeField] string _name = "Marimo";
 
     public int Point{ 
         get { return _point; } 
