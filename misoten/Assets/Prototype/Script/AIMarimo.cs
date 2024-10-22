@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIMarimo : MonoBehaviour
+public class AIMarimo : Marimo
 {
     Rigidbody2D rigid2d;
     Vector2 direction;  // AIが移動する方向
@@ -12,32 +12,13 @@ public class AIMarimo : MonoBehaviour
     bool _isNoraml = true;   // 通常状態フラグ
     SpriteRenderer _spriteRenderer;
 
-    int _point = 0;   // 得点
-    [SerializeField] string _name = "AI";   // 名前
-
-    public int Point
-    {
-        get { return _point; }
-    }
-
-    public string Name
-    {
-        get { return _name; }
-    }
-
     void Start()
     {
         this.rigid2d = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         StartCoroutine("MarimoAIMove");
-    }
 
-    void Update()
-    {
-        Vector3 currentPos = transform.position;
-        currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
-        currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
-        transform.position = currentPos;
+        _name = "AI";
     }
 
     void FixedUpdate()
@@ -67,7 +48,7 @@ public class AIMarimo : MonoBehaviour
     }
 
     // AIの移動ロジック
-    private void Move()
+    protected override void Move()
     {
         // ターゲットが範囲内にあるかをチェック
         Transform target = FindTargetInRange();

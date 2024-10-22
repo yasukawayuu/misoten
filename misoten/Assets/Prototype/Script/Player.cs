@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : Marimo
 {
 
     Rigidbody2D rigid2d;
@@ -19,21 +19,6 @@ public class Player : MonoBehaviour
     private float _scale = 1.0f;
     SpriteRenderer _spriteRenderer;
 
-    [SerializeField]bool _canMove;
-
-    int _point = 0;
-    [SerializeField] string _name = "Marimo";
-
-    public int Point{ 
-        get { return _point; } 
-    }
-
-    public string Name
-    {
-        get { return _name; }
-    }
-
-
     void Start()
     {
         this.rigid2d = GetComponent<Rigidbody2D>();
@@ -44,19 +29,15 @@ public class Player : MonoBehaviour
         
        _render = GetComponent<Renderer>();
         _render.sortingOrder = 1;
+
+        _name = "Player";
     }
 
-    void Update()
+    protected override void Update()
     {
-        if(_canMove)
-            Move();
+        Move();
 
-        Vector3 currentPos = transform.position;
-
-        currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
-        currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
-
-        transform.position = currentPos;
+        base.Update();
     }
 
     void FixedUpdate()
@@ -84,7 +65,7 @@ public class Player : MonoBehaviour
         
     }
 
-    private void Move()
+    protected override void Move()
     {
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

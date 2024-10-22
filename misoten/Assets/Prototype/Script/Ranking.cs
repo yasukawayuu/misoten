@@ -7,12 +7,12 @@ using System.Linq;
 public class Ranking : MonoBehaviour
 {
     Text _rangking;
-    List<Player> _players;
+    List<Marimo> _players;
     // Start is called before the first frame update
     void Start()
     {
         _rangking = GetComponent<Text>();
-        _players = new List<Player>();
+        _players = new List<Marimo>();
     }
 
     // Update is called once per frame
@@ -20,7 +20,8 @@ public class Ranking : MonoBehaviour
     {
         _rangking.text =
             "ƒ‰ƒ“ƒLƒ“ƒO\n" +
-            _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n";
+            _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n" +
+            _players[1].Name.PadRight(20) + _players[1].Point.ToString().PadLeft(10) + "\n";
     }
 
     private void FixedUpdate()
@@ -29,7 +30,10 @@ public class Ranking : MonoBehaviour
         GameObject[] playerCount = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < playerCount.Length; ++i)
         {
-            _players.Add(playerCount[i].GetComponent<Player>());
+            if (playerCount[i].GetComponent<Player>() != null)
+                _players.Add(playerCount[i].GetComponent<Player>());
+            else
+                _players.Add(playerCount[i].GetComponent<AIMarimo>());
         }
         _players.Sort((a,b) => b.Point - a.Point);
     }

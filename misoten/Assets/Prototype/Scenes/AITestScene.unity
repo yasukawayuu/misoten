@@ -134,8 +134,8 @@ GameObject:
   - component: {fileID: 24775393}
   - component: {fileID: 24775396}
   - component: {fileID: 24775395}
-  - component: {fileID: 24775397}
   - component: {fileID: 24775398}
+  - component: {fileID: 24775397}
   m_Layer: 0
   m_Name: Marimo
   m_TagString: Player
@@ -285,8 +285,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  _canMove: 1
-  _name: Player1
 --- !u!120 &24775398
 LineRenderer:
   serializedVersion: 2
@@ -500,7 +498,7 @@ GameObject:
   - component: {fileID: 616958888}
   m_Layer: 0
   m_Name: AI
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -761,7 +759,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   detectionRange: 5
-  _name: AI
 --- !u!1 &625374075
 GameObject:
   m_ObjectHideFlags: 0
