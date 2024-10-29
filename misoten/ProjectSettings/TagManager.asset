@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Garbage
+  - Effect
   layers:
   - Default
   - TransparentFX
