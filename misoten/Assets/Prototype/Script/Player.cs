@@ -8,26 +8,36 @@ using UnityEngine.SceneManagement;
 public class Player : Marimo
 {
 
-    Rigidbody2D rigid2d;
-    Vector2 startPos;
+    private Rigidbody2D rigid2d;
+    private Vector2 startPos;
 
-    [SerializeField] float speed = 1f;
-    bool _isDrag = false;
-    bool _isNoraml = true;
+    [SerializeField]private float speed = 1f;
+
+    private bool _isLocalPlayer = false;
+    private bool _isDrag = false;
+    private bool _isNoraml = true;
+
     private LineRenderer _lineRend;
     private Renderer _render;
     private float _scale = 1.0f;
-    SpriteRenderer _spriteRenderer;
+    private SpriteRenderer _spriteRenderer;
+
+    public bool IsLocalPlayer
+    {
+        get { return _isLocalPlayer; }
+        set { _isLocalPlayer = value; }
+    }
 
     void Start()
     {
         this.rigid2d = GetComponent<Rigidbody2D>();
         this._lineRend = GetComponent<LineRenderer>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _lineRend.enabled = false;
 
         _lineRend.positionCount = 2;
         
-       _render = GetComponent<Renderer>();
+        _render = GetComponent<Renderer>();
         _render.sortingOrder = 1;
 
         _name = "Player";
@@ -35,7 +45,8 @@ public class Player : Marimo
 
     protected override void Update()
     {
-        Move();
+        if(_isLocalPlayer)
+            Move();
 
         base.Update();
     }
@@ -48,6 +59,7 @@ public class Player : Marimo
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //âòêıï®Ç…Ç†Ç¡ÇΩÇÁëÂÇ´Ç≠Ç»ÇËê‘Ç≠Ç»ÇÈ
         if (collision.gameObject.tag == "Garbage" && _isNoraml)
         {
             Destroy(collision.gameObject);
@@ -94,7 +106,8 @@ public class Player : Marimo
             _lineRend.enabled = false;
         }
     }
-
+    
+    //å‹ïbå„Ç…ïÅí èÛë‘Ç…ñﬂÇÈ
     private IEnumerator Clean()
     {
         yield return new WaitForSeconds(5f);
