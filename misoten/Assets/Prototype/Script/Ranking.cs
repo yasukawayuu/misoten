@@ -33,7 +33,7 @@ public class Ranking : MonoBehaviour
             if (playerCount[i].GetComponent<Player>() != null)
                 _players.Add(playerCount[i].GetComponent<Player>());
             else
-                _players.Add(playerCount[i].GetComponent<AIMarimo>());
+                _players.Add(playerCount[i].GetComponent<AI>());
         }
         _players.Sort((a,b) => b.Point - a.Point);
     }

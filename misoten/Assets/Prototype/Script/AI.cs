@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIMarimo : Marimo
+public class AI : Marimo
 {
-    Rigidbody2D rigid2d;
-    Vector2 direction;  // AIが移動する方向
-    [SerializeField] float speed = 1.0f;   // 移動速度
-    [SerializeField] float detectionRange = 5f;   // ターゲットを検出する範囲
+    private Rigidbody2D rigid2d;
+    private Vector2 direction;  // AIが移動する方向
+
+    [SerializeField]private float speed = 1.0f;   // 移動速度
+    [SerializeField]private float detectionRange = 5f;   // ターゲットを検出する範囲
     private float _scale = 1.0f;   // 大きさ
-    bool _isNoraml = true;   // 通常状態フラグ
-    SpriteRenderer _spriteRenderer;
+    private bool _isNoraml = true;   // 通常状態フラグ
+    private SpriteRenderer _spriteRenderer;
 
     void Start()
     {
@@ -19,6 +20,11 @@ public class AIMarimo : Marimo
         StartCoroutine("MarimoAIMove");
 
         _name = "AI";
+    }
+
+    protected override void Update()
+    {
+        base.Update();
     }
 
     void FixedUpdate()
