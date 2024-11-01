@@ -285,6 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
+  _isLocalPlayer: 0
 --- !u!120 &24775398
 LineRenderer:
   serializedVersion: 2
@@ -948,7 +949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9abba5cf3e312e840a24ca0d650a0e4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Garbage: {fileID: 6053600499292350993, guid: f0284f09a4a5a444b9f9cad0371f7d3e, type: 3}
+  _garbage: {fileID: 0}
 --- !u!4 &645771386
 Transform:
   m_ObjectHideFlags: 0

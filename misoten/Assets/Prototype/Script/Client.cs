@@ -4,25 +4,40 @@ using UnityEngine;
 using UnityEngine.UI;
 using NativeWebSocket;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using System.Collections;
 
 public class WebSocketClient : MonoBehaviour
 {
     WebSocket websocket;
-    [SerializeField]Text text;
+    [SerializeField] Text text;
 
     [SerializeField] private GameObject _player;
     IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
+    private float ping;
+    private Stopwatch pingStopwatch = new Stopwatch();
+
+    public int ClientId
+    {
+        get { return _clientId; }
+    }
+    public IDictionary<int, GameObject> Players
+    {
+        get { return _players; }
+    }
 
     void Start()
     {
         ConnectWebSocket();
+        StartCoroutine("PingSync");
     }
 
     async void ConnectWebSocket()
     {
-        websocket = new WebSocket("ws://localhost:8080");
+        websocket = new WebSocket("ws://54.238.184.102:8080");
 
         websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -63,6 +78,14 @@ public class WebSocketClient : MonoBehaviour
                 _players[data.id].transform.position = data.position;
                 _players[data.id].transform.rotation = Quaternion.Euler(data.rotation);
                 _players[data.id].transform.localScale = data.scale;
+                _players[data.id].GetComponent<Rigidbody2D>().velocity = data.velocity;
+                _players[data.id].GetComponent<Rigidbody2D>().angularVelocity  = data.angularVelocity;
+            }
+            else if (data.type == "pong")
+            {
+                pingStopwatch.Stop();
+                ping = pingStopwatch.ElapsedMilliseconds;
+                text.text = ping.ToString() + "　　ms";
             }
             else if (data.type == "playerDisconnected")
             {
@@ -77,11 +100,6 @@ public class WebSocketClient : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SendMessageToServer("Hello Unity"); 
-        }
-
         if (_players.ContainsKey(_clientId))
         {
             PlayerSync(_players[_clientId]); // プレイヤーの位置情報をサーバーに送信
@@ -90,6 +108,11 @@ public class WebSocketClient : MonoBehaviour
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
+    }
+
+    void FixedUpdate()
+    {
+        
     }
 
     async void PlayerSync(GameObject player)
@@ -102,7 +125,9 @@ public class WebSocketClient : MonoBehaviour
                 id = _clientId,
                 position = player.transform.position,
                 rotation = player.transform.rotation.eulerAngles,
-                scale = player.transform.localScale
+                scale = player.transform.localScale,
+                velocity = player.GetComponent<Rigidbody2D>().velocity,
+                angularVelocity = player.GetComponent<Rigidbody2D>().angularVelocity
 
             };
 
@@ -110,21 +135,24 @@ public class WebSocketClient : MonoBehaviour
         }
     }
 
-    async void SendMessageToServer(string message)
+    async void SendPing()
     {
         if (websocket.State == WebSocketState.Open)
         {
-            var data = new ClientMessage
+            var data = new ServerMessage
             {
-                type = "message",
-                message = message
+                type = "ping",
             };
-            
+            pingStopwatch.Restart();
             await websocket.SendText(JsonUtility.ToJson(data));
-            Debug.Log("Sent: " + message);
         }
     }
 
+    private IEnumerator PingSync()
+    {
+        yield return new WaitForSeconds(2f);
+        SendPing();
+    }   
     async void OnApplicationQuit()
     {
         await websocket.Close();
@@ -139,16 +167,8 @@ public class WebSocketClient : MonoBehaviour
         public Vector3 position;
         public Vector3 rotation;
         public Vector3 scale;
+        public Vector2 velocity;
+        public float angularVelocity;
         public string message; // メッセージ内容
-    }
-
-    [Serializable]
-    public class ClientMessage
-    {
-        public string type; // メッセージのタイプ ("Buffer" 等)
-        public string message; // Bufferのデータ (数値の配列)
-        public Vector3 position;
-        public Vector3 rotation;
-        public Vector3 scale;
     }
 }

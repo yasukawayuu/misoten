@@ -13,7 +13,7 @@ public class Player : Marimo
 
     [SerializeField]private float speed = 1f;
 
-    private bool _isLocalPlayer = false;
+    [SerializeField]private bool _isLocalPlayer = false;
     private bool _isDrag = false;
     private bool _isNoraml = true;
 
@@ -73,8 +73,6 @@ public class Player : Marimo
         {
             SceneManager.LoadScene("PrototypeTitle");
         }
-
-        
     }
 
     protected override void Move()
