@@ -35,6 +35,6 @@ public class Ranking : MonoBehaviour
             else
                 _players.Add(playerCount[i].GetComponent<AI>());
         }
-        _players.Sort((a,b) => b.Point - a.Point);
+        _players.Sort((a,b) => Mathf.FloorToInt(b.Point) - Mathf.FloorToInt(a.Point));
     }
 }
