@@ -45,7 +45,6 @@ public class AI : Marimo
             _point += 1;
             StartCoroutine("Clean");
         }
-        // ò‰»‚²‚İ‚ÉÕ“Ë
         else if (collision.gameObject.tag == "Garbage" && !_isNoraml)
         {
             // Á–Å
