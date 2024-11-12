@@ -37,7 +37,7 @@ public class WebSocketClient : MonoBehaviour
 
     async void ConnectWebSocket()
     {
-        websocket = new WebSocket("ws://54.238.184.102:8080");
+        websocket = new WebSocket("ws://localhost:8080");
 
         websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
