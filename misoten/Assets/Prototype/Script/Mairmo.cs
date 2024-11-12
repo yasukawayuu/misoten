@@ -1,13 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class Marimo : MonoBehaviour
 {
-    protected int _point = 0;
-    protected string _name = "";
+    [CustomLabel("ポイント")]
+    [SerializeField] protected float _point = 1.0f;
 
-    public int Point
+    [CustomLabel("現在の汚染ポイント")]
+    [SerializeField] protected float _garbageValue = 0.0f;
+
+    [CustomLabel("汚染ポイント上限")]
+    [SerializeField] protected int _maxGarbageValue = 5;
+
+    [CustomLabel("名前")]
+    [SerializeField] protected string _name = "";
+
+    public float Point
     {
         get { return _point; }
     }
@@ -35,4 +45,5 @@ public class Marimo : MonoBehaviour
     }
 
     protected virtual void Move(){}
+
 }

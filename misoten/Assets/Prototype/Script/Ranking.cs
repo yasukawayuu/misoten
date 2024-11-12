@@ -18,10 +18,10 @@ public class Ranking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _rangking.text =
-            "ランキング\n" +
-            _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n" +
-            _players[1].Name.PadRight(20) + _players[1].Point.ToString().PadLeft(10) + "\n";
+        //_rangking.text =
+        //    "ランキング\n" +
+        //    _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n" +
+        //    _players[1].Name.PadRight(20) + _players[1].Point.ToString().PadLeft(10) + "\n";
     }
 
     private void FixedUpdate()
@@ -33,8 +33,8 @@ public class Ranking : MonoBehaviour
             if (playerCount[i].GetComponent<Player>() != null)
                 _players.Add(playerCount[i].GetComponent<Player>());
             else
-                _players.Add(playerCount[i].GetComponent<AIMarimo>());
+                _players.Add(playerCount[i].GetComponent<AI>());
         }
-        _players.Sort((a,b) => b.Point - a.Point);
+        _players.Sort((a,b) => Mathf.FloorToInt(b.Point) - Mathf.FloorToInt(a.Point));
     }
 }

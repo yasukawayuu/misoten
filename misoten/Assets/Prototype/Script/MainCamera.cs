@@ -15,12 +15,18 @@ public class MainCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 cameraPos = _target.transform.position; 
+        WebSocketClient client = _target.GetComponent<WebSocketClient>();
+        if (client.Players.ContainsKey(client.ClientId))
+        {
+            Vector3 cameraPos = client.Players[client.ClientId].transform.position;
 
-        cameraPos.z = -10;
-        Camera.main.gameObject.transform.position = cameraPos;
 
-        Camera.main.orthographicSize = _target.transform.localScale.x * 5;
+            cameraPos.z = -10;
+            Camera.main.gameObject.transform.position = cameraPos;
+        }
+            
+
+        //Camera.main.orthographicSize = _target.transform.localScale.x * 5;
     }
 
 }
