@@ -20,6 +20,6 @@ public class LocalCamera : MonoBehaviour
         cameraPos.z = -10;
         Camera.main.gameObject.transform.position = cameraPos;
 
-        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize,_target.transform.localScale.x + 4.0f, 0.01f);
+        Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize,_target.transform.localScale.x + 4.0f, 1.0f);
     }
 }

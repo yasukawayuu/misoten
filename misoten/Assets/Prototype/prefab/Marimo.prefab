@@ -164,15 +164,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _point: 1
-  _maxPoint: 1
+  _garbageValue: 0
+  _maxGarbageValue: 5
   _name: 
-  _holdPoint: 900
-  _pointScale:
-  - 50
-  - 100
-  - 150
-  _raito: 090000000600000003000000
+  _minSpeed: 900
   _isLocalPlayer: 0
+  _pointScale:
+  - 10
+  - 20
+  - 30
+  _raito: 090000000600000003000000
+  _cleanTime:
+  - 0
+  - 0
   _rigid2d: {fileID: 5630655247442295696}
   _lineRend: {fileID: 544607155715530076}
   _render: {fileID: 5318292089184548353}

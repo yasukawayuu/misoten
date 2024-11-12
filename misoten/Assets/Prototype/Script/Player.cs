@@ -7,16 +7,27 @@ using UnityEngine.SceneManagement;
 
 public class Player : Marimo
 {
-    [SerializeField] private float _holdPoint = 900.0f;
-    [SerializeField] private float[] _pointScale = new float[3];
-    [SerializeField] private int[] _raito = new int[3]; 
-   
-    private Vector2 _startPos;
+    [CustomLabel("最低移動量")]
+    [SerializeField] private float _minSpeed = 900.0f;
+
+    [CustomLabel("ローカルプレイヤー")]
     [SerializeField] private bool _isLocalPlayer = false;
-    private bool _isDrag = false;
-    private bool _isNoraml = true;
-    private float _maxLineLength = 0;
-    private float _scale = 1.0f;
+
+    [CustomLabel("チャージ上限")]
+    [SerializeField] private float[] _pointScale = new float[3];
+
+    [CustomLabel("チャージ割合")]
+    [SerializeField] private int[] _raito = new int[3];
+
+    [CustomLabel("浄化時間")]
+    [SerializeField] private float[] _cleanTime = new float[2];
+
+    private Vector2 _startPos;          //マウスの初期位置
+    private bool _isDrag = false;       //マウス押してるかどうか
+    private bool _isNormal = true;      //上限に達してるか
+    private float _maxLineLength = 0;   //現在のチャージ
+    private float _scale = 1.0f;        //プライヤーの大きさ
+    private float _holdPoint = 900.0f;　//最低移動量
 
     [SerializeField] private Rigidbody2D _rigid2d;
     [SerializeField] private LineRenderer _lineRend;
@@ -24,6 +35,9 @@ public class Player : Marimo
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
 
+
+    private float _cameraSize = 0.0f;
+    private float _lineWidth = 1.0f;
 
     public bool IsLocalPlayer
     {
@@ -35,12 +49,16 @@ public class Player : Marimo
     {
 
         _lineRend.enabled = false;
-
         _lineRend.positionCount = 2;
+        _lineRend.widthMultiplier = 1.0f;
+        
+        _cameraSize = Camera.main.orthographicSize;
 
-        _render.sortingOrder = 1;
+        _render.sortingOrder = 2;
 
         _name = "Player";
+
+        StartCoroutine("Clean");
     }
 
     protected override void Update()
@@ -54,23 +72,25 @@ public class Player : Marimo
     void FixedUpdate()
     {
         _rigid2d.velocity *= 0.85f;
+
         if( _point > 1.0f )
             _scale = Mathf.Floor(_point) / 2 + 0.5f;
         else
             _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
-        float scaledValue = (_garbageValue / _maxGarbageValue) * 2.0f + 1.0f;
-        _spriteRenderer.material.SetFloat("_BeforeColorAmount", scaledValue);
+
+        _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
+
+
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if(_garbageValue >= _maxGarbageValue)
-        //{
-        //    SceneManager.LoadScene("PrototypeTitle");
-        //}
-           
+        if (collision.gameObject.tag == "Garbage" && !_isNormal)
+            SceneManager.LoadScene("PrototypeTitle");
+
+
         //汚染物にあったら大きくなり赤くなる
         if (collision.gameObject.tag == "Garbage")
         {
@@ -78,12 +98,16 @@ public class Player : Marimo
             _garbageValue += 1;
             _scale += _point / 2;
             _point += 1.0f;
-            StartCoroutine("Clean");
         }
+
+        if (_garbageValue >= _maxGarbageValue)
+            _isNormal = false;
 
     }
 
-    //プレイヤーの移動
+    /// <summary>
+    /// プレイヤーの移動
+    /// </summary>    
     protected override void Move()
     {
         // マウスを押した地点の座標を記録
@@ -101,29 +125,30 @@ public class Player : Marimo
         {
             Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-            // ワールド座標での距離計算
-            float distance = Vector2.Distance(currentMousePos, _startPos);
+            // カメラサイズに基づいて距離をスケーリング
+            float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
+            float distance = Vector2.Distance(currentMousePos, _startPos) * cameraSizeRatio;
 
             // ラインの色と長さ制限を設定
-            if (distance > 1.0f && distance <= 2.0f)
+            if (distance > 1.0f * cameraSizeRatio && distance <= 2.0f * cameraSizeRatio)
             {
                 _childSpriteRender.color = Color.gray;
-                _maxLineLength = 2.0f;
+                _maxLineLength = 2.0f * cameraSizeRatio;
             } 
-            else if (distance <= 4.0f && _point > _pointScale[0])
+            else if (distance <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
             {
                 _childSpriteRender.color = Color.yellow;
-                _maxLineLength = 4.0f;
+                _maxLineLength = 4.0f * cameraSizeRatio;
             }
-            else if (distance <= 6.0f && _point > _pointScale[1])
+            else if (distance <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
             {
                 _childSpriteRender.color = Color.green;
-                _maxLineLength = 6.0f;
+                _maxLineLength = 6.0f * cameraSizeRatio;
             }   
             else if(_point > _pointScale[2])
             {
                 _childSpriteRender.color = Color.blue;
-                _maxLineLength = 8.0f;
+                _maxLineLength = 8.0f * cameraSizeRatio;
             }
 
             // スタート位置からマウス位置までの方向と距離を計算
@@ -142,42 +167,70 @@ public class Player : Marimo
             Vector2 endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 startDirection = -1 * (endPos - _startPos).normalized;
 
+            float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
+            Debug.Log(cameraSizeRatio);
             // ポイント消費
-            if (_maxLineLength <= 2.0f)
-                _holdPoint = 900.0f;
-            else if (_maxLineLength <= 4.0f && _point > _pointScale[0])
+            if (_maxLineLength <= 2.0f * cameraSizeRatio)
+                _holdPoint = _minSpeed;
+            else if (_maxLineLength <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
                 HoldPoint(_raito[0]);
-            else if (_maxLineLength <= 6.0f && _point > _pointScale[1])
+            else if (_maxLineLength <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
                 HoldPoint(_raito[1]); 
             else if(_point > _pointScale[2])
                 HoldPoint(_raito[2]);
 
+            
             // 力を加える
-            if(_maxLineLength > 0.0f)
+            if (_maxLineLength > 0.0f)
                 _rigid2d.AddForce(startDirection * _holdPoint);
 
             _lineRend.enabled = false;
             _childSpriteRender.color = Color.white;
         }
 
+        _lineRend.widthMultiplier = _lineWidth * (Camera.main.orthographicSize / _cameraSize);
+
     }
 
-    //ホールポイント計算
+    /// <summary>
+    /// ホールドポイント計算
+    /// </summary>
+    /// <param name="ratio"></param>
     private void HoldPoint(int ratio)
     {
-        _holdPoint = (Mathf.Floor(_point) / ratio) * 10 + 900.0f;
+        _holdPoint = (Mathf.Floor(_point) / ratio) * 10 + _minSpeed;
         _point -= (Mathf.Floor(_point) / ratio);
         _point = Mathf.Floor(_point);
     }
 
-   private void Shader()
-    {
-
-    }
-
-    //五秒後に普通状態に戻る
+    /// <summary>
+    /// 浄化
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Clean()
     {
-        yield return new WaitForSeconds(5f);
+        while(true)
+        {
+            if (_isNormal)
+            {
+                yield return new WaitForSeconds(_cleanTime[0]);
+                if (_garbageValue > 0.0f)
+                    _garbageValue -= 0.1f;
+            }  
+            else
+            {
+                yield return new WaitForSeconds(_cleanTime[1]);
+                _garbageValue -= 0.1f;
+
+                if (_garbageValue <= 0.0f)
+                {
+                    _isNormal = true;
+                    _garbageValue = 0.0f;
+                    _maxGarbageValue = Mathf.FloorToInt(_point) * 2;
+                }     
+            }
+        }
+        
+
     }
 }
