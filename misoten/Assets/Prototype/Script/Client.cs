@@ -8,12 +8,16 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Collections;
 
-public class WebSocketClient : MonoBehaviour
+public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 {
     WebSocket websocket;
     [SerializeField] Text text;
 
     [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _samllGarbage;
+    [SerializeField] private GameObject _mediumGarbage;
+    [SerializeField] private GameObject _LargeGarbage;
+
     IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
@@ -35,7 +39,7 @@ public class WebSocketClient : MonoBehaviour
         StartCoroutine("PingSync");
     }
 
-    async void ConnectWebSocket()
+    private async void ConnectWebSocket()
     {
         websocket = new WebSocket("ws://localhost:8080");
 
@@ -81,6 +85,18 @@ public class WebSocketClient : MonoBehaviour
                 _players[data.id].GetComponent<Rigidbody2D>().velocity = data.velocity;
                 _players[data.id].GetComponent<Rigidbody2D>().angularVelocity  = data.angularVelocity;
             }
+            else if(data.type == "samllGarbagePosition")
+            {
+                GabageSpawn(_samllGarbage, data, "smallGarbage");
+            }
+            else if (data.type == "mediumGarbagePosition")
+            {
+                GabageSpawn(_mediumGarbage, data, "mediumGarbage");
+            }
+            else if (data.type == "largeGarbagePosition")
+            {
+                Instantiate(_LargeGarbage, data.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            }
             else if (data.type == "pong")
             {
                 pingStopwatch.Stop();
@@ -98,7 +114,7 @@ public class WebSocketClient : MonoBehaviour
         await websocket.Connect();
     }
 
-    void Update()
+    private void Update()
     {
         if (_players.ContainsKey(_clientId))
         {
@@ -110,12 +126,26 @@ public class WebSocketClient : MonoBehaviour
 #endif
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         
     }
 
-    async void PlayerSync(GameObject player)
+    public async void GarbageIDSync(string gabageType,int _mapchipID)
+    {
+        if (websocket.State == WebSocketState.Open)
+        {
+            var data = new ServerMessage
+            {
+                type = gabageType,
+                id = _mapchipID
+            };
+
+            await websocket.SendText(JsonUtility.ToJson(data));
+        }
+    }
+
+    private async void PlayerSync(GameObject player)
     {
         if (websocket.State == WebSocketState.Open)
         {
@@ -148,6 +178,36 @@ public class WebSocketClient : MonoBehaviour
         }
     }
 
+    private bool IsPlayerNearby(Vector3 position)
+    {
+        // プレイヤーの位置と半径を基に周囲のプレイヤーをチェック
+        float radius = 5.0f;  // 衝突判定の範囲（半径）
+        Collider[] colliders = Physics.OverlapSphere(position, radius);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                return false;  // プレイヤーが近くにいる
+            }
+        }
+
+        return true;  // プレイヤーがいない
+    }
+
+    private void GabageSpawn(GameObject gabage, ServerMessage data, string garbageType)
+    {
+        if (IsPlayerNearby(data.position))
+        {
+            GameObject garbage = Instantiate(gabage, data.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            garbage.GetComponent<Garbage>().ID = data.id;
+        }
+        else
+        {
+            GarbageIDSync(garbageType, data.id);
+        }
+    }
+
     private IEnumerator PingSync()
     {
         yield return new WaitForSeconds(2f);
@@ -157,6 +217,7 @@ public class WebSocketClient : MonoBehaviour
     {
         await websocket.Close();
     }
+
 
     // サーバーから受け取るメッセージのデータ形式
     [Serializable]
@@ -169,6 +230,5 @@ public class WebSocketClient : MonoBehaviour
         public Vector3 scale;
         public Vector2 velocity;
         public float angularVelocity;
-        public string message; // メッセージ内容
     }
 }

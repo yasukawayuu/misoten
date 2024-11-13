@@ -27,14 +27,13 @@ public class Player : Marimo
     private bool _isNormal = true;      //上限に達してるか
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
-    private float _holdPoint = 900.0f;　//最低移動量
+    private float _holdPoint = 900.0f;　//ホールドポイント
 
     [SerializeField] private Rigidbody2D _rigid2d;
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
-
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -92,12 +91,15 @@ public class Player : Marimo
 
 
         //汚染物にあったら大きくなり赤くなる
-        if (collision.gameObject.tag == "Garbage")
+        if (collision.gameObject.tag == "SmallGarbage")
         {
-            Destroy(collision.gameObject);
-            _garbageValue += 1;
-            _scale += _point / 2;
-            _point += 1.0f;
+            WebSocketClient client = WebSocketClient.Instance;
+            client.GarbageIDSync("smallGarbage", collision.GetComponent<SmallGarbage>().ID);
+            EatGarbage(collision.gameObject);
+        }
+        else if(collision.gameObject.tag == "MediumGarbage")
+        {
+            EatGarbage(collision.gameObject);
         }
 
         if (_garbageValue >= _maxGarbageValue)
@@ -184,6 +186,8 @@ public class Player : Marimo
             if (_maxLineLength > 0.0f)
                 _rigid2d.AddForce(startDirection * _holdPoint);
 
+            Debug.Log(_holdPoint);
+
             _lineRend.enabled = false;
             _childSpriteRender.color = Color.white;
         }
@@ -203,6 +207,14 @@ public class Player : Marimo
         _point = Mathf.Floor(_point);
     }
 
+    private void EatGarbage(GameObject gameObject)
+    {
+        Destroy(gameObject);
+        _garbageValue += 1;
+        _scale += _point / 2;
+        _point += 1.0f;
+    }
+
     /// <summary>
     /// 浄化
     /// </summary>
@@ -216,6 +228,9 @@ public class Player : Marimo
                 yield return new WaitForSeconds(_cleanTime[0]);
                 if (_garbageValue > 0.0f)
                     _garbageValue -= 0.1f;
+
+                if(_garbageValue < 0.0f)
+                    _garbageValue = 0.0f;
             }  
             else
             {

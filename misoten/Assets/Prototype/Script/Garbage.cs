@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Garbage : MonoBehaviour
 {
-    
+    protected int _id = 0;
+    public int ID
+    {
+        get {  return _id;  }
+        set {  _id = value; }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -12,8 +17,14 @@ public class Garbage : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        this.gameObject.transform.rotation *= Quaternion.Euler(0.0f, 0.0f, 1.0f);
+        Vector3 viewportPosition = Camera.main.WorldToViewportPoint(transform.position);
+
+        // âÊñ äOÇ…Ç¢ÇÈèÍçá
+        if (!(viewportPosition.x < 0 || viewportPosition.x > 1 || viewportPosition.y < 0 || viewportPosition.y > 1))
+        {
+            
+        }
     }
 }

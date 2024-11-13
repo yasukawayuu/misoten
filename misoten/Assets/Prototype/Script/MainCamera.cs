@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    [SerializeField]GameObject _target;
     Vector3 _pos;
     // Start is called before the first frame update
     void Start()
@@ -15,7 +14,7 @@ public class MainCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        WebSocketClient client = _target.GetComponent<WebSocketClient>();
+        WebSocketClient client = WebSocketClient.Instance;
         if (client.Players.ContainsKey(client.ClientId))
         {
             Vector3 cameraPos = client.Players[client.ClientId].transform.position;
