@@ -199,7 +199,7 @@ public class Player : Marimo
         _point = Mathf.Floor(_point);
     }
 
-    public void EatGarbage(GameObject gameObject)
+    public void EatGarbage()
     {
         _garbageValue += 1;
         _scale += _point / 2;

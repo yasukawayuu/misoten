@@ -6,20 +6,9 @@ public class GarbageParticleController : MonoBehaviour
 {
     private ParticleSystem _particleSystem;
     private List<ParticleSystem.Particle> _enterParticles = new List<ParticleSystem.Particle>();
-    [SerializeField] private GameObject _player;
-    private MetaBallTestCharacter _metaBallTestCharacter;
 
     void Start()
     {
-        if (_player.GetComponent<MetaBallTestCharacter>() == null)
-        {
-            Debug.LogWarning("PlayerにMetaBallTestCharacterが存在しません");
-        }
-        else
-        {
-            _metaBallTestCharacter = _player.GetComponent<MetaBallTestCharacter>();
-        }
-
         _particleSystem = GetComponent<ParticleSystem>();
         Invoke(nameof(StopEmitting), 5.0f);
     }
@@ -31,21 +20,44 @@ public class GarbageParticleController : MonoBehaviour
 
     void OnParticleTrigger()
     {
-        // このフレームのトリガーの条件に一致するパーティクルを取得
+        // このフレームでトリガー条件に一致するパーティクルを取得
         int numEnter = _particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
 
+        // 衝突判定のための探索範囲
+        float detectionRadius = 0.2f; // パーティクルの周囲の判定半径
 
-        // トリガーに侵入したパーティクルを走査
+        // トリガーに侵入したパーティクルを処理
         for (int i = 0; i < numEnter; i++)
         {
-            _metaBallTestCharacter.GarbageValue -= 0.05f;
+            ParticleSystem.Particle particle = _enterParticles[i];
 
-            ParticleSystem.Particle p = _enterParticles[i];
-            p.remainingLifetime = -1.0f;
-            _enterParticles[i] = p;
+            // パーティクルのワールド座標を取得
+            Vector3 particlePosition = particle.position;
+
+            // 2DのColliderを検出（OverlapCircleを使う）
+            Collider2D[] hitColliders = Physics2D.OverlapCircleAll(particlePosition, detectionRadius);
+
+            foreach (var collider in hitColliders)
+            {
+                // Playerタグを持つオブジェクトの場合の処理例
+                if (collider.gameObject.GetComponent<Player>())
+                {
+                    collider.gameObject.GetComponent<Player>().EatGarbage();
+                }
+            }
+
+            // パーティクルのライフタイムを終了
+            particle.remainingLifetime = -1.0f;
+            _enterParticles[i] = particle;
         }
 
-        // 変更したパーティクルをパーティクルシステムに再割り当て
+        // 変更したパーティクルを再設定
         _particleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
+
+        // 次のフレームで削除確認
+        if (_particleSystem.particleCount == 1)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
