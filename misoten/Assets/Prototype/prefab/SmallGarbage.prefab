@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3445912799151188072}
   - component: {fileID: 4724086779170544615}
   - component: {fileID: 4990008958986256861}
-  - component: {fileID: 6178400315022699967}
   m_Layer: 0
   m_Name: SmallGarbage
   m_TagString: SmallGarbage
@@ -131,15 +130,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &6178400315022699967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6053600499292350993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30bbac325fcf7ab4d9b36f7cfea69155, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Garbage : MonoBehaviour
 {
     protected int _id = 0;
+    [SerializeField]protected string _dataType = "";
     public int ID
     {
         get {  return _id;  }
@@ -25,6 +26,16 @@ public class Garbage : MonoBehaviour
         if (!(viewportPosition.x < 0 || viewportPosition.x > 1 || viewportPosition.y < 0 || viewportPosition.y > 1))
         {
             
+        }
+    }
+
+    protected virtual void LateUpdate()
+    {
+        if (transform.childCount == 0)
+        {
+            WebSocketClient client = WebSocketClient.Instance;
+            client.GarbageIDSync(_dataType, _id);
+            Destroy(gameObject);
         }
     }
 }
