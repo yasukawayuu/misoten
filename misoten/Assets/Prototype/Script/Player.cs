@@ -5,119 +5,247 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : Marimo
 {
+    [CustomLabel("最低移動量")]
+    [SerializeField] private float _minSpeed = 900.0f;
 
-    Rigidbody2D rigid2d;
-    Vector2 startPos;
+    [CustomLabel("ローカルプレイヤー")]
+    [SerializeField] private bool _isLocalPlayer = false;
 
-    [SerializeField] float speed = 1f;
-    bool _isDrag = false;
-    bool _isNoraml = true;
-    private LineRenderer _lineRend;
-    private Renderer _render;
-    private float _scale = 1.0f;
-    SpriteRenderer _spriteRenderer;
+    [CustomLabel("チャージ上限")]
+    [SerializeField] private float[] _pointScale = new float[3];
 
-    [SerializeField]bool _canMove;
+    [CustomLabel("チャージ割合")]
+    [SerializeField] private int[] _raito = new int[3];
 
-    int _point = 0;
-    [SerializeField] string _name = " ";
+    [CustomLabel("浄化時間")]
+    [SerializeField] private float[] _cleanTime = new float[2];
 
-    public int Point{ 
-        get { return _point; } 
-    }
+    private Vector2 _startPos;          //マウスの初期位置
+    private bool _isDrag = false;       //マウス押してるかどうか
+    private bool _isNormal = true;      //上限に達してるか
+    private float _maxLineLength = 0;   //現在のチャージ
+    private float _scale = 1.0f;        //プライヤーの大きさ
+    private float _holdPoint = 900.0f;　//ホールドポイント
 
-    public string Name
+    [SerializeField] private Rigidbody2D _rigid2d;
+    [SerializeField] private LineRenderer _lineRend;
+    [SerializeField] private Renderer _render;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer _childSpriteRender;
+
+    private float _cameraSize = 0.0f;
+    private float _lineWidth = 1.0f;
+
+    public bool IsLocalPlayer
     {
-        get { return _name; }
+        get { return _isLocalPlayer; }
+        set { _isLocalPlayer = value; }
     }
-
 
     void Start()
     {
-        this.rigid2d = GetComponent<Rigidbody2D>();
-        this._lineRend = GetComponent<LineRenderer>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
 
+        _lineRend.enabled = false;
         _lineRend.positionCount = 2;
+        _lineRend.widthMultiplier = 1.0f;
         
-       _render = GetComponent<Renderer>();
-        _render.sortingOrder = 1;
+        _cameraSize = Camera.main.orthographicSize;
+
+        _render.sortingOrder = 2;
+
+        _name = "Player";
+
+        StartCoroutine("Clean");
     }
 
-    void Update()
+    protected override void Update()
     {
-        if(_canMove)
+        if (_isLocalPlayer)
             Move();
 
-        Vector3 currentPos = transform.position;
-
-        currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
-        currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
-
-        transform.position = currentPos;
+        base.Update();
     }
 
     void FixedUpdate()
     {
-        this.rigid2d.velocity *= 0.85f;
+        _rigid2d.velocity *= 0.85f;
+
+        if( _point > 1.0f )
+            _scale = Mathf.Floor(_point) / 2 + 0.5f;
+        else
+            _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
+
+        _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
+
+
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Garbage" && _isNoraml)
-        {
-            Destroy(collision.gameObject);
-            _scale += 0.5f;
-            _spriteRenderer.color = Color.red;
-            _isNoraml = false;
-            _point += 1;
-            StartCoroutine("Clean");
-        }
-        else if(collision.gameObject.tag == "Garbage" && !_isNoraml)
-        {
+        if (collision.gameObject.tag == "Garbage" && !_isNormal)
             SceneManager.LoadScene("PrototypeTitle");
+
+
+        //汚染物にあったら大きくなり赤くなる
+        if (collision.gameObject.tag == "SmallGarbage")
+        {
+            WebSocketClient client = WebSocketClient.Instance;
+            client.GarbageIDSync("smallGarbage", collision.GetComponent<SmallGarbage>().ID);
+            EatGarbage(collision.gameObject);
+        }
+        else if(collision.gameObject.tag == "MediumGarbage")
+        {
+            EatGarbage(collision.gameObject);
         }
 
-        
+        if (_garbageValue >= _maxGarbageValue)
+            _isNormal = false;
+
     }
 
-    private void Move()
+    /// <summary>
+    /// プレイヤーの移動
+    /// </summary>    
+    protected override void Move()
     {
-        Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
         // マウスを押した地点の座標を記録
         if (Input.GetMouseButtonDown(0))
         {
-            this.startPos = Input.mousePosition;
+            _startPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             _lineRend.enabled = true;
-            _lineRend.SetPosition(0, new Vector3(worldMousePosition.x, worldMousePosition.y, 0));
+            _lineRend.SetPosition(0, _startPos);
             _isDrag = true;
+            _maxLineLength = 0.0f;
         }
 
+        // マウスを押している間
         if (Input.GetMouseButton(0) && _isDrag)
         {
-            // 終了点をマウスの現在位置に設定
-            _lineRend.SetPosition(1, new Vector3(worldMousePosition.x, worldMousePosition.y, 0));
+            Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // カメラサイズに基づいて距離をスケーリング
+            float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
+            float distance = Vector2.Distance(currentMousePos, _startPos) * cameraSizeRatio;
+
+            // ラインの色と長さ制限を設定
+            if (distance > 1.0f * cameraSizeRatio && distance <= 2.0f * cameraSizeRatio)
+            {
+                _childSpriteRender.color = Color.gray;
+                _maxLineLength = 2.0f * cameraSizeRatio;
+            } 
+            else if (distance <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
+            {
+                _childSpriteRender.color = Color.yellow;
+                _maxLineLength = 4.0f * cameraSizeRatio;
+            }
+            else if (distance <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
+            {
+                _childSpriteRender.color = Color.green;
+                _maxLineLength = 6.0f * cameraSizeRatio;
+            }   
+            else if(_point > _pointScale[2])
+            {
+                _childSpriteRender.color = Color.blue;
+                _maxLineLength = 8.0f * cameraSizeRatio;
+            }
+
+            // スタート位置からマウス位置までの方向と距離を計算
+            Vector2 direction = currentMousePos - _startPos;
+
+            // ラインの長さを制限
+            Vector2 limitedDirection = Vector2.ClampMagnitude(direction, _maxLineLength);
+            Vector2 endPoint = _startPos + limitedDirection;
+
+            _lineRend.SetPosition(1, endPoint);
         }
 
-        // マウスを離した地点の座標から、発射方向を計算
+        // マウスを離したとき
         if (Input.GetMouseButtonUp(0))
         {
-            Vector2 endPos = Input.mousePosition;
-            Vector2 startDirection = -1 * (endPos - startPos).normalized;
-            float distance = Vector2.Distance(endPos, startPos);
-            this.rigid2d.AddForce(startDirection * distance * speed);
+            Vector2 endPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 startDirection = -1 * (endPos - _startPos).normalized;
+
+            float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
+            Debug.Log(cameraSizeRatio);
+            // ポイント消費
+            if (_maxLineLength <= 2.0f * cameraSizeRatio)
+                _holdPoint = _minSpeed;
+            else if (_maxLineLength <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
+                HoldPoint(_raito[0]);
+            else if (_maxLineLength <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
+                HoldPoint(_raito[1]); 
+            else if(_point > _pointScale[2])
+                HoldPoint(_raito[2]);
+
+            
+            // 力を加える
+            if (_maxLineLength > 0.0f)
+                _rigid2d.AddForce(startDirection * _holdPoint);
+
+            Debug.Log(_holdPoint);
+
             _lineRend.enabled = false;
+            _childSpriteRender.color = Color.white;
         }
+
+        _lineRend.widthMultiplier = _lineWidth * (Camera.main.orthographicSize / _cameraSize);
+
     }
 
+    /// <summary>
+    /// ホールドポイント計算
+    /// </summary>
+    /// <param name="ratio"></param>
+    private void HoldPoint(int ratio)
+    {
+        _holdPoint = (Mathf.Floor(_point) / ratio) * 10 + _minSpeed;
+        _point -= (Mathf.Floor(_point) / ratio);
+        _point = Mathf.Floor(_point);
+    }
+
+    private void EatGarbage(GameObject gameObject)
+    {
+        Destroy(gameObject);
+        _garbageValue += 1;
+        _scale += _point / 2;
+        _point += 1.0f;
+    }
+
+    /// <summary>
+    /// 浄化
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Clean()
     {
-        yield return new WaitForSeconds(5f);
-        _isNoraml = true;
-        _spriteRenderer.color = new Color(0.7600026f,1.0f,0.0f);
+        while(true)
+        {
+            if (_isNormal)
+            {
+                yield return new WaitForSeconds(_cleanTime[0]);
+                if (_garbageValue > 0.0f)
+                    _garbageValue -= 0.1f;
+
+                if(_garbageValue < 0.0f)
+                    _garbageValue = 0.0f;
+            }  
+            else
+            {
+                yield return new WaitForSeconds(_cleanTime[1]);
+                _garbageValue -= 0.1f;
+
+                if (_garbageValue <= 0.0f)
+                {
+                    _isNormal = true;
+                    _garbageValue = 0.0f;
+                    _maxGarbageValue = Mathf.FloorToInt(_point) * 2;
+                }     
+            }
+        }
+        
+
     }
 }

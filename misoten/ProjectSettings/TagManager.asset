@@ -4,15 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Garbage
+  - Effect
+  - MediumGarbage
+  - LargeGarbage
+  - SmallGarbage
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Effect
+  - Garbage
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 

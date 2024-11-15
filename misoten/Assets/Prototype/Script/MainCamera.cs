@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    [SerializeField]GameObject _target;
     Vector3 _pos;
     // Start is called before the first frame update
     void Start()
@@ -15,11 +14,18 @@ public class MainCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 cameraPos = _target.transform.position; 
+        WebSocketClient client = WebSocketClient.Instance;
+        if (client.Players.ContainsKey(client.ClientId))
+        {
+            Vector3 cameraPos = client.Players[client.ClientId].transform.position;
 
-        cameraPos.z = -10;
-        Camera.main.gameObject.transform.position = cameraPos;
 
+            cameraPos.z = -10;
+            Camera.main.gameObject.transform.position = cameraPos;
+        }
+            
+
+        //Camera.main.orthographicSize = _target.transform.localScale.x * 5;
     }
 
 }
