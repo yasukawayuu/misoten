@@ -37,6 +37,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
     {
         ConnectWebSocket();
         StartCoroutine("PingSync");
+        StartCoroutine("SendPlayerPostion");
     }
 
     private async void ConnectWebSocket()
@@ -83,9 +84,9 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 _players[data.id].transform.rotation = Quaternion.Euler(data.rotation);
                 _players[data.id].transform.localScale = data.scale;
                 _players[data.id].GetComponent<Rigidbody2D>().velocity = data.velocity;
-                _players[data.id].GetComponent<Rigidbody2D>().angularVelocity  = data.angularVelocity;
+                _players[data.id].GetComponent<Rigidbody2D>().angularVelocity = data.angularVelocity;        
             }
-            else if(data.type == "samllGarbagePosition")
+            else if(data.type == "smallGarbagePosition")
             {
                 GabageSpawn(_samllGarbage, data, "smallGarbage");
             }
@@ -116,10 +117,6 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private void Update()
     {
-        if (_players.ContainsKey(_clientId))
-        {
-            PlayerSync(_players[_clientId]); // プレイヤーの位置情報をサーバーに送信
-        }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
@@ -210,9 +207,22 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private IEnumerator PingSync()
     {
-        yield return new WaitForSeconds(2f);
         SendPing();
-    }   
+        yield return new WaitForSeconds(2f);
+    }
+
+    private IEnumerator SendPlayerPostion()
+    {
+        while(true)
+        {
+            if (_players.ContainsKey(_clientId))
+            {
+                PlayerSync(_players[_clientId]); // プレイヤーの位置情報をサーバーに送信
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
     async void OnApplicationQuit()
     {
         await websocket.Close();
@@ -224,6 +234,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
     public class ServerMessage
     {
         public string type; // メッセージの種類 ("id" or "message")
+        public string name;
         public int id; // クライアントID
         public Vector3 position;
         public Vector3 rotation;

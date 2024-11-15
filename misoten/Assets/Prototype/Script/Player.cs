@@ -34,6 +34,7 @@ public class Player : Marimo
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
+    [SerializeField] private GameObject _nameText;
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -53,9 +54,12 @@ public class Player : Marimo
         
         _cameraSize = Camera.main.orthographicSize;
 
+        _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
+
         _render.sortingOrder = 2;
 
-        _name = "Player";
+        _name = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+        _nameText.GetComponent<TextMesh>().text = _name;
 
         StartCoroutine("Clean");
     }
@@ -89,18 +93,6 @@ public class Player : Marimo
         if (collision.gameObject.tag == "Garbage" && !_isNormal)
             SceneManager.LoadScene("PrototypeTitle");
 
-
-        //âòêıï®Ç…Ç†Ç¡ÇΩÇÁëÂÇ´Ç≠Ç»ÇËê‘Ç≠Ç»ÇÈ
-        if (collision.gameObject.tag == "SmallGarbage")
-        {
-            WebSocketClient client = WebSocketClient.Instance;
-            client.GarbageIDSync("smallGarbage", collision.GetComponent<SmallGarbage>().ID);
-            EatGarbage(collision.gameObject);
-        }
-        else if(collision.gameObject.tag == "MediumGarbage")
-        {
-            EatGarbage(collision.gameObject);
-        }
 
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
@@ -207,9 +199,8 @@ public class Player : Marimo
         _point = Mathf.Floor(_point);
     }
 
-    private void EatGarbage(GameObject gameObject)
+    public void EatGarbage(GameObject gameObject)
     {
-        Destroy(gameObject);
         _garbageValue += 1;
         _scale += _point / 2;
         _point += 1.0f;
