@@ -26,6 +26,7 @@ public class GarbageParticleController : MonoBehaviour
         // 衝突判定のための探索範囲
         float detectionRadius = 0.2f; // パーティクルの周囲の判定半径
 
+       
         // トリガーに侵入したパーティクルを処理
         for (int i = 0; i < numEnter; i++)
         {
@@ -37,10 +38,11 @@ public class GarbageParticleController : MonoBehaviour
             // 2DのColliderを検出（OverlapCircleを使う）
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(particlePosition, detectionRadius);
 
+            
             foreach (var collider in hitColliders)
             {
                 // Playerタグを持つオブジェクトの場合の処理例
-                if (collider.gameObject.GetComponent<Player>())
+                if (collider.CompareTag("Player"))
                 {
                     collider.gameObject.GetComponent<Player>().EatGarbage();
                 }

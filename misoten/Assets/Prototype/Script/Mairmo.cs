@@ -14,17 +14,11 @@ public class Marimo : MonoBehaviour
     [CustomLabel("汚染ポイント上限")]
     [SerializeField] protected int _maxGarbageValue = 5;
 
-    [CustomLabel("名前")]
-    [SerializeField] protected string _name = "";
 
     public float Point
     {
         get { return _point; }
-    }
-
-    public string Name
-    {
-        get { return _name; }
+        set { _point = value; }
     }
 
     // Start is called before the first frame update

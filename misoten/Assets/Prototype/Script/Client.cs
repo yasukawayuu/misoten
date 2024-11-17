@@ -70,19 +70,32 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
             }
             else if (data.type == "existingPlayer" || data.type == "newPlayer")
             {
-                GameObject player = Instantiate(_player, data.position, Quaternion.Euler(data.rotation));
-                player.transform.localScale = data.scale;
-                if(data.id == _clientId)
+                GameObject player = Instantiate(_player, data.position,Quaternion.Euler(new Vector3(0,0,0)));
+                player.GetComponent<Player>().Point = data.point;
+                if (data.id == _clientId)
+                {
                     player.GetComponent<Player>().IsLocalPlayer = true;
+                    player.name = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+                    SendPlayerName(player.name);
+                }
+                else
+                {
+                    player.name = data.name;
+                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = data.name;
+                }
                 _players[data.id] = player;
 
                 Debug.Log($"新しいプレイヤーが接続: {data.id}");
             }
+            else if(data.type == "playerName")
+            {
+                _players[data.id].name = data.name;
+            }
             else if (data.type == "transform")
             {
                 _players[data.id].transform.position = data.position;
-                _players[data.id].transform.rotation = Quaternion.Euler(data.rotation);
-                _players[data.id].transform.localScale = data.scale;
+                _players[data.id].GetComponent<Player>().Point = data.point;
                 _players[data.id].GetComponent<Rigidbody2D>().velocity = data.velocity;
                 _players[data.id].GetComponent<Rigidbody2D>().angularVelocity = data.angularVelocity;        
             }
@@ -152,10 +165,25 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 id = _clientId,
                 position = player.transform.position,
                 rotation = player.transform.rotation.eulerAngles,
-                scale = player.transform.localScale,
+                point = player.GetComponent<Player>().Point,
                 velocity = player.GetComponent<Rigidbody2D>().velocity,
                 angularVelocity = player.GetComponent<Rigidbody2D>().angularVelocity
 
+            };
+
+            await websocket.SendText(JsonUtility.ToJson(data));
+        }
+    }
+
+    private async void SendPlayerName(string playerName)
+    {
+        if (websocket.State == WebSocketState.Open)
+        {
+            var data = new ServerMessage
+            {
+                type = "playerName",
+                id = _clientId,
+                name = playerName
             };
 
             await websocket.SendText(JsonUtility.ToJson(data));
@@ -238,7 +266,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
         public int id; // クライアントID
         public Vector3 position;
         public Vector3 rotation;
-        public Vector3 scale;
+        public float point;
         public Vector2 velocity;
         public float angularVelocity;
     }

@@ -3,25 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 public class Ranking : MonoBehaviour
 {
-    Text _rangking;
+    [SerializeField] Text _name;
+    [SerializeField] Text _point;
     List<Marimo> _players;
     // Start is called before the first frame update
     void Start()
     {
-        _rangking = GetComponent<Text>();
         _players = new List<Marimo>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //_rangking.text =
-        //    "ランキング\n" +
-        //    _players[0].Name.PadRight(20) + _players[0].Point.ToString().PadLeft(10) + "\n" +
-        //    _players[1].Name.PadRight(20) + _players[1].Point.ToString().PadLeft(10) + "\n";
+        _name.text = "";
+        _point.text = "";
+
+        int maxRanking = 10; // 表示するランキングの上限
+        for (int i = 0; i < Math.Min(_players.Count, maxRanking); i++)
+        {
+            _name.text += (i + 1) + "." + _players[i].name + "\n";
+            _point.text += _players[i].Point + "\n";
+        }
     }
 
     private void FixedUpdate()
