@@ -45,6 +45,11 @@ public class Player : Marimo
         set { _isLocalPlayer = value; }
     }
 
+    public GameObject NameText
+    {
+        get { return _nameText; }
+    }
+
     void Start()
     {
 
@@ -57,9 +62,6 @@ public class Player : Marimo
         _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
         _render.sortingOrder = 2;
-
-        _name = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
-        _nameText.GetComponent<TextMesh>().text = _name;
 
         StartCoroutine("Clean");
     }
@@ -84,7 +86,8 @@ public class Player : Marimo
 
         _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
 
-
+        if (_garbageValue >= _maxGarbageValue)
+            _isNormal = false;
     }
 
 
@@ -92,10 +95,6 @@ public class Player : Marimo
     {
         if (collision.gameObject.tag == "Garbage" && !_isNormal)
             SceneManager.LoadScene("PrototypeTitle");
-
-
-        if (_garbageValue >= _maxGarbageValue)
-            _isNormal = false;
 
     }
 
