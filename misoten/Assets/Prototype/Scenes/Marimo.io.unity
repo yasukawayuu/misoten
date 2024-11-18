@@ -1325,13 +1325,15 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 300
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30E9\u30F3\u30AD\u30F3\u30B0\n"
+  m_Text: 'LeaderbBard
+
+'
 --- !u!222 &1982690261
 CanvasRenderer:
   m_ObjectHideFlags: 0
