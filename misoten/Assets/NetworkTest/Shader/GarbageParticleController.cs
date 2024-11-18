@@ -20,10 +20,44 @@ public class GarbageParticleController : MonoBehaviour
 
     void OnParticleTrigger()
     {
-        // このフレームでトリガー条件に一致するパーティクルを取得
+        //// このフレームでトリガー条件に一致するパーティクルを取得
+        //int numEnter = _particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
+
+        //// 衝突判定のための探索範囲
+        //float detectionRadius = 0.2f; // パーティクルの周囲の判定半径
+
+        //// トリガーに侵入したパーティクルを処理
+        //for (int i = 0; i < numEnter; i++)
+        //{
+        //    ParticleSystem.Particle particle = _enterParticles[i];
+
+        //    // パーティクルのワールド座標を取得
+        //    Vector3 particlePosition = particle.position;
+
+        //    // 2DのColliderを検出（OverlapCircleを使う）
+        //    Collider2D[] hitColliders = Physics2D.OverlapCircleAll(particlePosition, detectionRadius);
+
+        //    foreach (var collider in hitColliders)
+        //    {
+        //        // Playerタグを持つオブジェクトの場合の処理例
+        //        if (collider.gameObject.GetComponent<Player>())
+        //        {
+        //            collider.gameObject.GetComponent<Player>().EatGarbage();
+        //        }
+        //    }
+
+        //    // パーティクルのライフタイムを終了
+        //    particle.remainingLifetime = -1.0f;
+        //    _enterParticles[i] = particle;
+        //}
+
+        //// 変更したパーティクルを再設定
+        //_particleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
+
+        // トリガー条件に一致するパーティクルを取得
         int numEnter = _particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
 
-        // 衝突判定のための探索範囲
+        // 探索範囲
         float detectionRadius = 0.2f; // パーティクルの周囲の判定半径
 
         // トリガーに侵入したパーティクルを処理
@@ -34,13 +68,18 @@ public class GarbageParticleController : MonoBehaviour
             // パーティクルのワールド座標を取得
             Vector3 particlePosition = particle.position;
 
-            // 2DのColliderを検出（OverlapCircleを使う）
+            // 全てのオブジェクトとの衝突判定を行う
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(particlePosition, detectionRadius);
+
+            Debug.Log("1");
 
             foreach (var collider in hitColliders)
             {
-                // Playerタグを持つオブジェクトの場合の処理例
-                if (collider.gameObject.GetComponent<Player>())
+                // 任意のオブジェクトに対する処理
+                Debug.Log("2");
+
+                // Player タグを持つオブジェクトの例
+                if (collider.gameObject.tag == "Player")
                 {
                     collider.gameObject.GetComponent<Player>().EatGarbage();
                 }
@@ -53,6 +92,45 @@ public class GarbageParticleController : MonoBehaviour
 
         // 変更したパーティクルを再設定
         _particleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
+
+
+
+
+        // 次のフレームで削除確認
+        if (_particleSystem.particleCount == 1)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        // 衝突したオブジェクトが Player の場合のみ処理
+        Player player = other.GetComponent<Player>();
+        if (player == null)
+            return;
+
+        player.EatGarbage();
+
+        // 衝突したパーティクルの寿命を終了させる
+        List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
+        int collisionCount = _particleSystem.GetCollisionEvents(other, collisionEvents);
+
+        for (int i = 0; i < collisionCount; i++)
+        {
+            int particleIndex = collisionEvents[i].intersectionIndex;
+
+            // パーティクルの寿命を終了させる
+            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[_particleSystem.particleCount];
+            _particleSystem.GetParticles(particles);
+
+            if (particleIndex >= 0 && particleIndex < particles.Length)
+            {
+                particles[particleIndex].remainingLifetime = -1.0f;
+            }
+
+            _particleSystem.SetParticles(particles);
+        }
 
         // 次のフレームで削除確認
         if (_particleSystem.particleCount == 1)

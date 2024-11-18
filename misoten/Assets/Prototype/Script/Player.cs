@@ -162,7 +162,7 @@ public class Player : Marimo
             Vector2 startDirection = -1 * (endPos - _startPos).normalized;
 
             float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
-            Debug.Log(cameraSizeRatio);
+            //Debug.Log(cameraSizeRatio);
             // É|ÉCÉìÉgè¡îÔ
             if (_maxLineLength <= 2.0f * cameraSizeRatio)
                 _holdPoint = _minSpeed;
@@ -178,7 +178,7 @@ public class Player : Marimo
             if (_maxLineLength > 0.0f)
                 _rigid2d.AddForce(startDirection * _holdPoint);
 
-            Debug.Log(_holdPoint);
+            //Debug.Log(_holdPoint);
 
             _lineRend.enabled = false;
             _childSpriteRender.color = Color.white;
@@ -201,6 +201,8 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
+        Debug.Log("in EatGarbage");
+
         _garbageValue += 1;
         _scale += _point / 2;
         _point += 1.0f;
