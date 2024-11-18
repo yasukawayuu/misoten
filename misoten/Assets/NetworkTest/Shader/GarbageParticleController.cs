@@ -112,25 +112,31 @@ public class GarbageParticleController : MonoBehaviour
 
         player.EatGarbage();
 
-        // 衝突したパーティクルの寿命を終了させる
+        // 衝突イベントを取得
         List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
         int collisionCount = _particleSystem.GetCollisionEvents(other, collisionEvents);
 
+        // パーティクルを取得して処理
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[_particleSystem.particleCount];
+        _particleSystem.GetParticles(particles);
+
         for (int i = 0; i < collisionCount; i++)
         {
-            int particleIndex = collisionEvents[i].intersectionIndex;
+            Vector3 collisionPosition = collisionEvents[i].intersection;
 
-            // パーティクルの寿命を終了させる
-            ParticleSystem.Particle[] particles = new ParticleSystem.Particle[_particleSystem.particleCount];
-            _particleSystem.GetParticles(particles);
-
-            if (particleIndex >= 0 && particleIndex < particles.Length)
+            // パーティクルを衝突位置に基づいて検索
+            for (int j = 0; j < particles.Length; j++)
             {
-                particles[particleIndex].remainingLifetime = -1.0f;
+                // パーティクルの位置が衝突位置に近ければ削除
+                if (Vector3.Distance(particles[j].position, collisionPosition) < 0.1f) // しきい値は適宜調整
+                {
+                    particles[j].remainingLifetime = -1.0f;
+                }
             }
-
-            _particleSystem.SetParticles(particles);
         }
+
+        // パーティクルを再設定
+        _particleSystem.SetParticles(particles);
 
         // 次のフレームで削除確認
         if (_particleSystem.particleCount == 1)
