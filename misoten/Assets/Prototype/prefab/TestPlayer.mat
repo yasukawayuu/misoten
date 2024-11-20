@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player
-  m_Shader: {fileID: 4800000, guid: 5e5b9ec1ca0c4ef4abc0e7026cc100c9, type: 3}
+  m_Name: TestPlayer
+  m_Shader: {fileID: 4800000, guid: e6f748682f0bb464494577b7c979c73d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

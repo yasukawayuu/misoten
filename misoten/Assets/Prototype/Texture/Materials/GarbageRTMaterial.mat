@@ -47,7 +47,7 @@ Material:
     m_Floats:
     - _Cutoff: 0.65
     - _EnableExternalAlpha: 0
-    - _NoiseAmount: 0.015
+    - _NoiseAmount: 0.01
     - _Speed: 0.7
     - _Stroke: 0.8
     m_Colors:

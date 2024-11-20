@@ -200,8 +200,6 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
-        Debug.Log("in EatGarbage");
-
         _garbageValue += 1;
         _scale += _point / 2;
         _point += 1.0f;
