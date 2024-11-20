@@ -6,6 +6,10 @@ Properties
     _Cutoff ("Cutoff", Range(0,1)) = 0.5
     _Stroke ("Storke", Range(0,1)) = 0.1
     _StrokeColor ("StrokeColor", Color) = (1,1,1,1)
+
+    _NoiseTex("Noise", 2D) = "white" {}
+    _Speed("Speed", Range(0, 1)) = 0.7
+    _NoiseAmount("NoiseAmount", Range(0, 0.05)) = 0.025
 }
 
 SubShader
@@ -48,10 +52,13 @@ SubShader
 
 
         sampler2D _MainTex;
+        sampler2D _NoiseTex;
         half4 _Color;
         fixed _Cutoff;
         fixed _Stroke;
         half4 _StrokeColor;
+        float _NoiseAmount;
+        float _Speed;
 
         v2f vert(appdata_t IN)
         {
@@ -64,6 +71,13 @@ SubShader
 
         fixed4 frag (v2f i) : SV_Target
         {
+            // ノイズ処理
+            float2 nUv = i.texcoord;
+            nUv.y += _Time.x * _Speed;
+            float4 uvNoise= 2 * tex2D(_NoiseTex, nUv) -1 ;//0 - 1座標を-1 - 1に変換
+            i.texcoord += uvNoise.xy * _NoiseAmount;
+
+            // メタボールの色設定
             fixed4 color = tex2D(_MainTex, i.texcoord);
             clip(color.a - _Cutoff);
             color = color.a < _Stroke ? _StrokeColor : _Color;

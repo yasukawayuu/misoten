@@ -1,7 +1,6 @@
 Shader "Metaball/MetaballParticle" {
 Properties
 {
-    // _Color ("Color", Color) = (1,1,1,1)
     _Scale ("Scale", Range(0,0.05)) = 0.01
     _Cutoff ("Cutoff", Range(0,05)) = 0.01
 }
@@ -50,7 +49,6 @@ SubShader
             v2f OUT;
             OUT.vertex = UnityObjectToClipPos(IN.vertex);
             OUT.texcoord = IN.texcoord;
-            // OUT.color = IN.color * _Color;
             return OUT;
         }
 
