@@ -72,6 +72,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
             {
                 GameObject player = Instantiate(_player, data.position,Quaternion.Euler(new Vector3(0,0,0)));
                 player.GetComponent<Player>().Point = data.point;
+                player.GetComponent<SpriteRenderer>().material.SetColor("_BeforeColor", data.color);
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
@@ -164,7 +165,6 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 type = "transform",
                 id = _clientId,
                 position = player.transform.position,
-                rotation = player.transform.rotation.eulerAngles,
                 point = player.GetComponent<Player>().Point,
                 velocity = player.GetComponent<Rigidbody2D>().velocity,
                 angularVelocity = player.GetComponent<Rigidbody2D>().angularVelocity
@@ -203,13 +203,12 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
         }
     }
 
-    private bool IsPlayerNearby(Vector3 position)
+    private bool IsPlayerNearby(Vector2 position)
     {
-        // プレイヤーの位置と半径を基に周囲のプレイヤーをチェック
         float radius = 5.0f;  // 衝突判定の範囲（半径）
-        Collider[] colliders = Physics.OverlapSphere(position, radius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position, radius);
 
-        foreach (Collider collider in colliders)
+        foreach (Collider2D collider in colliders)
         {
             if (collider.gameObject.CompareTag("Player"))
             {
@@ -218,11 +217,12 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
         }
 
         return true;  // プレイヤーがいない
+
     }
 
     private void GabageSpawn(GameObject gabage, ServerMessage data, string garbageType)
     {
-        if (IsPlayerNearby(data.position))
+        if (IsPlayerNearby(new Vector2(data.position.x,data.position.y)))
         {
             GameObject garbage = Instantiate(gabage, data.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
             garbage.GetComponent<Garbage>().ID = data.id;
@@ -256,6 +256,14 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
         await websocket.Close();
     }
 
+    public async void CloseWebSocket()
+    {
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            await websocket.Close();
+            Debug.Log("サーバーから切断しました");
+        }
+    }
 
     // サーバーから受け取るメッセージのデータ形式
     [Serializable]
@@ -265,7 +273,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
         public string name;
         public int id; // クライアントID
         public Vector3 position;
-        public Vector3 rotation;
+        public Color color;
         public float point;
         public Vector2 velocity;
         public float angularVelocity;

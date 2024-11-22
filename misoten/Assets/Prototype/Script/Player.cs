@@ -79,7 +79,7 @@ public class Player : Marimo
         _rigid2d.velocity *= 0.85f;
 
         if( _point > 1.0f )
-            _scale = Mathf.Floor(_point) / 2 + 0.5f;
+            _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
             _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
@@ -88,14 +88,6 @@ public class Player : Marimo
 
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Garbage" && !_isNormal)
-            SceneManager.LoadScene("PrototypeTitle");
-
     }
 
     /// <summary>
@@ -200,10 +192,14 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
-        Debug.Log("in EatGarbage");
+        if(!_isNormal && _isLocalPlayer)
+        {
+            WebSocketClient.Instance.CloseWebSocket();
+            SceneManager.LoadScene("PrototypeTitle");
+        }
 
         _garbageValue += 1;
-        _scale += _point / 2;
+        _scale += _point / 5;
         _point += 1.0f;
     }
 

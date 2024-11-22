@@ -382,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca6d010727de6041bb179632a54476e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerName: 
 --- !u!1 &1041150968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1230,7 @@ GameObject:
   - component: {fileID: 1940089962}
   - component: {fileID: 1940089961}
   - component: {fileID: 1940089964}
+  - component: {fileID: 1940089965}
   m_Layer: 5
   m_Name: Play
   m_TagString: Untagged
@@ -1299,31 +1301,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1940089962}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 883612265}
-        m_TargetAssemblyTypeName: SavePlayerName, Assembly-CSharp
-        m_MethodName: SetName
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1940089964}
-        m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Marimo.io
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1940089962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1374,6 +1352,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f06c0415fee69a409dfd7e9f23f776b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1940089965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1940089959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf8f40bbcba9db4e8442ddc43c8cbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playeButton: {fileID: 1940089961}
+  ChangeScene: {fileID: 1940089964}
 --- !u!1 &2120798992
 GameObject:
   m_ObjectHideFlags: 0

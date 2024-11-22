@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class MainCamera : MonoBehaviour
 {
@@ -22,10 +23,8 @@ public class MainCamera : MonoBehaviour
 
             cameraPos.z = -10;
             Camera.main.gameObject.transform.position = cameraPos;
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, client.Players[client.ClientId].transform.localScale.x + 4.0f, 1.0f);
         }
-            
-
-        //Camera.main.orthographicSize = _target.transform.localScale.x * 5;
     }
 
 }
