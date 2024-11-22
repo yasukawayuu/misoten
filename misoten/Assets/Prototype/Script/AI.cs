@@ -19,7 +19,6 @@ public class AI : Marimo
         _spriteRenderer = GetComponent<SpriteRenderer>();
         StartCoroutine("MarimoAIMove");
 
-        _name = "AI";
     }
 
     protected override void Update()

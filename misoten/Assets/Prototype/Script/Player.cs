@@ -27,14 +27,14 @@ public class Player : Marimo
     private bool _isNormal = true;      //上限に達してるか
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
-    private float _holdPoint = 900.0f;　//最低移動量
+    private float _holdPoint = 900.0f;　//ホールドポイント
 
     [SerializeField] private Rigidbody2D _rigid2d;
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
-
+    [SerializeField] private GameObject _nameText;
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -43,6 +43,11 @@ public class Player : Marimo
     {
         get { return _isLocalPlayer; }
         set { _isLocalPlayer = value; }
+    }
+
+    public GameObject NameText
+    {
+        get { return _nameText; }
     }
 
     void Start()
@@ -54,9 +59,9 @@ public class Player : Marimo
         
         _cameraSize = Camera.main.orthographicSize;
 
-        _render.sortingOrder = 2;
+        _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
-        _name = "Player";
+        _render.sortingOrder = 2;
 
         StartCoroutine("Clean");
     }
@@ -74,35 +79,15 @@ public class Player : Marimo
         _rigid2d.velocity *= 0.85f;
 
         if( _point > 1.0f )
-            _scale = Mathf.Floor(_point) / 2 + 0.5f;
+            _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
             _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
 
         _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
 
-
-    }
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Garbage" && !_isNormal)
-            SceneManager.LoadScene("PrototypeTitle");
-
-
-        //汚染物にあったら大きくなり赤くなる
-        if (collision.gameObject.tag == "Garbage")
-        {
-            Destroy(collision.gameObject);
-            _garbageValue += 1;
-            _scale += _point / 2;
-            _point += 1.0f;
-        }
-
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
-
     }
 
     /// <summary>
@@ -168,7 +153,7 @@ public class Player : Marimo
             Vector2 startDirection = -1 * (endPos - _startPos).normalized;
 
             float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
-            Debug.Log(cameraSizeRatio);
+            //Debug.Log(cameraSizeRatio);
             // ポイント消費
             if (_maxLineLength <= 2.0f * cameraSizeRatio)
                 _holdPoint = _minSpeed;
@@ -183,6 +168,8 @@ public class Player : Marimo
             // 力を加える
             if (_maxLineLength > 0.0f)
                 _rigid2d.AddForce(startDirection * _holdPoint);
+
+            //Debug.Log(_holdPoint);
 
             _lineRend.enabled = false;
             _childSpriteRender.color = Color.white;
@@ -203,6 +190,19 @@ public class Player : Marimo
         _point = Mathf.Floor(_point);
     }
 
+    public void EatGarbage()
+    {
+        if(!_isNormal && _isLocalPlayer)
+        {
+            WebSocketClient.Instance.CloseWebSocket();
+            SceneManager.LoadScene("PrototypeTitle");
+        }
+
+        _garbageValue += 1;
+        _scale += _point / 5;
+        _point += 1.0f;
+    }
+
     /// <summary>
     /// 浄化
     /// </summary>
@@ -216,6 +216,9 @@ public class Player : Marimo
                 yield return new WaitForSeconds(_cleanTime[0]);
                 if (_garbageValue > 0.0f)
                     _garbageValue -= 0.1f;
+
+                if(_garbageValue < 0.0f)
+                    _garbageValue = 0.0f;
             }  
             else
             {
