@@ -918,6 +918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954124a92b2a7394ebdab178ac257979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _effectCamera: {fileID: 1330582821}
 --- !u!1001 &1021509163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1061,6 +1062,11 @@ RectTransform:
 --- !u!4 &1330582820 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2296163610766428480, guid: 7322a275ddd9c244bbaeb29192d04082, type: 3}
+  m_PrefabInstance: {fileID: 1021509163}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1330582821 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5580909443039205735, guid: 7322a275ddd9c244bbaeb29192d04082, type: 3}
   m_PrefabInstance: {fileID: 1021509163}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1454579423

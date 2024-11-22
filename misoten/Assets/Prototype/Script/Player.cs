@@ -115,7 +115,7 @@ public class Player : Marimo
             float distance = Vector2.Distance(currentMousePos, _startPos) * cameraSizeRatio;
 
             // ƒ‰ƒCƒ“‚ÌF‚Æ’·‚³§ŒÀ‚ðÝ’è
-            if (distance > 1.0f * cameraSizeRatio && distance <= 2.0f * cameraSizeRatio)
+            if (distance <= 2.0f * cameraSizeRatio)
             {
                 _childSpriteRender.color = Color.gray;
                 _maxLineLength = 2.0f * cameraSizeRatio;
