@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GarbageRTMaterial
-  m_Shader: {fileID: 4800000, guid: 67c67da0546210842a86730ac5052427, type: 3}
+  m_Name: TestPlayer
+  m_Shader: {fileID: 4800000, guid: e6f748682f0bb464494577b7c979c73d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: 53d93e17c451817499b0ede26f3a6fed, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -41,12 +41,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.65
+    - _BeforeColorAmount: -1
+    - _Cutoff: 0.258
     - _EnableExternalAlpha: 0
-    - _Stroke: 0.8
+    - _Scale: 0.01
     m_Colors:
-    - _Color: {r: 1, g: 0.3150943, b: 0.3150943, a: 1}
+    - _AfterColor: {r: 0, g: 0, b: 0, a: 1}
+    - _BeforeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _StrokeColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

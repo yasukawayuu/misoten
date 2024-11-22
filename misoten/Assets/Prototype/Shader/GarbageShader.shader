@@ -1,11 +1,8 @@
-Shader "Metaball/MetaballRenderer" {
+Shader "Metaball/MetaballParticle" {
 Properties
 {
-    _MainTex ("MainTex", 2D) = "white" {}
-    _Color ("Color", Color) = (1,1,1,1)
-    _Cutoff ("Cutoff", Range(0,1)) = 0.5
-    _Stroke ("Storke", Range(0,1)) = 0.1
-    _StrokeColor ("StrokeColor", Color) = (1,1,1,1)
+    _Scale ("Scale", Range(0,0.05)) = 0.01
+    _Cutoff ("Cutoff", Range(0,05)) = 0.01
 }
 
 SubShader
@@ -15,17 +12,17 @@ SubShader
         "Queue"="Transparent"
         "IgnoreProjector"="True"
         "RenderType"="Transparent"
-        // "PreviewType"="Plane"
+        "PreviewType"="Plane"
     }
 
-    Cull Off//— ‚à•`‰æ‚·‚é
-    // Lighting Off
-    ZWrite Off //transparent‚ÅŽg—p‚·‚é•”•ª
+    Cull Off
+    Lighting Off
+    ZWrite Off
     Blend One OneMinusSrcAlpha
 
     Pass
     {
-    CGPROGRAM
+        CGPROGRAM
         #pragma vertex vert
         #pragma fragment frag
         #pragma multi_compile_fog
@@ -35,41 +32,37 @@ SubShader
         struct appdata_t
         {
             float4 vertex   : POSITION;
-            float4 color    : COLOR;
             float2 texcoord : TEXCOORD0;
         };
 
         struct v2f
         {
             float4 vertex   : SV_POSITION;
-            fixed4 color    : COLOR;
             float2 texcoord : TEXCOORD0;
         };
 
-
-        sampler2D _MainTex;
-        half4 _Color;
+        fixed _Scale;
         fixed _Cutoff;
-        fixed _Stroke;
-        half4 _StrokeColor;
 
         v2f vert(appdata_t IN)
         {
             v2f OUT;
             OUT.vertex = UnityObjectToClipPos(IN.vertex);
             OUT.texcoord = IN.texcoord;
-            OUT.color = IN.color * _Color;
             return OUT;
         }
 
-        fixed4 frag (v2f i) : SV_Target
+        fixed4 frag (v2f i) : SV_Target 
         {
-            fixed4 color = tex2D(_MainTex, i.texcoord);
+            fixed2 uv = i.texcoord - 0.5;
+            fixed a = 1 / (uv.x * uv.x + uv.y * uv.y);
+            a *= _Scale;
+
+            fixed4 color = a;
             clip(color.a - _Cutoff);
-            color = color.a < _Stroke ? _StrokeColor : _Color;
             return color;
         }
-    ENDCG
-    }
+     ENDCG
+     }
 }
 }
