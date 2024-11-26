@@ -5,19 +5,20 @@ using UnityEngine;
 
 public class Marimo : MonoBehaviour
 {
+    [CustomLabel("ポイント")]
     [SerializeField] protected float _point = 1.0f;
+
+    [CustomLabel("現在の汚染ポイント")]
     [SerializeField] protected float _garbageValue = 0.0f;
+
+    [CustomLabel("汚染ポイント上限")]
     [SerializeField] protected int _maxGarbageValue = 5;
-    [SerializeField] protected string _name = "";
+
 
     public float Point
     {
         get { return _point; }
-    }
-
-    public string Name
-    {
-        get { return _name; }
+        set { _point = value; }
     }
 
     // Start is called before the first frame update
