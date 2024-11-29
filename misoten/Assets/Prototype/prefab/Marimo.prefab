@@ -254,15 +254,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: c0d5c93b1e75e2d4faaae5ef4beff108, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 0.4338983}
+  m_Size: {x: 5.9, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8015660797568526394
@@ -301,9 +301,9 @@ Transform:
   m_Children:
   - {fileID: 3007393555711953774}
   - {fileID: 8354126851733626528}
-  - {fileID: 7217530325082225418}
   - {fileID: 430904640956643326}
   - {fileID: 6988672491366811264}
+  - {fileID: 7217530325082225418}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5318292089184548353
@@ -450,6 +450,10 @@ MonoBehaviour:
   _render: {fileID: 5318292089184548353}
   _spriteRenderer: {fileID: 5318292089184548353}
   _childSpriteRender: {fileID: 911420899057077395}
+  _eyesSpriteRender: {fileID: 5253779134374426375}
+  _eyesSprite:
+  - {fileID: 21300000, guid: c8bdddbd134948246b5e580fc91e9c34, type: 3}
+  - {fileID: 21300000, guid: cc165c9db151dc445bec506a60f1d57e, type: 3}
   _nameText: {fileID: 2641949427431184931}
 --- !u!120 &544607155715530076
 LineRenderer:

@@ -34,7 +34,10 @@ public class Player : Marimo
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
+    [SerializeField] private SpriteRenderer _eyesSpriteRender;
+    [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
     [SerializeField] private GameObject _nameText;
+ 
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -52,7 +55,7 @@ public class Player : Marimo
 
     void Start()
     {
-
+        _eyesSpriteRender.sprite = _eyesSprite[0]; 
         _lineRend.enabled = false;
         _lineRend.positionCount = 2;
         _lineRend.widthMultiplier = 1.0f;
@@ -103,6 +106,7 @@ public class Player : Marimo
             _lineRend.SetPosition(0, _startPos);
             _isDrag = true;
             _maxLineLength = 0.0f;
+            _eyesSpriteRender.sprite = _eyesSprite[1];
         }
 
         // ƒ}ƒEƒX‚ð‰Ÿ‚µ‚Ä‚¢‚éŠÔ
@@ -172,6 +176,7 @@ public class Player : Marimo
             //Debug.Log(_holdPoint);
 
             _lineRend.enabled = false;
+            _eyesSpriteRender.sprite = _eyesSprite[0];
             _childSpriteRender.color = Color.white;
         }
 
