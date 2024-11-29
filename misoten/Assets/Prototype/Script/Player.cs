@@ -35,6 +35,7 @@ public class Player : Marimo
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
     [SerializeField] private GameObject _nameText;
+    [SerializeField] private GameObject _playerGravity;
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -62,6 +63,8 @@ public class Player : Marimo
         _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
         _render.sortingOrder = 2;
+
+        _playerGravity.GetComponent<PlayerGravityController>().GravitySetteing(this);
 
         StartCoroutine("Clean");
     }

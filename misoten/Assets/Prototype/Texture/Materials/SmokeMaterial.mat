@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GarbageRTMaterial
-  m_Shader: {fileID: 4800000, guid: 67c67da0546210842a86730ac5052427, type: 3}
+  m_Name: SmokeMaterial
+  m_Shader: {fileID: 202, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,15 +28,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: 53d93e17c451817499b0ede26f3a6fed, type: 2}
+        m_Texture: {fileID: 2800000, guid: cf1a2cc5fdb35754fb75f2019a62b467, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: ae691b175f43b384aa2ab17e0ef66e3e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -45,14 +41,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.65
     - _EnableExternalAlpha: 0
-    - _NoiseAmount: 0.01
-    - _Speed: 0.7
-    - _Stroke: 0.8
+    - _InvFade: 1
     m_Colors:
-    - _Color: {r: 0.6392157, g: 0.078431375, b: 0.74509805, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _StrokeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
