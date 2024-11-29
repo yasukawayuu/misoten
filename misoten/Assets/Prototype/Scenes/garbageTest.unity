@@ -29020,11 +29020,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &334192984 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4564588920899757540, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-  m_PrefabInstance: {fileID: 907309640}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &335469252
 GameObject:
   m_ObjectHideFlags: 0
@@ -67868,7 +67863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5630655247442295696, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_Simulated
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5726897486434360443, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_IsTrigger
@@ -67906,10 +67901,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 506882822454312921, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 331262394035305354, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1064430334}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
 --- !u!1 &931219786
 GameObject:
@@ -72986,27 +72978,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1064430332 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 331262394035305354, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-  m_PrefabInstance: {fileID: 907309640}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1064430334
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064430332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8223390eef360e42bad0373bff3aff5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _baseGravityScale: 1
-  _gravityForceField: {fileID: 1092694160}
-  _baseCollisionScale: 0.15
-  _gravityCollision: {fileID: 334192984}
 --- !u!1 &1086241398
 GameObject:
   m_ObjectHideFlags: 0
@@ -73550,11 +73521,6 @@ Transform:
   - {fileID: 2061871326}
   m_Father: {fileID: 863389380}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1092694160 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8025483068667135913, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-  m_PrefabInstance: {fileID: 907309640}
-  m_PrefabAsset: {fileID: 0}
 --- !u!330 &1092694162 stripped
 ParticleSystemForceField:
   m_CorrespondingSourceObject: {fileID: 2330034844001987844, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}

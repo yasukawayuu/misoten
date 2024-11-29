@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class RippleEffectController : MonoBehaviour
 {
-    public GameObject ripplePrefab;  // ≤®ºy•®•’•ß•Ø•»§Œ•◊•Ï•œ•÷§Ú≤Œ’’
+    public GameObject ripplePrefab;  // ≤®ºy•®•’•ß•Ø•»§Œ•◊•ÅEœ•÷§Ú≤Œ’’
 
     void Update()
     {
-        // •ﬁ•¶•π◊Û•Ø•Í•√•Ø §ﬁ§ø§œ •ø•√•¡§Úó ≥ˆ
+        // •ﬁ•¶•π◊Û•Ø•ÅE√•Ø §ﬁ§ø§œ •ø•√•¡§Úó ≥ÅE
         if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
-            // •π•Ø•Í©`•ÛŒª÷√£®•ﬁ•¶•π§ﬁ§ø§œ•ø•√•¡Œª÷√£©§Ú•Ô©`•Î•…◊˘òÀ§Àâ‰ìQ
+            // •π•Ø•ÅE`•ÛŒª÷√£®•ﬁ•¶•π§ﬁ§ø§œ•ø•√•¡Œª÷√£©§Ú•ÅE`•ÅE…◊˘òÀ§Àâ‰ìQ
             Vector3 screenPos = Input.GetMouseButtonDown(0) ? Input.mousePosition : (Vector3)Input.GetTouch(0).position;
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
             worldPos.z = 0;  // 2Dø’Ègƒ⁄§ŒŒª÷√§À‘O∂®
@@ -17,15 +17,14 @@ public class RippleEffectController : MonoBehaviour
             // ≤®ºy•®•’•ß•Ø•»§Ú•§•Û•π•ø•Û•πªØ
             GameObject rippleInstance = Instantiate(ripplePrefab, worldPos, Quaternion.identity);
 
-            // ≤®ºy•¢•À•·©`•∑•Á•Û§Ú‘Ÿ…˙
+            // ≤®ºy•¢•À•·©`•∑•Á•Û§Ú‘Ÿ…ÅE
             Animator animator = rippleInstance.GetComponentInChildren<Animator>();
             if (animator != null)
             {
-                animator.Play("RippleAnimation");  // ‘O∂®§∑§ø•¢•À•·©`•∑•Á•Û§Ú‘Ÿ…˙
+                animator.Play("RippleAnimation");  // ‘O∂®§∑§ø•¢•À•·©`•∑•Á•Û§Ú‘Ÿ…ÅE            }
             }
-
             // •¢•À•·©`•∑•Á•ÛΩK¡À··°¢•§•Û•π•ø•Û•π§Ú∆∆óâ
-            Destroy(rippleInstance, 0.5f);  // •¢•À•·©`•∑•Á•Û§ŒÈL§µ§¨0.5√Î§»Å¢∂®
+            Destroy(rippleInstance, 0.5f);  // •¢•À•·©`•∑•Á•Û§ŒÈL§µ§¨0.5√ÅE»Å¢∂®
         }
     }
 }
