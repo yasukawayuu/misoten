@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GarbageRTMaterial
-  m_Shader: {fileID: 4800000, guid: 67c67da0546210842a86730ac5052427, type: 3}
+  m_Name: GarbageRTSmoke
+  m_Shader: {fileID: 4800000, guid: dc1ec000ca1ff99479d738527339cdbe, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -45,14 +45,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.65
+    - _Cutoff: 0.35
     - _EnableExternalAlpha: 0
+    - _Intensity: 3.12
     - _NoiseAmount: 0.01
     - _Speed: 0.7
     - _Stroke: 0.8
+    - _Threshold: 0.285
     m_Colors:
-    - _Color: {r: 0.6392157, g: 0.078431375, b: 0.74509805, a: 1}
+    - _Color: {r: 0.7033455, g: 0.2066856, b: 0.7660377, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0.68301874, g: 0, b: 0, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _StrokeColor: {r: 1, g: 1, b: 1, a: 1}
+    - _StrokeColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []

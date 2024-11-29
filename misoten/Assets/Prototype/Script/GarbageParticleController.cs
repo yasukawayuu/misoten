@@ -71,13 +71,8 @@ public class GarbageParticleController : MonoBehaviour
             // 全てのオブジェクトとの衝突判定を行う
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(particlePosition, detectionRadius);
 
-            Debug.Log("1");
-
             foreach (var collider in hitColliders)
             {
-                // 任意のオブジェクトに対する処理
-                Debug.Log("2");
-
                 // Player タグを持つオブジェクトの例
                 if (collider.gameObject.tag == "Player")
                 {
@@ -122,6 +117,8 @@ public class GarbageParticleController : MonoBehaviour
 
         for (int i = 0; i < collisionCount; i++)
         {
+            Debug.Log("collisionCount " + collisionCount);
+
             Vector3 collisionPosition = collisionEvents[i].intersection;
 
             // パーティクルを衝突位置に基づいて検索
