@@ -47,7 +47,7 @@ Material:
     m_Floats:
     - _Cutoff: 0.35
     - _EnableExternalAlpha: 0
-    - _Intensity: 3.12
+    - _Intensity: 3.42
     - _NoiseAmount: 0.01
     - _Speed: 0.7
     - _Stroke: 0.8

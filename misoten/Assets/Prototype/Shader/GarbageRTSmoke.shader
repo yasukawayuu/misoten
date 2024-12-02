@@ -2,8 +2,6 @@ Shader "Metaball/GarbageRTSmoke" {
 Properties
 {
     _MainTex ("MainTex", 2D) = "white" {}
-    _GlowColor ("Glow Color", Color) = (1, 0, 0, 1)
-    _Intensity ("Glow Intensity", Range(0, 10)) = 2
 }
 
 SubShader
@@ -19,7 +17,7 @@ SubShader
     Cull Off//裏も描画する
     // Lighting Off
     ZWrite Off //transparentで使用する部分
-    Blend One OneMinusSrcAlpha
+    Blend One SrcAlpha //Blend One OneMinusSrcAlpha
 
     Pass
     {
@@ -46,8 +44,6 @@ SubShader
 
 
         sampler2D _MainTex;
-        float4 _GlowColor;
-        float _GlowIntensity;
 
         v2f vert(appdata_t IN)
         {
@@ -62,11 +58,8 @@ SubShader
         {
             fixed4 color = tex2D(_MainTex, i.texcoord);
 
-                     // グローの強調
-                fixed4 glow = _GlowColor * _GlowIntensity * color.a;
-                
-                // 最終的な色
-                return color;// + glow;
+            // 最終的な色
+            return color;
         }
 
 
