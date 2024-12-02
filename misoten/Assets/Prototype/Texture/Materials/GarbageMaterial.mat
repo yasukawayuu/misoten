@@ -10,15 +10,15 @@ Material:
   m_Name: GarbageMaterial
   m_Shader: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 2100000, guid: 7c0d49cd705fd6f459d9242751431196, type: 2}
-  m_ModifiedSerializedProperties: 2
+  m_ModifiedSerializedProperties: 18
   m_ValidKeywords:
   - _ALPHABLEND_ON
-  - _COLORCOLOR_ON
+  - _COLORADDSUBDIFF_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
@@ -32,8 +32,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _BlendOp: 0
+    - _ColorMode: 5
+    - _DstBlend: 1
+    - _Mode: 4
+    - _SrcBlend: 5
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.64303356, g: 0.123780586, b: 0.690566, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _ColorAddSubDiff: {r: -1, g: 1, b: 0, a: 0}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
