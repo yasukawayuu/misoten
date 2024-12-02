@@ -455,7 +455,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c8bdddbd134948246b5e580fc91e9c34, type: 3}
   - {fileID: 21300000, guid: cc165c9db151dc445bec506a60f1d57e, type: 3}
   _nameText: {fileID: 2641949427431184931}
-  _playerGravity: {fileID: 331262394035305354}
 --- !u!120 &544607155715530076
 LineRenderer:
   serializedVersion: 2
@@ -477,7 +476,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 2527368a4cfc3fa43b77008e46da9ea9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -518,7 +517,7 @@ LineRenderer:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -559,10 +558,10 @@ LineRenderer:
       m_NumColorKeys: 4
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 10
+    numCapVertices: 0
     alignment: 0
     textureMode: 0
-    textureScale: {x: 1, y: 1}
+    textureScale: {x: 1, y: 0.5}
     shadowBias: 0.5
     generateLightingData: 0
   m_MaskInteraction: 0
@@ -722,11 +721,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
---- !u!1 &331262394035305354 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3956838532619083696, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
-  m_PrefabInstance: {fileID: 3634794994151056442}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7217530325082225418 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6221920097890426672, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
