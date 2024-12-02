@@ -42,11 +42,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _Float: 0.01
+    - _Garadation: -1
+    - _Max: 1
+    - _Min: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Thickness: 0.0202
+    - _Thickness: 0.02
     m_Colors:
     - _Color: {r: 0, g: 2.363667, b: 10.556064, a: 1}
+    - _PlayerColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4901001382246857602
 MonoBehaviour:

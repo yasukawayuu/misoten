@@ -72,7 +72,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
             {
                 GameObject player = Instantiate(_player, data.position,Quaternion.Euler(new Vector3(0,0,0)));
                 player.GetComponent<Player>().Point = data.point;
-                player.GetComponent<SpriteRenderer>().material.SetColor("_BeforeColor", data.color);
+                player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;

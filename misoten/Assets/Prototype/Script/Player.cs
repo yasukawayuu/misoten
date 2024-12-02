@@ -87,7 +87,11 @@ public class Player : Marimo
             _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
 
-        _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
+        // _garbageValueを最大値に基づいて、-1から1の範囲に変換
+        float gradationValue = Mathf.Lerp(-1.0f, 1.0f, _garbageValue / _maxGarbageValue);
+
+        // シェーダーに値を設定
+        _spriteRenderer.material.SetFloat("_Garadation", gradationValue);
 
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
