@@ -51,7 +51,7 @@ Material:
     - _Speed: 0.7
     - _Stroke: 0.8
     m_Colors:
-    - _Color: {r: 0.6096165, g: 0.13040222, b: 0.6981132, a: 1}
+    - _Color: {r: 0.6392157, g: 0.078431375, b: 0.74509805, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _StrokeColor: {r: 1, g: 1, b: 1, a: 1}
