@@ -42,7 +42,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private async void ConnectWebSocket()
     {
-        websocket = new WebSocket("ws://localhost:8080");
+        websocket = new WebSocket("wss://marimo-king.com:8080");
 
         websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -248,7 +248,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 PlayerSync(_players[_clientId]); // プレイヤーの位置情報をサーバーに送信
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01667f);
         }
     }
     async void OnApplicationQuit()
