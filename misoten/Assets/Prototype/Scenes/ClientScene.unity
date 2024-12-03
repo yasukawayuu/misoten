@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &737163781
+--- !u!1001 &720165789
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -130,17 +130,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 506882822454312921, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4952026368633133954, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.5560204
       objectReference: {fileID: 0}
     - target: {fileID: 4952026368633133954, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.48917842
       objectReference: {fileID: 0}
     - target: {fileID: 4952026368633133954, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -174,10 +170,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5318292089184548353, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: c5b776f10e82e324a93f9253f4517c15, type: 2}
     - target: {fileID: 8015660797568526394, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
       propertyPath: m_Name
       value: Marimo
@@ -329,4 +321,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 907820103}
-  - {fileID: 737163781}
+  - {fileID: 720165789}
