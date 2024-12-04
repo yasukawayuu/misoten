@@ -4,18 +4,41 @@ using UnityEngine;
 
 public class EffectRenderTextureResize : MonoBehaviour
 {
-    [SerializeField] private Camera effectCamera;
+    [SerializeField] private Camera _effectCamera;
+    [SerializeField] private RenderTexture _renderTexture;
+
+    private Vector2Int _previousScreenSize;
+
+    void Awake()
+    {
+        _previousScreenSize = new Vector2Int(Screen.width, Screen.height);
+        OnScreenSizeChanged(_previousScreenSize);
+    }
 
     void Start()
     {
-        if (effectCamera == null)
+        if (_effectCamera == null)
         {
-            effectCamera = Camera.main;
+            _effectCamera = Camera.main;
         }
 
-        float height = effectCamera.orthographicSize * 2;
-        float width = height * effectCamera.aspect;
+        float height = _effectCamera.orthographicSize * 2;
+        float width = height * _effectCamera.aspect;
 
         transform.localScale = new Vector3(width, height, 0);
+    }
+
+    void Update()
+    {
+        Vector2Int currentScreenSize = new Vector2Int(Screen.width, Screen.height);
+        if (currentScreenSize != _previousScreenSize)
+        {
+            OnScreenSizeChanged(currentScreenSize);
+        }
+    }
+
+    void OnScreenSizeChanged(Vector2Int newSize)
+    {
+        _renderTexture = new RenderTexture(newSize.x, newSize.y, 16);
     }
 }
