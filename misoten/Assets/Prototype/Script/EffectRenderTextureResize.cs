@@ -4,41 +4,48 @@ using UnityEngine;
 
 public class EffectRenderTextureResize : MonoBehaviour
 {
-    [SerializeField] private Camera _effectCamera;
     [SerializeField] private RenderTexture _renderTexture;
-
+    [SerializeField] private Camera _effectCamera;
+    private Camera _mainCamera;
     private Vector2Int _previousScreenSize;
-
-    void Awake()
-    {
-        _previousScreenSize = new Vector2Int(Screen.width, Screen.height);
-        OnScreenSizeChanged(_previousScreenSize);
-    }
 
     void Start()
     {
-        if (_effectCamera == null)
-        {
-            _effectCamera = Camera.main;
-        }
+        _mainCamera = Camera.main;
 
-        float height = _effectCamera.orthographicSize * 2;
-        float width = height * _effectCamera.aspect;
-
-        transform.localScale = new Vector3(width, height, 0);
+        int width = (int)_mainCamera.pixelRect.width;
+        int height = (int)_mainCamera.pixelRect.height;
+        _previousScreenSize = new Vector2Int(width, height);
+        OnScreenSizeChanged(_previousScreenSize);
     }
 
     void Update()
     {
-        Vector2Int currentScreenSize = new Vector2Int(Screen.width, Screen.height);
+        int width = (int)_mainCamera.pixelRect.width;
+        int height = (int)_mainCamera.pixelRect.height;
+        Vector2Int currentScreenSize = new Vector2Int(width, height);
         if (currentScreenSize != _previousScreenSize)
         {
             OnScreenSizeChanged(currentScreenSize);
+            _previousScreenSize = currentScreenSize;
         }
     }
 
     void OnScreenSizeChanged(Vector2Int newSize)
     {
-        _renderTexture = new RenderTexture(newSize.x, newSize.y, 16);
+        // カメラ更新
+        _effectCamera.rect = _mainCamera.rect;
+        _effectCamera.aspect = _mainCamera.aspect;
+
+        // renderTextureのsizeを更新
+        _renderTexture.Release();
+        _renderTexture.width = newSize.x;
+        _renderTexture.height = newSize.y;
+        _renderTexture.Create();
+
+        float height = _mainCamera.orthographicSize * 2;
+        float width = height * _mainCamera.aspect;
+
+        transform.localScale = new Vector3(width, height, 0);
     }
 }
