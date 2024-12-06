@@ -42,7 +42,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private async void ConnectWebSocket()
     {
-        websocket = new WebSocket("wss://marimo-king.com:8080");
+        websocket = new WebSocket("ws://localhost:8080");
 
         websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -98,7 +98,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 _players[data.id].transform.position = data.position;
                 _players[data.id].GetComponent<Player>().Point = data.point;
                 _players[data.id].GetComponent<Rigidbody2D>().velocity = data.velocity;
-                _players[data.id].GetComponent<Rigidbody2D>().angularVelocity = data.angularVelocity;        
+                _players[data.id].GetComponent<Rigidbody2D>().angularVelocity = data.angularVelocity;
             }
             else if(data.type == "smallGarbagePosition")
             {
@@ -235,8 +235,11 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private IEnumerator PingSync()
     {
-        SendPing();
-        yield return new WaitForSeconds(2f);
+        while(true)
+        {
+            SendPing();
+            yield return new WaitForSeconds(2f);
+        }
     }
 
     private IEnumerator SendPlayerPostion()
@@ -251,9 +254,9 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
             yield return new WaitForSeconds(0.01667f);
         }
     }
-    async void OnApplicationQuit()
+    private async void OnApplicationQuit()
     {
-        await websocket.Close();
+        await websocket.Close();    
     }
 
     public async void CloseWebSocket()
