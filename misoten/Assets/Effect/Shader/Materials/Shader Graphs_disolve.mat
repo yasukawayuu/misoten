@@ -57,6 +57,6 @@ Material:
     - _0_3: 0
     - _QueueControl: 0
     - _QueueOffset: -1
-    - _cliptime: 1
+    - _cliptime: 0.44
     m_Colors: []
   m_BuildTextureStacks: []
