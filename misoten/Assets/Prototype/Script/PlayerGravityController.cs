@@ -17,7 +17,6 @@ public class PlayerGravityController : MonoBehaviour
     public void GravitySetteing(Player player)
     {
         _player = player;
-        Debug.Log("test");
     }
 
     void Update()
