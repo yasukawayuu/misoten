@@ -42,7 +42,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
 
     private async void ConnectWebSocket()
     {
-        websocket = new WebSocket("ws://localhost:8080");
+        websocket = new WebSocket("wss://marimo-king.com:8080");
 
         websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -72,7 +72,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
             {
                 GameObject player = Instantiate(_player, data.position,Quaternion.Euler(new Vector3(0,0,0)));
                 player.GetComponent<Player>().Point = data.point;
-                player.GetComponent<SpriteRenderer>().material.SetColor("_BeforeColor", data.color);
+                player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
@@ -248,7 +248,7 @@ public class WebSocketClient : SingletonMonoBehaviour<WebSocketClient>
                 PlayerSync(_players[_clientId]); // プレイヤーの位置情報をサーバーに送信
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01667f);
         }
     }
     async void OnApplicationQuit()

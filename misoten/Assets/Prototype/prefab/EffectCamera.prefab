@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2296163610766428480}
   - component: {fileID: 5580909443039205735}
-  - component: {fileID: 4049365256772178224}
   - component: {fileID: 5219261301860798539}
   m_Layer: 0
   m_Name: EffectCamera
@@ -86,14 +85,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4049365256772178224
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2481563992541367051}
-  m_Enabled: 0
 --- !u!114 &5219261301860798539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +192,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2f78926bab759594fa698f4896b570b2, type: 2}
+  - {fileID: 2100000, guid: 678e4ecfe2c882347b4ca7d8ab1392b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -257,4 +248,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf7988417e1fff40a6d8bfb18fdf0e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectCamera: {fileID: 5580909443039205735}
+  _effectCamera: {fileID: 5580909443039205735}
+  _renderTexture: {fileID: 8400000, guid: 53d93e17c451817499b0ede26f3a6fed, type: 2}

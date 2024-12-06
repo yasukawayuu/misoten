@@ -34,7 +34,11 @@ public class Player : Marimo
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _childSpriteRender;
+    [SerializeField] private SpriteRenderer _eyesSpriteRender;
+    [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
     [SerializeField] private GameObject _nameText;
+    [SerializeField] private PlayerGravityController _playerGravityController;
+
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -52,7 +56,7 @@ public class Player : Marimo
 
     void Start()
     {
-
+        _eyesSpriteRender.sprite = _eyesSprite[0]; 
         _lineRend.enabled = false;
         _lineRend.positionCount = 2;
         _lineRend.widthMultiplier = 1.0f;
@@ -62,6 +66,8 @@ public class Player : Marimo
         _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
         _render.sortingOrder = 2;
+
+        _playerGravityController.GravitySetteing(this);
 
         StartCoroutine("Clean");
     }
@@ -84,7 +90,11 @@ public class Player : Marimo
             _scale = 1.0f;
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
 
-        _spriteRenderer.material.SetFloat("_BeforeColorAmount", ((_garbageValue / _maxGarbageValue) * 2.0f - 1.0f) * -1.0f);
+        // _garbageValueを最大値に基づいて、-1から1の範囲に変換
+        float gradationValue = Mathf.Lerp(-1.0f, 1.0f, _garbageValue / _maxGarbageValue);
+
+        // シェーダーに値を設定
+        _spriteRenderer.material.SetFloat("_Garadation", gradationValue);
 
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
@@ -103,6 +113,7 @@ public class Player : Marimo
             _lineRend.SetPosition(0, _startPos);
             _isDrag = true;
             _maxLineLength = 0.0f;
+            _eyesSpriteRender.sprite = _eyesSprite[1];
         }
 
         // マウスを押している間
@@ -115,7 +126,7 @@ public class Player : Marimo
             float distance = Vector2.Distance(currentMousePos, _startPos) * cameraSizeRatio;
 
             // ラインの色と長さ制限を設定
-            if (distance > 1.0f * cameraSizeRatio && distance <= 2.0f * cameraSizeRatio)
+            if (distance <= 2.0f * cameraSizeRatio)
             {
                 _childSpriteRender.color = Color.gray;
                 _maxLineLength = 2.0f * cameraSizeRatio;
@@ -172,6 +183,7 @@ public class Player : Marimo
             //Debug.Log(_holdPoint);
 
             _lineRend.enabled = false;
+            _eyesSpriteRender.sprite = _eyesSprite[0];
             _childSpriteRender.color = Color.white;
         }
 
