@@ -77,6 +77,7 @@ public class GarbageParticleController : MonoBehaviour
                 if (collider.gameObject.tag == "Player")
                 {
                     collider.gameObject.GetComponent<Player>().EatGarbage();
+
                 }
             }
 

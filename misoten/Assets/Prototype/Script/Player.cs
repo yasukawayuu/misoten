@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Player : Marimo
 {
     [CustomLabel("最低移動量")]
-    [SerializeField] private float _minSpeed = 900.0f;
+    [SerializeField] private float _minSpeed = 0.01f;
 
     [CustomLabel("ローカルプレイヤー")]
     [SerializeField] private bool _isLocalPlayer = false;
@@ -27,9 +27,8 @@ public class Player : Marimo
     private bool _isNormal = true;      //上限に達してるか
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
-    private float _holdPoint = 900.0f;　//ホールドポイント
+    private float _holdPoint = 0.01f;　 //ホールドポイント
 
-    [SerializeField] private Rigidbody2D _rigid2d;
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -38,7 +37,6 @@ public class Player : Marimo
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
     [SerializeField] private GameObject _nameText;
     [SerializeField] private PlayerGravityController _playerGravityController;
-
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -82,8 +80,6 @@ public class Player : Marimo
 
     void FixedUpdate()
     {
-        _rigid2d.velocity *= 0.85f;
-
         if( _point > 1.0f )
             _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
@@ -153,7 +149,7 @@ public class Player : Marimo
             // ラインの長さを制限
             Vector2 limitedDirection = Vector2.ClampMagnitude(direction, _maxLineLength);
             Vector2 endPoint = _startPos + limitedDirection;
-
+            
             _lineRend.SetPosition(1, endPoint);
         }
 
@@ -164,7 +160,7 @@ public class Player : Marimo
             Vector2 startDirection = -1 * (endPos - _startPos).normalized;
 
             float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
-            //Debug.Log(cameraSizeRatio);
+
             // ポイント消費
             if (_maxLineLength <= 2.0f * cameraSizeRatio)
                 _holdPoint = _minSpeed;
@@ -178,9 +174,7 @@ public class Player : Marimo
             
             // 力を加える
             if (_maxLineLength > 0.0f)
-                _rigid2d.AddForce(startDirection * _holdPoint);
-
-            //Debug.Log(_holdPoint);
+                ServerManager.Instance.SendInputToServer(startDirection * _holdPoint);
 
             _lineRend.enabled = false;
             _eyesSpriteRender.sprite = _eyesSprite[0];
