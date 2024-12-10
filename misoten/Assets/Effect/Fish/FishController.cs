@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class FishController : MonoBehaviour
 {
-    public float speed = 2f; // 魚の移動速度
-    public float angleOffset = -90f; // 角度のオフセット。Unityエディタで調整可能
-    public float destroyDistanceMultiplier = 3f; // 破壊位置の倍率
-    public Camera mainCamera; // カメラ、視野を判定するために使用
+    public float speed = 2f; // 嫑偺堏摦懍搙
+    public float angleOffset = -90f; // 妏搙偺僆僼僙僢僩丅Unity僄僨傿僞偱挷惍壜擻
+    public float destroyDistanceMultiplier = 3f; // 攋夡埵抲偺攞棪
+    public Camera mainCamera; // 僇儊儔丄帇栰傪敾掕偡傞偨傔偵巊梡
 
     private Vector3 targetPosition;
 
     private void Start()
     {
-        // Inspectorでカメラが割り当てられていない場合、シーン内のMain Cameraを自動で取得
+        // Inspector偱僇儊儔偑妱傝摉偰傜傟偰偄側偄応崌丄僔乕儞撪偺Main Camera傪帺摦偱庢摼
         if (mainCamera == null)
         {
-            mainCamera = Camera.main; // 主カメラを取得
+            mainCamera = Camera.main; // 庡僇儊儔傪庢摼
         }
     }
 
@@ -22,42 +22,42 @@ public class FishController : MonoBehaviour
     {
         targetPosition = target;
 
-        // 方向を計算して回転を調整
+        // 曽岦傪寁嶼偟偰夞揮傪挷惍
         Vector3 direction = target - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 角度を計算
-        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // 角度オフセットを加える
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 妏搙傪寁嶼
+        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // 妏搙僆僼僙僢僩傪壛偊傞
     }
 
     private void Update()
     {
-        // 魚をターゲット位置に向けて移動
+        // 嫑傪僞乕僎僢僩埵抲偵岦偗偰堏摦
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        // 魚がターゲット位置に到達したかチェック
+        // 嫑偑僞乕僎僢僩埵抲偵摓払偟偨偐僠僃僢僋
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // カメラの視野範囲を取得
+            // 僇儊儔偺帇栰斖埻傪庢摼
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(targetPosition);
 
-            // 2DゲームではカメラのZ値は固定されるべき
-            screenPosition.z = 0f; // z値を0に設定。xとy軸のみが重要
+            // 2D僎乕儉偱偼僇儊儔偺Z抣偼屌掕偝傟傞傋偒
+            screenPosition.z = 0f; // z抣傪0偵愝掕丅x偲y幉偺傒偑廳梫
 
-            // 目標位置が画面内にあるかを判定
+            // 栚昗埵抲偑夋柺撪偵偁傞偐傪敾掕
             if (screenPosition.x < 0 || screenPosition.x > Screen.width || screenPosition.y < 0 || screenPosition.y > Screen.height)
             {
-                // 画面外の場合、魚を破壊
+                // 夋柺奜偺応崌丄嫑傪攋夡
                 Destroy(gameObject);
             }
             else
             {
-                // 目標位置が視野内にあれば、ターゲット位置を更新
-                // 破壊位置のオフセットを計算
+                // 栚昗埵抲偑帇栰撪偵偁傟偽丄僞乕僎僢僩埵抲傪峏怴
+                // 攋夡埵抲偺僆僼僙僢僩傪寁嶼
                 Vector3 direction = targetPosition - transform.position;
                 Vector3 offsetPosition = direction.normalized * destroyDistanceMultiplier;
 
-                // ターゲット位置を延長
+                // 僞乕僎僢僩埵抲傪墑挿
                 targetPosition = targetPosition + offsetPosition;
-                SetTargetPosition(targetPosition); // ターゲット位置と角度を更新
+                SetTargetPosition(targetPosition); // 僞乕僎僢僩埵抲偲妏搙傪峏怴
             }
         }
     }

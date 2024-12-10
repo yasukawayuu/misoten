@@ -2,29 +2,32 @@ using UnityEngine;
 
 public class RippleEffectController : MonoBehaviour
 {
-    public GameObject ripplePrefab;  // ｲｨｼy･ｨ･ﾕ･ｧ･ｯ･ﾈ､ﾎ･ﾗ･・ﾏ･ﾖ､ﾎﾕﾕ
+    public GameObject ripplePrefab;  // リップル（波紋）エフェクトのプレハブ
 
     void Update()
     {
-        // ･ﾞ･ｦ･ｹﾗｯ･・ﾃ･ｯ ､ﾞ､ｿ､ﾏ ･ｿ･ﾃ･ﾁ､ﾊｳ・
+        // マウスのクリックまたはタッチ操作を検出
         if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
         {
-            // ･ｹ･ｯ･・`･ｻﾖﾃ｣ｨ･ﾞ･ｦ･ｹ､ﾞ､ｿ､ﾏ･ｿ･ﾃ･ﾁﾎｻﾖﾃ｣ｩ､・`･・ﾉﾗﾋ､ﾋ我轍
+            // マウスまたはタッチ入力のスクリーン座標を取得
             Vector3 screenPos = Input.GetMouseButtonDown(0) ? Input.mousePosition : (Vector3)Input.GetTouch(0).position;
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            worldPos.z = 0;  // 2Dｿﾕ馮ﾄﾚ､ﾎﾎｻﾖﾃ､ﾋﾔOｶｨ
 
-            // ｲｨｼy･ｨ･ﾕ･ｧ･ｯ･ﾈ､､･ｹ･ｿ･ｹｻｯ
+            // スクリーン座標をワールド座標に変換
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+            worldPos.z = 0;  // 2D空間での使用のため、Z座標を0に固定
+
+            // リップルエフェクトのインスタンスを生成
             GameObject rippleInstance = Instantiate(ripplePrefab, worldPos, Quaternion.identity);
 
-            // ｲｨｼy･｢･ﾋ･皓`･ｷ･逾ﾙﾉ・
+            // リップルエフェクトのアニメーションを再生
             Animator animator = rippleInstance.GetComponentInChildren<Animator>();
             if (animator != null)
             {
-                animator.Play("RippleAnimation");  // ﾔOｶｨ､ｷ､ｿ･｢･ﾋ･皓`･ｷ･逾ﾙﾉ・            }
+                animator.Play("RippleAnimation");  // リップルアニメーションの再生
             }
-            // ･｢･ﾋ･皓`･ｷ･逾Kﾁﾋ矣｡｢･､･ｹ･ｿ･ｹ､ﾆ莱
-            Destroy(rippleInstance, 0.5f);  // ･｢･ﾋ･皓`･ｷ･逾ﾎ餃､ｵ､ｬ0.5ﾃ・ﾈ△ｶｨ
+
+            // リップルエフェクトを一定時間後に破棄
+            Destroy(rippleInstance, 0.5f);  // 0.5秒後にオブジェクトを削除
         }
     }
 }

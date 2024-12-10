@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class FishSpawner : MonoBehaviour
 {
-    public GameObject[] fishPrefabs; // 複数の魚のプレハブを格納
-    public Camera mainCamera; // メインカメラ
-    public float spawnInterval = 3f; // 魚の生成間隔
-    private GameObject lastSpawnedFishPrefab = null; // 最後に生成された魚のプレハブ（最初のプレハブかどうかを判断）
+    public GameObject[] fishPrefabs; // 暋悢偺嫑偺僾儗僴僽傪奿擺
+    public Camera mainCamera; // 儊僀儞僇儊儔
+    public float spawnInterval = 3f; // 嫑偺惗惉娫妘
+    private GameObject lastSpawnedFishPrefab = null; // 嵟屻偵惗惉偝傟偨嫑偺僾儗僴僽乮嵟弶偺僾儗僴僽偐偳偆偐傪敾抐乯
 
     private void Start()
     {
-        // 魚を定期的に生成するコルーチンを開始
+        // 嫑傪掕婜揑偵惗惉偡傞僐儖乕僠儞傪奐巒
         StartCoroutine(SpawnFishCoroutine());
     }
 
@@ -18,72 +18,72 @@ public class FishSpawner : MonoBehaviour
     {
         while (true)
         {
-            // 魚を生成
+            // 嫑傪惗惉
             SpawnFish();
-            // 次の生成まで待機
+            // 師偺惗惉傑偱懸婡
             yield return new WaitForSeconds(spawnInterval);
         }
     }
 
     private void SpawnFish()
     {
-        // カメラの四隅のスクリーン座標を取得
+        // 僇儊儔偺巐嬿偺僗僋儕乕儞嵗昗傪庢摼
         Vector3 screenBottomLeft = mainCamera.ScreenToWorldPoint(new Vector3(0, 0, mainCamera.nearClipPlane));
         Vector3 screenTopRight = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.nearClipPlane));
 
-        // ランダムに位置を決定：画面外のどの辺から生成するか（左、右、上、下）
+        // 儔儞僟儉偵埵抲傪寛掕丗夋柺奜偺偳偺曈偐傜惗惉偡傞偐乮嵍丄塃丄忋丄壓乯
         Vector3 spawnPosition = Vector3.zero;
         Vector3 targetPosition = Vector3.zero;
-        int side = Random.Range(0, 4); // 0:左, 1:右, 2:上, 3:下
+        int side = Random.Range(0, 4); // 0:嵍, 1:塃, 2:忋, 3:壓
 
         switch (side)
         {
-            case 0: // 左側から生成、右側に消える
+            case 0: // 嵍懁偐傜惗惉丄塃懁偵徚偊傞
                 spawnPosition = new Vector3(screenBottomLeft.x - 1, Random.Range(screenBottomLeft.y, screenTopRight.y), 0);
                 targetPosition = new Vector3(screenTopRight.x + 1, Random.Range(screenBottomLeft.y, screenTopRight.y), 0);
                 break;
-            case 1: // 右側から生成、左側に消える
+            case 1: // 塃懁偐傜惗惉丄嵍懁偵徚偊傞
                 spawnPosition = new Vector3(screenTopRight.x + 1, Random.Range(screenBottomLeft.y, screenTopRight.y), 0);
                 targetPosition = new Vector3(screenBottomLeft.x - 1, Random.Range(screenBottomLeft.y, screenTopRight.y), 0);
                 break;
-            case 2: // 上側から生成、下側に消える
+            case 2: // 忋懁偐傜惗惉丄壓懁偵徚偊傞
                 spawnPosition = new Vector3(Random.Range(screenBottomLeft.x, screenTopRight.x), screenTopRight.y + 1, 0);
                 targetPosition = new Vector3(Random.Range(screenBottomLeft.x, screenTopRight.x), screenBottomLeft.y - 1, 0);
                 break;
-            case 3: // 下側から生成、上側に消える
+            case 3: // 壓懁偐傜惗惉丄忋懁偵徚偊傞
                 spawnPosition = new Vector3(Random.Range(screenBottomLeft.x, screenTopRight.x), screenBottomLeft.y - 1, 0);
                 targetPosition = new Vector3(Random.Range(screenBottomLeft.x, screenTopRight.x), screenTopRight.y + 1, 0);
                 break;
         }
 
-        // 魚のプレハブをランダムに選択
+        // 嫑偺僾儗僴僽傪儔儞僟儉偵慖戰
         GameObject selectedFishPrefab = fishPrefabs[Random.Range(0, fishPrefabs.Length)];
 
-        // 最初のプレハブが生成される場合、10から20匹の魚を生成
+        // 嵟弶偺僾儗僴僽偑惗惉偝傟傞応崌丄10偐傜20旵偺嫑傪惗惉
         if (selectedFishPrefab == fishPrefabs[0] && lastSpawnedFishPrefab != selectedFishPrefab)
         {
-            int numberOfFishToSpawn = Random.Range(10, 20); // 10から20匹の魚をランダムに生成
-            int maxColumns = 3; // 1行あたり最大3匹の魚
-            int rows = Mathf.CeilToInt(numberOfFishToSpawn / (float)maxColumns); // 必要な行数を計算
+            int numberOfFishToSpawn = Random.Range(10, 20); // 10偐傜20旵偺嫑傪儔儞僟儉偵惗惉
+            int maxColumns = 3; // 1峴偁偨傝嵟戝3旵偺嫑
+            int rows = Mathf.CeilToInt(numberOfFishToSpawn / (float)maxColumns); // 昁梫側峴悢傪寁嶼
 
-            // 複数の魚を生成
+            // 暋悢偺嫑傪惗惉
             for (int row = 0; row < rows; row++)
             {
-                // 各行の開始位置を計算
-                Vector3 rowStartPosition = spawnPosition + new Vector3(row * 1.5f, 0, 0); // 各行の間隔（1.5fは例示値、調整可能）
+                // 奺峴偺奐巒埵抲傪寁嶼
+                Vector3 rowStartPosition = spawnPosition + new Vector3(row * 1.5f, 0, 0); // 奺峴偺娫妘乮1.5f偼椺帵抣丄挷惍壜擻乯
 
                 for (int col = 0; col < maxColumns; col++)
                 {
-                    if ((row * maxColumns + col) >= numberOfFishToSpawn) break; // 必要な数を超えないようにする
+                    if ((row * maxColumns + col) >= numberOfFishToSpawn) break; // 昁梫側悢傪挻偊側偄傛偆偵偡傞
 
-                    // 重なりを避けるためにランダムに位置をオフセット
+                    // 廳側傝傪旔偗傞偨傔偵儔儞僟儉偵埵抲傪僆僼僙僢僩
                     Vector3 offset = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-                    Vector3 fishPosition = rowStartPosition + new Vector3(col * 1.5f, 0, 0) + offset; // 各魚の位置
+                    Vector3 fishPosition = rowStartPosition + new Vector3(col * 1.5f, 0, 0) + offset; // 奺嫑偺埵抲
                     GameObject fish = Instantiate(selectedFishPrefab, fishPosition, Quaternion.identity);
                     FishController fishController = fish.GetComponent<FishController>();
                     if (fishController != null)
                     {
-                        // 目標位置を設定
+                        // 栚昗埵抲傪愝掕
                         fishController.SetTargetPosition(targetPosition);
                     }
                 }
@@ -91,17 +91,17 @@ public class FishSpawner : MonoBehaviour
         }
         else
         {
-            // 1匹だけの魚を生成
+            // 1旵偩偗偺嫑傪惗惉
             GameObject fish = Instantiate(selectedFishPrefab, spawnPosition, Quaternion.identity);
             FishController fishController = fish.GetComponent<FishController>();
             if (fishController != null)
             {
-                // 目標位置を設定
+                // 栚昗埵抲傪愝掕
                 fishController.SetTargetPosition(targetPosition);
             }
         }
 
-        // 最後に生成された魚のプレハブを更新
+        // 嵟屻偵惗惉偝傟偨嫑偺僾儗僴僽傪峏怴
         lastSpawnedFishPrefab = selectedFishPrefab;
     }
 }

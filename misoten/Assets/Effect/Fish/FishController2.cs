@@ -2,53 +2,53 @@ using UnityEngine;
 
 public class FishController2 : MonoBehaviour
 {
-    public float speed = 2f; // 魚の基礎移動速度
-    public float angleOffset = -90f; // 角度オフセット
-    public float destroyDistanceMultiplier = 3f; // 破壊位置の倍率
-    public Camera mainCamera; // カメラ、視野を判定するために使用
+    public float speed = 2f; // 嫑偺婎慴堏摦懍搙
+    public float angleOffset = -90f; // 妏搙僆僼僙僢僩
+    public float destroyDistanceMultiplier = 3f; // 攋夡埵抲偺攞棪
+    public Camera mainCamera; // 僇儊儔丄帇栰傪敾掕偡傞偨傔偵巊梡
 
-    [Header("ランダム化設定")]
-    public Vector2 sizeRange = new Vector2(0.5f, 2f); // 魚のサイズ範囲
-    public Vector2 speedRange = new Vector2(1f, 5f); // 魚の速度範囲
-    public float largeFishSizeThreshold = 1.5f; // 大きな魚のサイズ閾値
+    [Header("儔儞僟儉壔愝掕")]
+    public Vector2 sizeRange = new Vector2(0.5f, 2f); // 嫑偺僒僀僘斖埻
+    public Vector2 speedRange = new Vector2(1f, 5f); // 嫑偺懍搙斖埻
+    public float largeFishSizeThreshold = 1.5f; // 戝偒側嫑偺僒僀僘鑷抣
 
     private Vector3 targetPosition;
 
     private void Start()
     {
-        // mainCameraが設定されていない場合、シーン内のメインカメラを取得
+        // mainCamera偑愝掕偝傟偰偄側偄応崌丄僔乕儞撪偺儊僀儞僇儊儔傪庢摼
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
         }
 
-        // 魚のサイズと速度をランダムに設定
+        // 嫑偺僒僀僘偲懍搙傪儔儞僟儉偵愝掕
         RandomizeFish();
 
-        // 初期方向の設定
+        // 弶婜曽岦偺愝掕
         // SetInitialDirection();
-        SetTargetPosition(targetPosition); // ターゲット位置と角度を更新
+        SetTargetPosition(targetPosition); // 僞乕僎僢僩埵抲偲妏搙傪峏怴
     }
 
-    // 魚の移動先位置を設定
+    // 嫑偺堏摦愭埵抲傪愝掕
     public void SetTargetPosition(Vector3 target)
     {
         targetPosition = target;
 
-        // 目標位置に向かう方向を計算し、回転を調整
+        // 栚昗埵抲偵岦偐偆曽岦傪寁嶼偟丄夞揮傪挷惍
         Vector3 direction = target - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 角度を計算
-        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // 角度オフセットを加える
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // 妏搙傪寁嶼
+        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // 妏搙僆僼僙僢僩傪壛偊傞
     }
 
-    // 魚のサイズと速度をランダムに設定
+    // 嫑偺僒僀僘偲懍搙傪儔儞僟儉偵愝掕
     private void RandomizeFish()
     {
         bool largeFishExists = false;
-        FishController2[] fishes = FindObjectsOfType<FishController2>(); // シーン内のすべてのFishController2を取得
+        FishController2[] fishes = FindObjectsOfType<FishController2>(); // 僔乕儞撪偺偡傋偰偺FishController2傪庢摼
         foreach (FishController2 fish in fishes)
         {
-            // 大きな魚が存在するか確認
+            // 戝偒側嫑偑懚嵼偡傞偐妋擣
             if (fish.transform.localScale.x >= largeFishSizeThreshold)
             {
                 largeFishExists = true;
@@ -56,51 +56,51 @@ public class FishController2 : MonoBehaviour
             }
         }
 
-        // 魚のサイズをランダムに設定
+        // 嫑偺僒僀僘傪儔儞僟儉偵愝掕
         float randomSize = Random.Range(sizeRange.x, sizeRange.y);
 
-        // 大きな魚が存在し、ランダムに選ばれたサイズが閾値以上の場合、サイズを小さく調整
+        // 戝偒側嫑偑懚嵼偟丄儔儞僟儉偵慖偽傟偨僒僀僘偑鑷抣埲忋偺応崌丄僒僀僘傪彫偝偔挷惍
         if (largeFishExists && randomSize >= largeFishSizeThreshold)
         {
             randomSize = Random.Range(sizeRange.x, largeFishSizeThreshold);
         }
 
-        // 魚のスケールを設定
+        // 嫑偺僗働乕儖傪愝掕
         transform.localScale = new Vector3(randomSize, randomSize, 1f);
 
-        // サイズに基づいて速度を調整
+        // 僒僀僘偵婎偯偄偰懍搙傪挷惍
         float sizeFactor = (randomSize - sizeRange.x) / (sizeRange.y - sizeRange.x);
-        speed = Mathf.Lerp(speedRange.y, speedRange.x, sizeFactor); // サイズに応じて速度をリニア補間
+        speed = Mathf.Lerp(speedRange.y, speedRange.x, sizeFactor); // 僒僀僘偵墳偠偰懍搙傪儕僯傾曗娫
     }
 
     private void Update()
     {
-        // 魚をターゲット位置に向かって移動
+        // 嫑傪僞乕僎僢僩埵抲偵岦偐偭偰堏摦
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        // 目標位置に到達したかどうかを確認
+        // 栚昗埵抲偵摓払偟偨偐偳偆偐傪妋擣
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // ターゲット位置をスクリーン座標に変換
+            // 僞乕僎僢僩埵抲傪僗僋儕乕儞嵗昗偵曄姺
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(targetPosition);
-            screenPosition.z = 0f; // 2Dゲームなのでz値は無視
+            screenPosition.z = 0f; // 2D僎乕儉側偺偱z抣偼柍帇
 
-            // 目標位置が画面内にあるかを判定
+            // 栚昗埵抲偑夋柺撪偵偁傞偐傪敾掕
             if (screenPosition.x < 0 || screenPosition.x > Screen.width || screenPosition.y < 0 || screenPosition.y > Screen.height)
             {
-                // 画面外に出た場合、魚を破壊
+                // 夋柺奜偵弌偨応崌丄嫑傪攋夡
                 Destroy(gameObject);
             }
             else
             {
-                // 目標位置が画面内にある場合、ターゲット位置を更新
-                // 目標位置を延長するためのオフセットを計算
+                // 栚昗埵抲偑夋柺撪偵偁傞応崌丄僞乕僎僢僩埵抲傪峏怴
+                // 栚昗埵抲傪墑挿偡傞偨傔偺僆僼僙僢僩傪寁嶼
                 Vector3 direction = targetPosition - transform.position;
                 Vector3 offsetPosition = direction.normalized * destroyDistanceMultiplier;
 
-                // ターゲット位置を延長
+                // 僞乕僎僢僩埵抲傪墑挿
                 targetPosition = targetPosition + offsetPosition;
-                SetTargetPosition(targetPosition); // ターゲット位置と角度を更新
+                SetTargetPosition(targetPosition); // 僞乕僎僢僩埵抲偲妏搙傪峏怴
             }
         }
     }
