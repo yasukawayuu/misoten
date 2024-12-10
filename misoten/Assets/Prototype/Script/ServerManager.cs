@@ -9,6 +9,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 {
     private WebSocket _websocket;
     [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _samllGarbage;
+    [SerializeField] private GameObject _mediumGarbage;
+    [SerializeField] private GameObject _largeGarbage;
 
 
     IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
@@ -35,7 +38,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 
     private async void ConnectToServer()
     {
-        _websocket = new WebSocket("ws://localhost:8080");
+        _websocket = new WebSocket("wss://marimo-king.com:8080");
 
         _websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -72,12 +75,24 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         if (_websocket == null || _websocket.State != WebSocketState.Open)
             return;
 
+        //collisionTest();
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         _websocket?.DispatchMessageQueue();
 #endif
     }
 
+    private void collisionTest()
+    {
+        if (Input.GetKey(KeyCode.W))
+            SendInputToServer(new Vector2(0.0f, 0.1f));
+        if (Input.GetKey(KeyCode.S))
+            SendInputToServer(new Vector2(0.0f, -0.1f));
+        if (Input.GetKey(KeyCode.A))
+            SendInputToServer(new Vector2(-0.1f, 0.0f));
+        if (Input.GetKey(KeyCode.D))
+            SendInputToServer(new Vector2(0.1f, 0.0f));
+    }
 
     public async void SendInputToServer(Vector2 velocity)
     {
@@ -97,7 +112,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         }
     }
 
-    public async void SendSclaeToServer(int point)
+    public async void SendSclaeToServer(float scale)
     {
         if (_websocket.State == WebSocketState.Open)
         {
@@ -106,7 +121,40 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             {
                 type = "scale",
                 id = _clientId,
-                point = point
+                scale = scale
+            };
+
+            string jsonMessage = JsonUtility.ToJson(message);
+            await _websocket.SendText(jsonMessage);
+        }
+    }
+
+    public async void SendGarbageToServer(string type,int id)
+    {
+        if (_websocket.State == WebSocketState.Open)
+        {
+            // 入力データをサーバーに送信
+            var message = new ScaleMessage
+            {
+                type = type,
+                id = id,
+            };
+
+            string jsonMessage = JsonUtility.ToJson(message);
+            await _websocket.SendText(jsonMessage);
+        }
+    }
+
+    private async void SendNameToServer(string name)
+    {
+        if (_websocket.State == WebSocketState.Open)
+        {
+            // 入力データをサーバーに送信
+            var message = new NameMessage
+            {
+                type = "playerName",
+                id = _clientId,
+                name = name
             };
 
             string jsonMessage = JsonUtility.ToJson(message);
@@ -118,6 +166,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         // サーバーからのメッセージをパース
         var data = JsonUtility.FromJson<ServerMessage>(message);
+        var garbageData = JsonUtility.FromJson<GarbageMessage>(message);
 
         switch (data.type)
         {
@@ -125,16 +174,37 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 _clientId = data.id;
                 Debug.Log(_clientId);
                 break;
+            case "playerName":
+                _players[data.id].name = data.name;
+                break;
             case "newPlayer":
             case "existingPlayer":
+                Debug.Log(data.type);
                 Vector2 position = new Vector2(data.state[0].position.x, data.state[0].position.y);
                 GameObject player = Instantiate(_player, position, Quaternion.Euler(new Vector3(0, 0, 0)));
                 player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
+                    player.name = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+                    SendNameToServer(player.name);
+                }
+                else
+                {
+                    player.name = data.name;
+                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = data.name;
                 }
                 _players[data.id] = player;
+                break;
+            case "smallGarbagePosition":
+                GabageSpawn(_samllGarbage, garbageData, "smallGarbage");
+                break;
+            case "mediumGarbagePosition":
+                GabageSpawn(_mediumGarbage, garbageData, "mediumGarbage");
+                break;
+            case "largeGarbagePosition":
+                Instantiate(_largeGarbage, garbageData.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
                 break;
             case "update":
                 HandleUpdate(data.state);
@@ -159,11 +229,51 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         }
     }
 
+    private void GabageSpawn(GameObject gabage, GarbageMessage data, string type)
+    {
+        if (IsPlayerNearby(new Vector2(data.position.x, data.position.y)))
+        {
+            GameObject garbage = Instantiate(gabage, data.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            garbage.GetComponent<Garbage>().ID = data.id;
+        }
+        else
+        {
+            SendGarbageToServer(type, data.id);
+        }
+    }
+
+    private bool IsPlayerNearby(Vector2 position)
+    {
+        float radius = 5.0f;  // 衝突判定の範囲（半径）
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position, radius);
+
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                return false;  // プレイヤーが近くにいる
+            }
+        }
+
+        return true;  // プレイヤーがいない
+
+    }
+
+    public async void CloseWebSocket()
+    {
+        if (_websocket != null && _websocket.State == WebSocketState.Open)
+        {
+            await _websocket.Close();
+            Debug.Log("サーバーから切断しました");
+        }
+    }
+
     [Serializable]
     private class ServerMessage
     {
         public string type;
         public int id;
+        public string name;
         public Color color;
         public ServerState[] state;
     }
@@ -192,6 +302,22 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         public string type;
         public int id;
-        public int point;
+        public float scale;
+    }
+
+    [Serializable]
+    private class GarbageMessage
+    {
+        public string type;
+        public int id;
+        public Vector2 position;
+    }
+
+    [Serializable]
+    private class NameMessage
+    {
+        public string type;
+        public int id;
+        public string name;
     }
 }

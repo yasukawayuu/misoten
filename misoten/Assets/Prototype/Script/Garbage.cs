@@ -33,8 +33,7 @@ public class Garbage : MonoBehaviour
     {
         if (transform.childCount == 0)
         {
-            WebSocketClient client = WebSocketClient.Instance;
-            client.GarbageIDSync(_dataType, _id);
+            ServerManager.Instance.SendGarbageToServer(_dataType, _id);
             Destroy(gameObject);
         }
     }

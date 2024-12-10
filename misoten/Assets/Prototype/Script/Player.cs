@@ -19,6 +19,9 @@ public class Player : Marimo
     [CustomLabel("チャージ割合")]
     [SerializeField] private int[] _raito = new int[3];
 
+    [CustomLabel("ポイント消費割合")]
+    [SerializeField] private int[] _pointRaito = new int[3];
+
     [CustomLabel("浄化時間")]
     [SerializeField] private float[] _cleanTime = new float[2];
 
@@ -165,11 +168,11 @@ public class Player : Marimo
             if (_maxLineLength <= 2.0f * cameraSizeRatio)
                 _holdPoint = _minSpeed;
             else if (_maxLineLength <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
-                HoldPoint(_raito[0]);
+                HoldPoint(_raito[0], _pointRaito[0]);
             else if (_maxLineLength <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
-                HoldPoint(_raito[1]); 
+                HoldPoint(_raito[1], _pointRaito[1]); 
             else if(_point > _pointScale[2])
-                HoldPoint(_raito[2]);
+                HoldPoint(_raito[2], _pointRaito[2]);
 
             
             // 力を加える
@@ -189,24 +192,26 @@ public class Player : Marimo
     /// ホールドポイント計算
     /// </summary>
     /// <param name="ratio"></param>
-    private void HoldPoint(int ratio)
+    private void HoldPoint(int ratio,int pointRaito)
     {
-        _holdPoint = (Mathf.Floor(_point) / ratio) * 10 + _minSpeed;
-        _point -= (Mathf.Floor(_point) / ratio);
+        _holdPoint = (Mathf.Floor(_point) / ratio) + _minSpeed;
+        _point -= (Mathf.Floor(_point) / pointRaito);
         _point = Mathf.Floor(_point);
+        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
     }
 
     public void EatGarbage()
     {
         if(!_isNormal && _isLocalPlayer)
         {
-            WebSocketClient.Instance.CloseWebSocket();
+            ServerManager.Instance.CloseWebSocket();
             SceneManager.LoadScene("PrototypeTitle");
         }
 
         _garbageValue += 1;
         _scale += _point / 5;
         _point += 1.0f;
+        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
     }
 
     /// <summary>
