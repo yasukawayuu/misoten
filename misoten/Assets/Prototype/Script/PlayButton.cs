@@ -20,8 +20,9 @@ public class PlayButton : MonoBehaviour
     // Update is called once per frame
     private void OnClick()
     {
+        Screen.fullScreen = true;
+
         ChangeScene.LoadScene("Marimo.io");
         _playerName.GetComponent<SavePlayerName>().SetName();
     }
-
 }

@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class FishController : MonoBehaviour
 {
-    public float speed = 2f; // ô~¤ÎÒÆ„ÓËÙ¶È
+    public float speed = 2f; // ô~¤ÎÒÆEËÙ¶È
     public float angleOffset = -90f; // ½Ç¶È¤Î¥ª¥Õ¥»¥Ã¥È¡£Unity¥¨¥Ç¥£¥¿¤ÇÕ{Õû¿ÉÄÜ
     public float destroyDistanceMultiplier = 3f; // ÆÆ‰²Î»ÖÃ¤Î±¶ÂÊ
-    public Camera mainCamera; // ¥«¥á¥é¡¢Ò•Ò°¤òÅĞ¶¨¤¹¤ë¤¿¤á¤ËÊ¹ÓÃ
+    public Camera mainCamera; // ¥«¥á¥é¡¢Ò•Ò°¤òÅĞ¶¨¤¹¤E¿¤á¤ËÊ¹ÓÃ
 
     private Vector3 targetPosition;
 
     private void Start()
     {
-        // Inspector¤Ç¥«¥á¥é¤¬¸î¤êµ±¤Æ¤é¤ì¤Æ¤¤¤Ê¤¤ˆöºÏ¡¢¥·©`¥óÄÚ¤ÎMain Camera¤ò×Ô„Ó¤ÇÈ¡µÃ
+        // Inspector¤Ç¥«¥á¥é¤¬¸ûÀE±¤Æ¤é¤EÆ¤¤¤Ê¤¤ˆöºÏ¡¢¥·©`¥óÄÚ¤ÎMain Camera¤ò×ÔE¤ÇÈ¡µÃ
         if (mainCamera == null)
         {
             mainCamera = Camera.main; // Ö÷¥«¥á¥é¤òÈ¡µÃ
@@ -22,27 +22,27 @@ public class FishController : MonoBehaviour
     {
         targetPosition = target;
 
-        // ·½Ïò¤òÓ‹Ëã¤·¤Æ»ØÜ¤òÕ{Õû
+        // ·½Ïò¤òÓ‹Ëã¤·¤Æ»ØÜ¤òÕ{ÕE
         Vector3 direction = target - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // ½Ç¶È¤òÓ‹Ëã
-        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // ½Ç¶È¥ª¥Õ¥»¥Ã¥È¤ò¼Ó¤¨¤ë
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // ½Ç¶È¤òÓ‹ËE
+        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // ½Ç¶È¥ª¥Õ¥»¥Ã¥È¤ò¼Ó¤¨¤E
     }
 
     private void Update()
     {
-        // ô~¤ò¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ËÏò¤±¤ÆÒÆ„Ó
+        // ô~¤ò¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ËÏò¤±¤ÆÒÆE
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
         // ô~¤¬¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤Ëµ½ß_¤·¤¿¤«¥Á¥§¥Ã¥¯
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // ¥«¥á¥é¤ÎÒ•Ò°¹ ‡ì¤òÈ¡µÃ
+            // ¥«¥á¥é¤ÎÒ•Ò°¹ E¤òÈ¡µÃ
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(targetPosition);
 
-            // 2D¥²©`¥à¤Ç¤Ï¥«¥á¥é¤ÎZ‚¤Ï¹Ì¶¨¤µ¤ì¤ë¤Ù¤­
-            screenPosition.z = 0f; // z‚¤ò0¤ËÔO¶¨¡£x¤ÈyİS¤Î¤ß¤¬ÖØÒª
+            // 2D¥²©`¥à¤Ç¤Ï¥«¥á¥é¤ÎZ‚¤Ï¹Ì¶¨¤µ¤EEÙ¤­
+            screenPosition.z = 0f; // z‚¤E¤ËÔO¶¨¡£x¤ÈyİS¤Î¤ß¤¬ÖØÒª
 
-            // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤ë¤«¤òÅĞ¶¨
+            // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤E«¤òÅĞ¶¨
             if (screenPosition.x < 0 || screenPosition.x > Screen.width || screenPosition.y < 0 || screenPosition.y > Screen.height)
             {
                 // »­ÃæÍâ¤ÎˆöºÏ¡¢ô~¤òÆÆ‰²
@@ -50,14 +50,14 @@ public class FishController : MonoBehaviour
             }
             else
             {
-                // Ä¿˜ËÎ»ÖÃ¤¬Ò•Ò°ÄÚ¤Ë¤¢¤ì¤Ğ¡¢¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¸üĞÂ
-                // ÆÆ‰²Î»ÖÃ¤Î¥ª¥Õ¥»¥Ã¥È¤òÓ‹Ëã
+                // Ä¿˜ËÎ»ÖÃ¤¬Ò•Ò°ÄÚ¤Ë¤¢¤EĞ¡¢¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¸EÂ
+                // ÆÆ‰²Î»ÖÃ¤Î¥ª¥Õ¥»¥Ã¥È¤òÓ‹ËE
                 Vector3 direction = targetPosition - transform.position;
                 Vector3 offsetPosition = direction.normalized * destroyDistanceMultiplier;
 
                 // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤òÑÓéL
                 targetPosition = targetPosition + offsetPosition;
-                SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸üĞÂ
+                SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸EÂ
             }
         }
     }

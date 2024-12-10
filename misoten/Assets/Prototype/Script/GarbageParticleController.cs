@@ -117,8 +117,6 @@ public class GarbageParticleController : MonoBehaviour
 
         for (int i = 0; i < collisionCount; i++)
         {
-            Debug.Log("collisionCount " + collisionCount);
-
             Vector3 collisionPosition = collisionEvents[i].intersection;
 
             // パーティクルを衝突位置に基づいて検索

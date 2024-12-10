@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class FishController2 : MonoBehaviour
 {
-    public float speed = 2f; // ô~¤Î»ùµAÒÆ„ÓËÙ¶È
+    public float speed = 2f; // ô~¤Î»ùµAÒÆEËÙ¶È
     public float angleOffset = -90f; // ½Ç¶È¥ª¥Õ¥»¥Ã¥È
     public float destroyDistanceMultiplier = 3f; // ÆÆ‰²Î»ÖÃ¤Î±¶ÂÊ
-    public Camera mainCamera; // ¥«¥á¥é¡¢Ò•Ò°¤òÅĞ¶¨¤¹¤ë¤¿¤á¤ËÊ¹ÓÃ
+    public Camera mainCamera; // ¥«¥á¥é¡¢Ò•Ò°¤òÅĞ¶¨¤¹¤E¿¤á¤ËÊ¹ÓÃ
 
     [Header("¥é¥ó¥À¥à»¯ÔO¶¨")]
-    public Vector2 sizeRange = new Vector2(0.5f, 2f); // ô~¤Î¥µ¥¤¥º¹ ‡ì
-    public Vector2 speedRange = new Vector2(1f, 5f); // ô~¤ÎËÙ¶È¹ ‡ì
+    public Vector2 sizeRange = new Vector2(0.5f, 2f); // ô~¤Î¥µ¥¤¥º¹ E
+    public Vector2 speedRange = new Vector2(1f, 5f); // ô~¤ÎËÙ¶È¹ E
     public float largeFishSizeThreshold = 1.5f; // ´ó¤­¤Êô~¤Î¥µ¥¤¥ºé“‚
 
     private Vector3 targetPosition;
 
     private void Start()
     {
-        // mainCamera¤¬ÔO¶¨¤µ¤ì¤Æ¤¤¤Ê¤¤ˆöºÏ¡¢¥·©`¥óÄÚ¤Î¥á¥¤¥ó¥«¥á¥é¤òÈ¡µÃ
+        // mainCamera¤¬ÔO¶¨¤µ¤EÆ¤¤¤Ê¤¤ˆöºÏ¡¢¥·©`¥óÄÚ¤Î¥á¥¤¥ó¥«¥á¥é¤òÈ¡µÃ
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -26,19 +26,19 @@ public class FishController2 : MonoBehaviour
         RandomizeFish();
 
         // ³õÆÚ·½Ïò¤ÎÔO¶¨
-        // SetInitialDirection();
-        SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸üĞÂ
+        //SetInitialDirection();
+        SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸EÂ
     }
 
-    // ô~¤ÎÒÆ„ÓÏÈÎ»ÖÃ¤òÔO¶¨
+    // ô~¤ÎÒÆEÏÈÎ»ÖÃ¤òÔO¶¨
     public void SetTargetPosition(Vector3 target)
     {
         targetPosition = target;
 
-        // Ä¿˜ËÎ»ÖÃ¤ËÏò¤«¤¦·½Ïò¤òÓ‹Ëã¤·¡¢»ØÜ¤òÕ{Õû
+        // Ä¿˜ËÎ»ÖÃ¤ËÏò¤«¤¦·½Ïò¤òÓ‹Ëã¤·¡¢»ØÜ¤òÕ{ÕE
         Vector3 direction = target - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // ½Ç¶È¤òÓ‹Ëã
-        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // ½Ç¶È¥ª¥Õ¥»¥Ã¥È¤ò¼Ó¤¨¤ë
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg; // ½Ç¶È¤òÓ‹ËE
+        transform.rotation = Quaternion.Euler(0, 0, angle + angleOffset); // ½Ç¶È¥ª¥Õ¥»¥Ã¥È¤ò¼Ó¤¨¤E
     }
 
     // ô~¤Î¥µ¥¤¥º¤ÈËÙ¶È¤ò¥é¥ó¥À¥à¤ËÔO¶¨
@@ -48,7 +48,7 @@ public class FishController2 : MonoBehaviour
         FishController2[] fishes = FindObjectsOfType<FishController2>(); // ¥·©`¥óÄÚ¤Î¤¹¤Ù¤Æ¤ÎFishController2¤òÈ¡µÃ
         foreach (FishController2 fish in fishes)
         {
-            // ´ó¤­¤Êô~¤¬´æÔÚ¤¹¤ë¤«´_ÕJ
+            // ´ó¤­¤Êô~¤¬´æÔÚ¤¹¤E«´_ÕJ
             if (fish.transform.localScale.x >= largeFishSizeThreshold)
             {
                 largeFishExists = true;
@@ -59,33 +59,32 @@ public class FishController2 : MonoBehaviour
         // ô~¤Î¥µ¥¤¥º¤ò¥é¥ó¥À¥à¤ËÔO¶¨
         float randomSize = Random.Range(sizeRange.x, sizeRange.y);
 
-        // ´ó¤­¤Êô~¤¬´æÔÚ¤·¡¢¥é¥ó¥À¥à¤Ëßx¤Ğ¤ì¤¿¥µ¥¤¥º¤¬é“‚ÒÔÉÏ¤ÎˆöºÏ¡¢¥µ¥¤¥º¤òĞ¡¤µ¤¯Õ{Õû
+        // ´ó¤­¤Êô~¤¬´æÔÚ¤·¡¢¥é¥ó¥À¥à¤Ëßx¤Ğ¤E¿¥µ¥¤¥º¤¬é“‚ÒÔÉÏ¤ÎˆöºÏ¡¢¥µ¥¤¥º¤òĞ¡¤µ¤¯Õ{ÕE
         if (largeFishExists && randomSize >= largeFishSizeThreshold)
         {
             randomSize = Random.Range(sizeRange.x, largeFishSizeThreshold);
         }
 
-        // ô~¤Î¥¹¥±©`¥ë¤òÔO¶¨
+        // ô~¤Î¥¹¥±©`¥EòÔO¶¨
         transform.localScale = new Vector3(randomSize, randomSize, 1f);
 
-        // ¥µ¥¤¥º¤Ë»ù¤Å¤¤¤ÆËÙ¶È¤òÕ{Õû
+        // ¥µ¥¤¥º¤Ë»ù¤Å¤¤¤ÆËÙ¶È¤òÕ{ÕE
         float sizeFactor = (randomSize - sizeRange.x) / (sizeRange.y - sizeRange.x);
-        speed = Mathf.Lerp(speedRange.y, speedRange.x, sizeFactor); // ¥µ¥¤¥º¤Ëê¤¸¤ÆËÙ¶È¤ò¥ê¥Ë¥¢Ñaég
+        speed = Mathf.Lerp(speedRange.y, speedRange.x, sizeFactor); // ¥µ¥¤¥º¤Ëê¤¸¤ÆËÙ¶È¤ò¥EË¥¢Ñaég
     }
 
     private void Update()
     {
-        // ô~¤ò¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ËÏò¤«¤Ã¤ÆÒÆ„Ó
+        // ô~¤ò¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ËÏò¤«¤Ã¤ÆÒÆE
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
         // Ä¿˜ËÎ»ÖÃ¤Ëµ½ß_¤·¤¿¤«¤É¤¦¤«¤ò´_ÕJ
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¥¹¥¯¥ê©`¥ó×ù˜Ë¤Ë‰ä“Q
+            // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¥¹¥¯¥E`¥ó×ù˜Ë¤Ë‰ä“Q
             Vector3 screenPosition = mainCamera.WorldToScreenPoint(targetPosition);
-            screenPosition.z = 0f; // 2D¥²©`¥à¤Ê¤Î¤Çz‚¤ÏŸoÒ•
-
-            // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤ë¤«¤òÅĞ¶¨
+            screenPosition.z = 0f; // 2D¥²©`¥à¤Ê¤Î¤Çz‚¤ÏŸoÒE
+            // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤E«¤òÅĞ¶¨
             if (screenPosition.x < 0 || screenPosition.x > Screen.width || screenPosition.y < 0 || screenPosition.y > Screen.height)
             {
                 // »­ÃæÍâ¤Ë³ö¤¿ˆöºÏ¡¢ô~¤òÆÆ‰²
@@ -93,14 +92,14 @@ public class FishController2 : MonoBehaviour
             }
             else
             {
-                // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤ëˆöºÏ¡¢¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¸üĞÂ
-                // Ä¿˜ËÎ»ÖÃ¤òÑÓéL¤¹¤ë¤¿¤á¤Î¥ª¥Õ¥»¥Ã¥È¤òÓ‹Ëã
+                // Ä¿˜ËÎ»ÖÃ¤¬»­ÃæÄÚ¤Ë¤¢¤EöºÏ¡¢¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤ò¸EÂ
+                // Ä¿˜ËÎ»ÖÃ¤òÑÓéL¤¹¤E¿¤á¤Î¥ª¥Õ¥»¥Ã¥È¤òÓ‹ËE
                 Vector3 direction = targetPosition - transform.position;
                 Vector3 offsetPosition = direction.normalized * destroyDistanceMultiplier;
 
                 // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤òÑÓéL
                 targetPosition = targetPosition + offsetPosition;
-                SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸üĞÂ
+                SetTargetPosition(targetPosition); // ¥¿©`¥²¥Ã¥ÈÎ»ÖÃ¤È½Ç¶È¤ò¸EÂ
             }
         }
     }
