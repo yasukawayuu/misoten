@@ -206,6 +206,8 @@ public class Player : Marimo
     {
         if(!_isNormal && _isLocalPlayer)
         {
+            // ‚±‚±
+
             WebSocketClient.Instance.CloseWebSocket();
             SceneManager.LoadScene("PrototypeTitle");
         }
