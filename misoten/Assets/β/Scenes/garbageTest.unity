@@ -297,6 +297,7 @@ MonoBehaviour:
   _eyesSprite:
   - {fileID: 0}
   - {fileID: 0}
+  _disolveMaterial: {fileID: 0}
   _nameText: {fileID: 0}
   _chargeEffect: {fileID: 0}
   _burstEffect: {fileID: 0}
@@ -339,7 +340,7 @@ GameObject:
   - component: {fileID: 199925240}
   - component: {fileID: 199925239}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: disolve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1048,30 +1049,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: _render
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: _isLocalPlayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: _spriteRenderer
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5630655247442295696, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: m_Simulated
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5726897486434360443, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5726897486434360443, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 235336249270186263, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: _marimoBody
       value: 
@@ -1219,6 +1196,30 @@ PrefabInstance:
     - target: {fileID: 8045393736898269578, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: _render
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: _isLocalPlayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 679286435896673772, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: _spriteRenderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5630655247442295696, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: m_Simulated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5726897486434360443, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5726897486434360443, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5318292089184548353, guid: 8bb892e6b9bd3dc488e38aaa6484f5a0, type: 3}

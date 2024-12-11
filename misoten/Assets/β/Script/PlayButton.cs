@@ -7,13 +7,11 @@ using UnityEngine.UI;
 public class PlayButton : MonoBehaviour
 {
     [SerializeField] Button _playeButton;
-    [SerializeField] ChangeScene ChangeScene;
-    GameObject _playerName;
 
     // Start is called before the first frame update
     void Start()
     {
-        _playerName = GameObject.Find("PlayerName");
+
         _playeButton.onClick.AddListener(OnClick);
     }
 
@@ -22,7 +20,9 @@ public class PlayButton : MonoBehaviour
     {
         Screen.fullScreen = true;
 
-        ChangeScene.LoadScene("Marimo.io");
-        _playerName.GetComponent<SavePlayerName>().SetName();
+        GameSceneManager gameSceneManager = GameSceneManager.Instance;
+        gameSceneManager.IsFade = false;
+        gameSceneManager.SceneName = "Marimo.io";
+        SavePlayerName.Instance.SetName(); 
     }
 }

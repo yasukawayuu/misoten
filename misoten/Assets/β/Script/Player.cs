@@ -38,6 +38,7 @@ public class Player : Marimo
     [SerializeField] private SpriteRenderer _childSpriteRender;
     [SerializeField] private SpriteRenderer _eyesSpriteRender;
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
+    [SerializeField] private Material _disolveMaterial;
     [SerializeField] private GameObject _nameText;
     [SerializeField] private GameObject _chargeEffect;
     [SerializeField] private GameObject _burstEffect;
@@ -212,12 +213,10 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
-        if(!_isNormal && _isLocalPlayer) // Ž€–S
+        if(!_isNormal && _isLocalPlayer)
         {
-            // ƒfƒBƒ]ƒ‹ƒu
-
-            ServerManager.Instance.CloseWebSocket();
-            SceneManager.LoadScene("Title");
+            GetComponent<Renderer>().material = _disolveMaterial;
+            StartCoroutine("Respawn");
         }
 
         _garbageValue += 1;
@@ -258,5 +257,19 @@ public class Player : Marimo
         }
         
 
+    }
+
+    /// <summary>
+    /// Ž€–S
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        ServerManager.Instance.CloseWebSocket();
+        GameSceneManager gameSceneManager = GameSceneManager.Instance;
+        gameSceneManager.IsFade = false;
+        gameSceneManager.SceneName = "Title";
     }
 }

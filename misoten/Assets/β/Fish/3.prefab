@@ -235,9 +235,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4349773324582762993}
   - component: {fileID: 7365598681822757996}
-  - component: {fileID: -6584358306127171643}
+  - component: {fileID: 3158456060671935927}
   - component: {fileID: 6273251199818792147}
-  - component: {fileID: 4547617363993113503}
+  - component: {fileID: 6085509047700760367}
   m_Layer: 0
   m_Name: 3
   m_TagString: Untagged
@@ -254,7 +254,7 @@ Transform:
   m_GameObject: {fileID: 8489085009821991051}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6.7463, y: 0.40998, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -302,7 +302,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c06e15059b3c3574585648bad54517d8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9eddc55bd422be24688fab1b888e33e0, type: 3}
   m_Color: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -310,10 +310,10 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6584358306127171643
+--- !u!114 &3158456060671935927
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -326,10 +326,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RootBone: {fileID: 5297583585825688715}
-  m_BoneTransforms: []
+  m_BoneTransforms:
+  - {fileID: 5297583585825688715}
+  - {fileID: 8842058946560202334}
+  - {fileID: 9051187358274143481}
+  - {fileID: 3036981904047438751}
+  - {fileID: 6180270926977234701}
+  - {fileID: 2727469147223251545}
+  - {fileID: 6186218793050215289}
+  - {fileID: 171304274681905722}
+  - {fileID: 6584029735080441552}
   m_Bounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 6.603735, y: 0.8166201, z: 0}
+    m_Extent: {x: 0.84163475, y: 3.06762, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
 --- !u!95 &6273251199818792147
@@ -353,7 +362,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4547617363993113503
+--- !u!114 &6085509047700760367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -211,8 +211,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
-                    player.name = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
-                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = GameObject.Find("PlayerName").GetComponent<SavePlayerName>().PlayerName;
+                    player.name = SavePlayerName.Instance.PlayerName;
+                    player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = SavePlayerName.Instance.PlayerName;
                     SendNameToServer(player.name);
                 }
                 else
