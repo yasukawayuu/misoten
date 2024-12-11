@@ -235,9 +235,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4349773324582762993}
   - component: {fileID: 7365598681822757996}
-  - component: {fileID: 3158456060671935927}
+  - component: {fileID: -6584358306127171643}
   - component: {fileID: 6273251199818792147}
-  - component: {fileID: 1984366541506999872}
+  - component: {fileID: 4547617363993113503}
   m_Layer: 0
   m_Name: 3
   m_TagString: Untagged
@@ -254,7 +254,7 @@ Transform:
   m_GameObject: {fileID: 8489085009821991051}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.7463, y: 0.40998, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -313,7 +313,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3158456060671935927
+--- !u!114 &-6584358306127171643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -328,8 +328,8 @@ MonoBehaviour:
   m_RootBone: {fileID: 5297583585825688715}
   m_BoneTransforms: []
   m_Bounds:
-    m_Center: {x: 6.603735, y: 0.8166201, z: 0}
-    m_Extent: {x: 0.84163475, y: 3.06762, z: 0}
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
 --- !u!95 &6273251199818792147
@@ -353,7 +353,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1984366541506999872
+--- !u!114 &4547617363993113503
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -362,15 +362,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8489085009821991051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76eb8835548b4b24cb510780b4a7a6b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b1c0232bc621e14582eceabd93189d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  angleOffset: -90
-  destroyDistanceMultiplier: 3
-  sizeRange: {x: 0.3, y: 0.8}
-  speedRange: {x: 2, y: 10}
-  largeFishSizeThreshold: 0.7
 --- !u!1 &8592054138283539758
 GameObject:
   m_ObjectHideFlags: 0

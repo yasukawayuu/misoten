@@ -4,11 +4,6 @@ public class FishController : MonoBehaviour
 {
     private float _speed = 5.0f; // 魚の移動速度
 
-    private void Start()
-    {
-
-    }
-
     private void Update()
     {
         // 魚をターゲット位置に向けて移動
