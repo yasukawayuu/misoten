@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 7365598681822757996}
   - component: {fileID: 3158456060671935927}
   - component: {fileID: 6273251199818792147}
-  - component: {fileID: 1984366541506999872}
+  - component: {fileID: 6085509047700760367}
   m_Layer: 0
   m_Name: 3
   m_TagString: Untagged
@@ -351,7 +351,7 @@ Animator:
   m_GameObject: {fileID: 8489085009821991051}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5fe3fc0a26b861a47baba7667f68fdf2, type: 2}
+  m_Controller: {fileID: 9100000, guid: 237885bdb650a2a45a3795435a93d656, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -362,7 +362,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1984366541506999872
+--- !u!114 &6085509047700760367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -371,16 +371,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8489085009821991051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76eb8835548b4b24cb510780b4a7a6b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b1c0232bc621e14582eceabd93189d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  angleOffset: -90
-  destroyDistanceMultiplier: 3
-  mainCamera: {fileID: 0}
-  sizeRange: {x: 0.3, y: 0.8}
-  speedRange: {x: 2, y: 10}
-  largeFishSizeThreshold: 0.6
 --- !u!1 &8592054138283539758
 GameObject:
   m_ObjectHideFlags: 0
