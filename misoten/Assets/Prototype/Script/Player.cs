@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Player : Marimo
 {
     [CustomLabel("最低移動量")]
-    [SerializeField] private float _minSpeed = 900.0f;
+    [SerializeField] private float _minSpeed = 0.01f;
 
     [CustomLabel("ローカルプレイヤー")]
     [SerializeField] private bool _isLocalPlayer = false;
@@ -19,6 +19,9 @@ public class Player : Marimo
     [CustomLabel("チャージ割合")]
     [SerializeField] private int[] _raito = new int[3];
 
+    [CustomLabel("ポイント消費割合")]
+    [SerializeField] private int[] _pointRaito = new int[3];
+
     [CustomLabel("浄化時間")]
     [SerializeField] private float[] _cleanTime = new float[2];
 
@@ -27,9 +30,8 @@ public class Player : Marimo
     private bool _isNormal = true;      //上限に達してるか
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
-    private float _holdPoint = 900.0f;　//ホールドポイント
+    private float _holdPoint = 0.01f;　 //ホールドポイント
 
-    [SerializeField] private Rigidbody2D _rigid2d;
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -38,7 +40,6 @@ public class Player : Marimo
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
     [SerializeField] private GameObject _nameText;
     [SerializeField] private PlayerGravityController _playerGravityController;
-
 
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -82,8 +83,6 @@ public class Player : Marimo
 
     void FixedUpdate()
     {
-        _rigid2d.velocity *= 0.85f;
-
         if( _point > 1.0f )
             _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
@@ -153,7 +152,7 @@ public class Player : Marimo
             // ラインの長さを制限
             Vector2 limitedDirection = Vector2.ClampMagnitude(direction, _maxLineLength);
             Vector2 endPoint = _startPos + limitedDirection;
-
+            
             _lineRend.SetPosition(1, endPoint);
         }
 
@@ -164,23 +163,21 @@ public class Player : Marimo
             Vector2 startDirection = -1 * (endPos - _startPos).normalized;
 
             float cameraSizeRatio = Camera.main.orthographicSize / _cameraSize;
-            //Debug.Log(cameraSizeRatio);
+
             // ポイント消費
             if (_maxLineLength <= 2.0f * cameraSizeRatio)
                 _holdPoint = _minSpeed;
             else if (_maxLineLength <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
-                HoldPoint(_raito[0]);
+                HoldPoint(_raito[0], _pointRaito[0]);
             else if (_maxLineLength <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
-                HoldPoint(_raito[1]); 
+                HoldPoint(_raito[1], _pointRaito[1]); 
             else if(_point > _pointScale[2])
-                HoldPoint(_raito[2]);
+                HoldPoint(_raito[2], _pointRaito[2]);
 
             
             // 力を加える
             if (_maxLineLength > 0.0f)
-                _rigid2d.AddForce(startDirection * _holdPoint);
-
-            //Debug.Log(_holdPoint);
+                ServerManager.Instance.SendInputToServer(startDirection * _holdPoint);
 
             _lineRend.enabled = false;
             _eyesSpriteRender.sprite = _eyesSprite[0];
@@ -195,26 +192,26 @@ public class Player : Marimo
     /// ホールドポイント計算
     /// </summary>
     /// <param name="ratio"></param>
-    private void HoldPoint(int ratio)
+    private void HoldPoint(int ratio,int pointRaito)
     {
-        _holdPoint = (Mathf.Floor(_point) / ratio) * 10 + _minSpeed;
-        _point -= (Mathf.Floor(_point) / ratio);
+        _holdPoint = (Mathf.Floor(_point) / ratio) + _minSpeed;
+        _point -= (Mathf.Floor(_point) / pointRaito);
         _point = Mathf.Floor(_point);
+        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
     }
 
     public void EatGarbage()
     {
         if(!_isNormal && _isLocalPlayer)
         {
-            // ここ
-
-            WebSocketClient.Instance.CloseWebSocket();
-            SceneManager.LoadScene("PrototypeTitle");
+            ServerManager.Instance.CloseWebSocket();
+            SceneManager.LoadScene("Title");
         }
 
         _garbageValue += 1;
         _scale += _point / 5;
         _point += 1.0f;
+        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
     }
 
     /// <summary>
