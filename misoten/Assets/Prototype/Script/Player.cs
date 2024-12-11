@@ -39,6 +39,8 @@ public class Player : Marimo
     [SerializeField] private SpriteRenderer _eyesSpriteRender;
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
     [SerializeField] private GameObject _nameText;
+    [SerializeField] private GameObject _chargeEffect;
+    [SerializeField] private GameObject _burstEffect;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
     private float _cameraSize = 0.0f;
@@ -67,6 +69,8 @@ public class Player : Marimo
         _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
         _render.sortingOrder = 2;
+
+        _chargeEffect.SetActive(false);
 
         _playerGravityController.GravitySetteing(this);
 
@@ -154,6 +158,9 @@ public class Player : Marimo
             Vector2 endPoint = _startPos + limitedDirection;
             
             _lineRend.SetPosition(1, endPoint);
+
+            // チャージエフェクト表示
+            if (!_chargeEffect.activeSelf) _chargeEffect.SetActive(true);
         }
 
         // マウスを離したとき
@@ -174,7 +181,10 @@ public class Player : Marimo
             else if(_point > _pointScale[2])
                 HoldPoint(_raito[2], _pointRaito[2]);
 
-            
+            // チャージエフェクト非表示
+            if (_chargeEffect.activeSelf) _chargeEffect.SetActive(false);
+            Instantiate(_burstEffect);
+
             // 力を加える
             if (_maxLineLength > 0.0f)
                 ServerManager.Instance.SendInputToServer(startDirection * _holdPoint);
@@ -202,8 +212,10 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
-        if(!_isNormal && _isLocalPlayer)
+        if(!_isNormal && _isLocalPlayer) // 死亡
         {
+            // ディゾルブ
+
             ServerManager.Instance.CloseWebSocket();
             SceneManager.LoadScene("Title");
         }
