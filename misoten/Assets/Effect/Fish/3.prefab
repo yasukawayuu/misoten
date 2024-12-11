@@ -310,7 +310,7 @@ SpriteRenderer:
   m_Size: {x: 10.24, y: 10.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &3158456060671935927
@@ -380,7 +380,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   sizeRange: {x: 0.3, y: 0.8}
   speedRange: {x: 2, y: 10}
-  largeFishSizeThreshold: 0.7
+  largeFishSizeThreshold: 0.6
 --- !u!1 &8592054138283539758
 GameObject:
   m_ObjectHideFlags: 0
