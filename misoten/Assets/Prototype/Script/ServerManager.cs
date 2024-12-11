@@ -1,9 +1,13 @@
 using System;
+using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 using NativeWebSocket;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 using System.Collections;
-using UnityEngine.UIElements;
+
 
 public class ServerManager : SingletonMonoBehaviour<ServerManager>
 {
@@ -13,8 +17,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     [SerializeField] private GameObject _mediumGarbage;
     [SerializeField] private GameObject _largeGarbage;
 
+    [SerializeField] private Text _pingText;
+    float _ping = 0.0f;
+    private Stopwatch _pingStopwatch = new Stopwatch();
 
-    IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
+
+    private IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
     private Vector2 _position = Vector2.zero;
@@ -34,11 +42,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private void Start()
     {
         ConnectToServer();
+        StartCoroutine("SendPing");
     }
 
     private async void ConnectToServer()
     {
-        _websocket = new WebSocket("wss://marimo-king.com:8080");
+        _websocket = new WebSocket("ws://localhost:8080");
 
         _websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -162,6 +171,22 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         }
     }
 
+    private async void SendPingToServer()
+    {
+        if (_websocket.State == WebSocketState.Open)
+        {
+            // 入力データをサーバーに送信
+            var message = new ServerMessage
+            {
+                type = "ping",
+            };
+
+            _pingStopwatch.Restart();
+            string jsonMessage = JsonUtility.ToJson(message);
+            await _websocket.SendText(jsonMessage);
+        }
+    }
+
     private void HandleServerMessage(string message)
     {
         // サーバーからのメッセージをパース
@@ -194,7 +219,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 {
                     player.name = data.name;
                     player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = data.name;
-                }
+                }   
                 _players[data.id] = player;
                 break;
             case "smallGarbagePosition":
@@ -208,6 +233,11 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 break;
             case "update":
                 HandleUpdate(data.state);
+                break;
+            case "pong":
+                _pingStopwatch.Stop();
+                _ping = _pingStopwatch.ElapsedMilliseconds;
+                _pingText.text = _ping.ToString() + "　　ms";
                 break;
             case "playerDisconnected":
                 Debug.Log($"プレイヤーが切断: ID={data.id}");
@@ -259,6 +289,15 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 
     }
 
+    private IEnumerator SendPing()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(1f);
+            SendPingToServer();
+        }
+    }
+
     public async void CloseWebSocket()
     {
         if (_websocket != null && _websocket.State == WebSocketState.Open)
@@ -283,9 +322,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         public int id;
         public Vector2 position;
-        public Vector2 velocity;
-        public float angle;
-        public float angularVelocity;
+        public long timestamp;
     }
 
     [Serializable]

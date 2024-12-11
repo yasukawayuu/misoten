@@ -205,7 +205,7 @@ public class Player : Marimo
         if(!_isNormal && _isLocalPlayer)
         {
             ServerManager.Instance.CloseWebSocket();
-            SceneManager.LoadScene("PrototypeTitle");
+            SceneManager.LoadScene("Title");
         }
 
         _garbageValue += 1;

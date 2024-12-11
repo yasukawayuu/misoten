@@ -1581,6 +1581,7 @@ MonoBehaviour:
   _samllGarbage: {fileID: 4352319150858643701, guid: 22aba81bd4c54ee4e8a8424099dddcab, type: 3}
   _mediumGarbage: {fileID: 2966459596149767773, guid: 8346409e838c3a645ae0d9c02dcdae3f, type: 3}
   _largeGarbage: {fileID: 1492353258360331735, guid: 0b222ced3af55314ca4037b217a61b5e, type: 3}
+  _pingText: {fileID: 1057893071}
   forceInput: {x: 0, y: 0}
 --- !u!4 &1860404409
 Transform:
