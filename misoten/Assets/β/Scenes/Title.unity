@@ -2033,7 +2033,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playeButton: {fileID: 1940089961}
-  _gameSceneManager: {fileID: 1985121078}
 --- !u!1 &1985121073
 GameObject:
   m_ObjectHideFlags: 0
