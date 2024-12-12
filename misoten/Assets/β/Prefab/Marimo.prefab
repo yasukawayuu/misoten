@@ -512,6 +512,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c8bdddbd134948246b5e580fc91e9c34, type: 3}
   - {fileID: 21300000, guid: cc165c9db151dc445bec506a60f1d57e, type: 3}
   _disolveMaterial: {fileID: 2100000, guid: b1a0b885df85ab94f8ccb91abb0303ed, type: 2}
+  _disolveObjects:
+  - {fileID: 4934588809626517678}
   _nameText: {fileID: 1191063216733519657}
   _chargeEffect: {fileID: 1602265938586843971}
   _burstEffect: {fileID: 6071783580236914404, guid: 1ff9b1fdaa081e744bbe08a719ec1f52, type: 3}

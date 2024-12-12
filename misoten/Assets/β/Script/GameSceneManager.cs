@@ -5,16 +5,17 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
 {
-    [SerializeField] private Material circleFadeMaterial; // 円形フェードのマテリアル
+    [SerializeField] private Material _circleFadeMaterial; // 円形フェードのマテリアル
     [SerializeField] private GameObject _panel;
-    private float maskProgress = 0f; // マスクの現在の進行度
+    private float _maskProgress = 0f; // マスクの現在の進行度
     private bool _isFade = true; // マスクが拡大中か、trueで拡大、falseで縮小
     private string _sceneName = string.Empty;
 
-    [SerializeField] private float speed = 0.5f; // マスクの拡大/縮小速度
+    [SerializeField] private float _speed = 0.5f; // マスクの拡大/縮小速度
 
     public bool IsFade
     {
+        get { return _isFade; }
         set { _isFade = value; }
     }
 
@@ -22,12 +23,17 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     {
         set { _sceneName = value; }
     }
+
+    public float MaskProgress
+    {
+        get { return _maskProgress; }
+    }
     void Start()
     {
         // マテリアルの _MaskProgress プロパティを 0 に初期化
-        if (circleFadeMaterial != null)
+        if (_circleFadeMaterial != null)
         {
-            circleFadeMaterial.SetFloat("_MaskProgress", maskProgress);
+            _circleFadeMaterial.SetFloat("_MaskProgress", _maskProgress);
         }
     }
 
@@ -39,38 +45,34 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
 
     void Update()
     {
-        // スペースキーを押した時に拡大/縮小状態を切り替える
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    isFade = !isFade;
-        //}
-
         // 状態に応じてマスクの進行度を更新
         if (_isFade)
         {
-            maskProgress += speed * Time.deltaTime; // 拡大
-            if (maskProgress > 1f)
+            _maskProgress += _speed * Time.deltaTime; // 拡大
+            if (_maskProgress > 1f)
             {
                 _panel.SetActive(false);
-                maskProgress = 1f;
+                _maskProgress = 1f;
             }// 最大値を1に制限
         }
         else
         {
             _panel.SetActive(true);
-            maskProgress -= speed * Time.deltaTime; // 縮小
-            if (maskProgress < 0f)
+            _maskProgress -= _speed * Time.deltaTime; // 縮小
+            if (_maskProgress < 0f)
             {
                 SceneManager.LoadScene(_sceneName);
-                maskProgress = 0f;
+                _maskProgress = 0f;
                 _isFade = true;
             }// 最小値を0に制限
         }
 
         // マテリアルの _MaskProgress プロパティを更新
-        if (circleFadeMaterial != null)
+        if (_circleFadeMaterial != null)
         {
-            circleFadeMaterial.SetFloat("_MaskProgress", maskProgress);
+            _circleFadeMaterial.SetFloat("_MaskProgress", _maskProgress);
         }
     }
+   
+
 }
