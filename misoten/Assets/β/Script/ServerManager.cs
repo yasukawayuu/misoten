@@ -1,12 +1,14 @@
 using System;
 using System.Text;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using NativeWebSocket;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Debug = UnityEngine.Debug;
+using Debug = UnityEngine.Debug;    
 using System.Collections;
+using static UnityEngine.GraphicsBuffer;
 
 
 public class ServerManager : SingletonMonoBehaviour<ServerManager>
@@ -16,6 +18,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     [SerializeField] private GameObject _samllGarbage;
     [SerializeField] private GameObject _mediumGarbage;
     [SerializeField] private GameObject _largeGarbage;
+    
+    private int _stateID;
 
     [SerializeField] private Text _pingText;
     float _ping = 0.0f;
@@ -25,7 +29,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
-    private Vector2 _position = Vector2.zero;
+    private Vector2 _targetPosition = Vector2.zero;
 
     public int ClientId
     {
@@ -85,6 +89,21 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             return;
 
         //collisionTest();
+        if (_players.ContainsKey(_stateID))
+        {
+            Vector2 playerPosition = _players[_stateID].transform.position;
+            Vector2 direction = (_targetPosition - playerPosition).normalized;
+            float distanceToTarget = Vector2.Distance(playerPosition, _targetPosition);
+
+            Rigidbody2D rigidbody2D = _players[_stateID].GetComponent<Rigidbody2D>();
+
+            rigidbody2D.velocity = direction * 50.0f;
+
+            if (distanceToTarget < 1.0f)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+            }
+        }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         _websocket?.DispatchMessageQueue();
@@ -254,8 +273,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         foreach (var state in states)
         {
-            _position = state.position;
-            _players[state.id].transform.position = _position;
+            _targetPosition = state.position;
+            _stateID = state.id;
+            //_players[state.id].transform.position = _position;
         }
     }
 

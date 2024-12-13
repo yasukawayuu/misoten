@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Test : MonoBehaviour
 {
-    [SerializeField] private AudioClip _clip;
+    [SerializeField] Rigidbody2D _rb2D;
+    [SerializeField] float _speed;
+    [SerializeField] Transform _target;
 
     void Start()
     {
@@ -14,14 +17,24 @@ public class Test : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.Space))
-        {
-            SoundManager.Instance.PlaySE2D(_clip,1.5f);
-        }
+        
 
+    }
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            Vector3 direction = (_target.position - transform.position).normalized;
+            _rb2D.MovePosition(transform.position + direction * _speed * Time.fixedDeltaTime);
+        }
+       
+    }
+
+    private void TrackingMousePosition()
+    {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         transform.position = mousePosition;
-
     }
 }

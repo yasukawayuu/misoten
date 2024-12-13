@@ -360,6 +360,7 @@ GameObject:
   - component: {fileID: 6775279967321589777}
   - component: {fileID: 8045393736898269578}
   - component: {fileID: 898658819858679915}
+  - component: {fileID: 5338349531715652337}
   - component: {fileID: 4959388959721956752}
   - component: {fileID: 6224661661609249786}
   m_Layer: 6
@@ -450,7 +451,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 6030540607051041719}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: a0d563075734e664ca3e6dd4a8d9ee62, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -476,6 +477,33 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!50 &5338349531715652337
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6030540607051041719}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &4959388959721956752
 MonoBehaviour:
   m_ObjectHideFlags: 0
