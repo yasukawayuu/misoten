@@ -43,6 +43,7 @@ public class Player : Marimo
     [SerializeField] private GameObject _nameText;
     [SerializeField] private GameObject _chargeEffect;
     [SerializeField] private GameObject _burstEffect;
+    [SerializeField] private GameObject _hitEffect;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
     private float _cameraSize = 0.0f;
@@ -229,6 +230,14 @@ public class Player : Marimo
         _scale += _point / 5;
         _point += 1.0f;
         ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
+    }
+
+    private void OnCollisionEnter2D(Collision collision)
+    {
+        // è’ìÀà íuÇéÊìæÇ∑ÇÈ
+        Vector3 hitPos = collision.contacts[0].point;
+
+        Instantiate(_hitEffect, hitPos, Quaternion.identity);
     }
 
     /// <summary>

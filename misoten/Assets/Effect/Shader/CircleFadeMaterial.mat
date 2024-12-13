@@ -42,7 +42,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _MaskProgress: 0.99921316
+    - _MaskProgress: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _FadeColor: {r: 0, g: 0, b: 0, a: 1}
