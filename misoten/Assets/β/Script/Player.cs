@@ -44,6 +44,7 @@ public class Player : Marimo
     [SerializeField] private GameObject _chargeEffect;
     [SerializeField] private GameObject _burstEffect;
     [SerializeField] private GameObject _hitEffect;
+    [SerializeField] private GameObject _deathParticle;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
     private float _cameraSize = 0.0f;
@@ -58,6 +59,11 @@ public class Player : Marimo
     public GameObject NameText
     {
         get { return _nameText; }
+    }
+
+    public GameObject DeathParticle
+    {
+        get { return _deathParticle; }
     }
 
     void Start()
@@ -217,12 +223,12 @@ public class Player : Marimo
     {
         if(!_isNormal && _isLocalPlayer)
         {
-            GetComponent<Renderer>().material = _disolveMaterial;
-            foreach (GameObject obj in _disolveObjects)
-            {
-                Renderer renderer = obj.GetComponent<Renderer>();
-                renderer.material = _disolveMaterial;
-            }
+            //GetComponent<Renderer>().material = _disolveMaterial;
+            //foreach (GameObject obj in _disolveObjects)
+            //{
+            //    Renderer renderer = obj.GetComponent<Renderer>();
+            //    renderer.material = _disolveMaterial;
+            //}
             StartCoroutine("Respawn");
         }
 

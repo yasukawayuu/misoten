@@ -16,7 +16,7 @@ public class Marimo : MonoBehaviour
 
     [CustomLabel("‰¤Š¥")]
     [SerializeField] protected GameObject _crawn;
-    private bool _isKing = false;
+    private bool _isKing = true;
 
     public float Point
     {
@@ -54,7 +54,7 @@ public class Marimo : MonoBehaviour
             {
                 _crawn.SetActive(true);
             }
-            _crawn.transform.localPosition = new Vector3(0.07f + _point * 0.2f, 0.07f + _point * 0.2f, 0.0f);
+            _crawn.transform.localPosition = new Vector3(0.5f + _point * 0.008f, 0.5f + _point * 0.008f, 0.0f);
         }
         if(!_isKing && _crawn.activeSelf)
         {
