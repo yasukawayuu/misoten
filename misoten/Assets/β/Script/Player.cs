@@ -35,16 +35,18 @@ public class Player : Marimo
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private SpriteRenderer _childSpriteRender;
     [SerializeField] private SpriteRenderer _eyesSpriteRender;
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
-    [SerializeField] private Material _disolveMaterial;
     [SerializeField] private GameObject[] _disolveObjects;
     [SerializeField] private GameObject _nameText;
     [SerializeField] private GameObject _chargeEffect;
     [SerializeField] private GameObject _burstEffect;
+    [SerializeField] private GameObject _hitEffect;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
+    [SerializeField] private AudioClip _charge;
+
+    private float _disolvValue = 1.0f;
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
 
@@ -101,6 +103,9 @@ public class Player : Marimo
         // シェーダーに値を設定
         _spriteRenderer.material.SetFloat("_Garadation", gradationValue);
 
+        if (!_isNormal && _isLocalPlayer && _disolvValue > 0)
+            StartCoroutine("Disolv");
+
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
     }
@@ -133,22 +138,18 @@ public class Player : Marimo
             // ラインの色と長さ制限を設定
             if (distance <= 2.0f * cameraSizeRatio)
             {
-                _childSpriteRender.color = Color.gray;
                 _maxLineLength = 2.0f * cameraSizeRatio;
             } 
             else if (distance <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
             {
-                _childSpriteRender.color = Color.yellow;
                 _maxLineLength = 4.0f * cameraSizeRatio;
             }
             else if (distance <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
             {
-                _childSpriteRender.color = Color.green;
                 _maxLineLength = 6.0f * cameraSizeRatio;
             }   
             else if(_point > _pointScale[2])
             {
-                _childSpriteRender.color = Color.blue;
                 _maxLineLength = 8.0f * cameraSizeRatio;
             }
 
@@ -161,8 +162,10 @@ public class Player : Marimo
             
             _lineRend.SetPosition(1, endPoint);
 
+            SoundManager.Instance.PlaySE2D(_charge, 1.5f);
             // チャージエフェクト表示
             if (!_chargeEffect.activeSelf) _chargeEffect.SetActive(true);
+ 
         }
 
         // マウスを離したとき
@@ -185,6 +188,7 @@ public class Player : Marimo
 
             // チャージエフェクト非表示
             if (_chargeEffect.activeSelf) _chargeEffect.SetActive(false);
+               
             Instantiate(_burstEffect);
 
             // 力を加える
@@ -193,7 +197,6 @@ public class Player : Marimo
 
             _lineRend.enabled = false;
             _eyesSpriteRender.sprite = _eyesSprite[0];
-            _childSpriteRender.color = Color.white;
         }
 
         _lineRend.widthMultiplier = _lineWidth * (Camera.main.orthographicSize / _cameraSize);
@@ -214,21 +217,20 @@ public class Player : Marimo
 
     public void EatGarbage()
     {
-        if(!_isNormal && _isLocalPlayer)
-        {
-            GetComponent<Renderer>().material = _disolveMaterial;
-            foreach (GameObject obj in _disolveObjects)
-            {
-                Renderer renderer = obj.GetComponent<Renderer>();
-                renderer.material = _disolveMaterial;
-            }
+        if (!_isNormal && _isLocalPlayer)
             StartCoroutine("Respawn");
-        }
-
         _garbageValue += 1;
         _scale += _point / 5;
         _point += 1.0f;
         ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 衝突位置を取得する
+        Vector3 hitPos = collision.contacts[0].point;
+
+        Instantiate(_hitEffect, hitPos, Quaternion.identity);
     }
 
     /// <summary>
@@ -265,13 +267,20 @@ public class Player : Marimo
 
     }
 
+    private IEnumerator Disolv()
+    {
+        yield return new WaitForSeconds(0.1f);
+        _disolvValue -= 0.01f;
+        _spriteRenderer.material.SetFloat("_Disolve", _disolvValue);
+    }
+
     /// <summary>
     /// 死亡
     /// </summary>
     /// <returns></returns>
     private IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(1.75f);
+        yield return new WaitForSeconds(2f);
 
         ServerManager.Instance.CloseWebSocket();
         GameSceneManager gameSceneManager = GameSceneManager.Instance;

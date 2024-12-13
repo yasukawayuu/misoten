@@ -89,21 +89,6 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             return;
 
         //collisionTest();
-        if (_players.ContainsKey(_stateID))
-        {
-            Vector2 playerPosition = _players[_stateID].transform.position;
-            Vector2 direction = (_targetPosition - playerPosition).normalized;
-            float distanceToTarget = Vector2.Distance(playerPosition, _targetPosition);
-
-            Rigidbody2D rigidbody2D = _players[_stateID].GetComponent<Rigidbody2D>();
-
-            rigidbody2D.velocity = direction * 50.0f;
-
-            if (distanceToTarget < 1.0f)
-            {
-                rigidbody2D.velocity = Vector2.zero;
-            }
-        }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
         _websocket?.DispatchMessageQueue();
@@ -224,7 +209,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             case "newPlayer":
             case "existingPlayer":
                 Debug.Log(data.type);
-                Vector2 position = new Vector2(data.state[0].position.x, data.state[0].position.y);
+                Vector3 position = new Vector3(data.state[0].position.x, data.state[0].position.y,0);
                 GameObject player = Instantiate(_player, position, Quaternion.Euler(new Vector3(0, 0, 0)));
                 player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
@@ -274,8 +259,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         foreach (var state in states)
         {
             _targetPosition = state.position;
-            _stateID = state.id;
-            //_players[state.id].transform.position = _position;
+            _players[state.id].transform.position = _targetPosition;
         }
     }
 

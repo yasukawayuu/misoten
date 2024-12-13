@@ -10,7 +10,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     
     [SerializeField] private AudioClip _bgm;
 
-    private float _maxPitch = 5.0f;
     private void Start()
     {
         _bgmSource = gameObject.AddComponent<AudioSource>();

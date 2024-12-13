@@ -18,7 +18,8 @@ public class PlayButton : MonoBehaviour
     // Update is called once per frame
     private void OnClick()
     {
-        Screen.fullScreen = true;
+        //Screen.fullScreen = true;
+        Screen.SetResolution(1920, 1080, true);
 
         GameSceneManager gameSceneManager = GameSceneManager.Instance;
         gameSceneManager.IsFade = false;

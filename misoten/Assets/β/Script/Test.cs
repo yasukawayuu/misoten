@@ -13,26 +13,33 @@ public class Test : MonoBehaviour
     void Start()
     {
         
+        
     }
 
     void Update()
     {
-        
+        var collision = this.GetComponent<ParticleSystem>().collision;
+        collision.enabled = true;
+        collision.type = ParticleSystemCollisionType.World;
+        collision.mode = ParticleSystemCollisionMode.Collision3D;
 
     }
 
     private void FixedUpdate()
+    {
+
+        
+       
+    }
+
+    private void TrackingMousePosition()
     {
         if (Input.GetKey(KeyCode.Space))
         {
             Vector3 direction = (_target.position - transform.position).normalized;
             _rb2D.MovePosition(transform.position + direction * _speed * Time.fixedDeltaTime);
         }
-       
-    }
 
-    private void TrackingMousePosition()
-    {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         transform.position = mousePosition;

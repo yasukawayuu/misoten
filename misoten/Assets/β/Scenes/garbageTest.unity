@@ -292,17 +292,17 @@ MonoBehaviour:
   _lineRend: {fileID: 0}
   _render: {fileID: 0}
   _spriteRenderer: {fileID: 0}
-  _childSpriteRender: {fileID: 0}
   _eyesSpriteRender: {fileID: 0}
   _eyesSprite:
   - {fileID: 0}
   - {fileID: 0}
-  _disolveMaterial: {fileID: 0}
   _disolveObjects: []
   _nameText: {fileID: 0}
   _chargeEffect: {fileID: 0}
   _burstEffect: {fileID: 0}
+  _hitEffect: {fileID: 0}
   _playerGravityController: {fileID: 0}
+  _charge: {fileID: 0}
 --- !u!50 &154239841
 Rigidbody2D:
   serializedVersion: 4
@@ -953,11 +953,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686332131}
   m_CullTransparentMesh: 1
---- !u!1 &709534572 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4934588809626517678, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
-  m_PrefabInstance: {fileID: 907309640}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &714317341 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6775279967321589777, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
@@ -1070,6 +1065,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3153059221940063366, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4508693325018304732, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.15
@@ -1121,7 +1120,7 @@ PrefabInstance:
     - target: {fileID: 4959388959721956752, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: _disolveObjects.Array.data[0]
       value: 
-      objectReference: {fileID: 709534572}
+      objectReference: {fileID: 0}
     - target: {fileID: 5174297440302921780, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: m_Radius
       value: 1
@@ -1144,7 +1143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6224661661609249786, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6775279967321589777, guid: f74a0cf0e28a5624a8c6f0ed37b7d6c3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1832,7 +1831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2966459596149767773, guid: 8346409e838c3a645ae0d9c02dcdae3f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4831489529595699300, guid: 8346409e838c3a645ae0d9c02dcdae3f, type: 3}
       propertyPath: ShapeModule.type
