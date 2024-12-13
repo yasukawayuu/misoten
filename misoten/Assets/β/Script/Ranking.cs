@@ -25,6 +25,11 @@ public class Ranking : MonoBehaviour
         int maxRanking = 10; // 表示するランキングの上限
         for (int i = 0; i < Math.Min(_players.Count, maxRanking); i++)
         {
+            // 一位の人
+            if(i == 0) _players[i].King = true;
+            // それ以外の人
+            else _players[i].King = false;
+
             _name.text += (i + 1) + "." + _players[i].name + "\n";
             _point.text += _players[i].Point + "\n";
         }

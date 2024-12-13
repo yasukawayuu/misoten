@@ -14,11 +14,20 @@ public class Marimo : MonoBehaviour
     [CustomLabel("âòêıÉ|ÉCÉìÉgè„å¿")]
     [SerializeField] protected int _maxGarbageValue = 5;
 
+    [CustomLabel("â§ä•")]
+    [SerializeField] protected GameObject _crawn;
+    private bool _isKing = false;
 
     public float Point
     {
         get { return _point; }
         set { _point = value; }
+    }
+
+    public bool King
+    {
+        get { return _isKing; }
+        set { _isKing = value; }
     }
 
     // Start is called before the first frame update
@@ -36,8 +45,22 @@ public class Marimo : MonoBehaviour
         currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
 
         transform.position = currentPos;
+
+
+        // â§ä•èàóù
+        if(_isKing)
+        { 
+            if (!_crawn.activeSelf)
+            {
+                _crawn.SetActive(true);
+            }
+            _crawn.transform.localPosition = new Vector3(0.07f + _point * 0.2f, 0.07f + _point * 0.2f, 0.0f);
+        }
+        if(!_isKing && _crawn.activeSelf)
+        {
+            _crawn.SetActive(false);
+        }
     }
 
     protected virtual void Move(){}
-
 }

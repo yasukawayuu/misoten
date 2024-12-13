@@ -11,7 +11,6 @@ public class PlayButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         _playeButton.onClick.AddListener(OnClick);
     }
 
