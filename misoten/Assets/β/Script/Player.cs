@@ -44,7 +44,9 @@ public class Player : Marimo
     [SerializeField] private GameObject _hitEffect;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
-    [SerializeField] private AudioClip _charge;
+
+    [SerializeField] private AudioClip _hit;
+ 
 
     private float _disolvValue = 1.0f;
     private float _cameraSize = 0.0f;
@@ -64,6 +66,7 @@ public class Player : Marimo
     void Start()
     {
         _eyesSpriteRender.sprite = _eyesSprite[0]; 
+
         _lineRend.enabled = false;
         _lineRend.positionCount = 2;
         _lineRend.widthMultiplier = 1.0f;
@@ -162,7 +165,7 @@ public class Player : Marimo
             
             _lineRend.SetPosition(1, endPoint);
 
-            SoundManager.Instance.PlaySE2D(_charge, 1.5f);
+            SoundManager.Instance.PlaySE2D("charge", 1.5f);
             // チャージエフェクト表示
             if (!_chargeEffect.activeSelf) _chargeEffect.SetActive(true);
  
@@ -218,8 +221,9 @@ public class Player : Marimo
     public void EatGarbage()
     {
         if (!_isNormal && _isLocalPlayer)
-            StartCoroutine("Respawn");
-        _garbageValue += 1;
+            Respawn();
+
+         _garbageValue += 1;
         _scale += _point / 5;
         _point += 1.0f;
         ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
@@ -227,10 +231,15 @@ public class Player : Marimo
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // 衝突位置を取得する
-        Vector3 hitPos = collision.contacts[0].point;
+       if(collision.gameObject.tag == "Player")
+       {
+            // 衝突位置を取得する
+            Vector3 hitPos = collision.contacts[0].point;
 
-        Instantiate(_hitEffect, hitPos, Quaternion.identity);
+            SoundManager.Instance.PlaySE3D(hitPos, _hit);
+
+            Instantiate(_hitEffect, hitPos, Quaternion.identity);
+       }
     }
 
     /// <summary>
@@ -245,7 +254,11 @@ public class Player : Marimo
             {
                 yield return new WaitForSeconds(_cleanTime[0]);
                 if (_garbageValue > 0.0f)
+                {
+                    SoundManager.Instance.PlaySE2D("clean");
                     _garbageValue -= 0.1f;
+                }
+                    
 
                 if(_garbageValue < 0.0f)
                     _garbageValue = 0.0f;
@@ -254,13 +267,15 @@ public class Player : Marimo
             {
                 yield return new WaitForSeconds(_cleanTime[1]);
                 _garbageValue -= 0.1f;
+                SoundManager.Instance.PlaySE2D("clean", 3);
 
                 if (_garbageValue <= 0.0f)
                 {
                     _isNormal = true;
                     _garbageValue = 0.0f;
                     _maxGarbageValue = Mathf.FloorToInt(_point) * 2;
-                }     
+                }
+                
             }
         }
         
@@ -278,10 +293,8 @@ public class Player : Marimo
     /// 死亡
     /// </summary>
     /// <returns></returns>
-    private IEnumerator Respawn()
+    private void Respawn()
     {
-        yield return new WaitForSeconds(2f);
-
         ServerManager.Instance.CloseWebSocket();
         GameSceneManager gameSceneManager = GameSceneManager.Instance;
         gameSceneManager.IsFade = false;

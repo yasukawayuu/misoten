@@ -18,7 +18,7 @@ public class PlayButton : MonoBehaviour
     private void OnClick()
     {
         //Screen.fullScreen = true;
-        Screen.SetResolution(1920, 1080, true);
+        //Screen.SetResolution(1920, 1080, true);
 
         GameSceneManager gameSceneManager = GameSceneManager.Instance;
         gameSceneManager.IsFade = false;

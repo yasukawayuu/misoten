@@ -6,9 +6,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
     private AudioSource _bgmSource;
     private AudioSource _seSource3D;
-    private AudioSource _seSource2D;
-    
+    private IDictionary<string, AudioSource> _seSources2D = new Dictionary<string, AudioSource>();
+
+
     [SerializeField] private AudioClip _bgm;
+    [SerializeField] private AudioClip _clean;
+    [SerializeField] private AudioClip _charge;
+    [SerializeField] private AudioClip _recovery;
 
     private void Start()
     {
@@ -24,7 +28,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         _seSource3D.minDistance = 1.0f;
         _seSource3D.maxDistance = 50.0f;
 
-        _seSource2D = gameObject.AddComponent<AudioSource>();
+        _seSources2D["charge"] = gameObject.AddComponent<AudioSource>();
+        _seSources2D["charge"].clip = _charge;
+        _seSources2D["clean"] = gameObject.AddComponent<AudioSource>();
+        _seSources2D["clean"].clip = _clean;
+        _seSources2D["recovery"] = gameObject.AddComponent<AudioSource>();
+        _seSources2D["recovery"].clip = _recovery;
     }
 
     private void Update()
@@ -46,12 +55,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         _seSource3D.PlayOneShot(clip);
     }
 
-    public void PlaySE2D(AudioClip clip,float pitch = 1.0f)
+    public void PlaySE2D(string clip,float pitch = 1.0f)
     {
-        _seSource2D.pitch = pitch;
+        _seSources2D[clip].pitch = pitch;
 
-        if(!_seSource2D.isPlaying)
-            _seSource2D.PlayOneShot(clip);
+        if(!_seSources2D[clip].isPlaying)
+            _seSources2D[clip].PlayOneShot(_seSources2D[clip].clip);
     }
 
 }
