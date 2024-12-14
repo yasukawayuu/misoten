@@ -59,7 +59,7 @@ Material:
     - _Thickness: 0.02
     m_Colors:
     - _Color: {r: 0, g: 2.363667, b: 10.556064, a: 1}
-    - _PlayerColor: {r: 1, g: 1, b: 1, a: 0}
+    - _PlayerColor: {r: 1, g: 0.4660377, b: 0.4660377, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4901001382246857602
 MonoBehaviour:

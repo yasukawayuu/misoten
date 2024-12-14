@@ -10,13 +10,12 @@ public class Ranking : MonoBehaviour
     [SerializeField] Text _name;
     [SerializeField] Text _point;
     List<Marimo> _players;
-    // Start is called before the first frame update
+
     void Start()
     {
         _players = new List<Marimo>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         _name.text = "";

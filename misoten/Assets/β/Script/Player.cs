@@ -42,6 +42,7 @@ public class Player : Marimo
     [SerializeField] private GameObject _chargeEffect;
     [SerializeField] private GameObject _burstEffect;
     [SerializeField] private GameObject _hitEffect;
+    [SerializeField] private GameObject _deathParticle;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
 
@@ -61,6 +62,11 @@ public class Player : Marimo
     public GameObject NameText
     {
         get { return _nameText; }
+    }
+
+    public GameObject DeathParticle
+    {
+        get { return _deathParticle; }
     }
 
     void Start()

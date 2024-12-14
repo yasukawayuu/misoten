@@ -245,6 +245,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 break;
             case "playerDisconnected":
                 Debug.Log($"ƒvƒŒƒCƒ„[‚ªØ’f: ID={data.id}");
+
+                GameObject obj = Instantiate(_player.GetComponent<Player>().DeathParticle, _players[data.id].transform.position, Quaternion.identity);
+                var main = obj.GetComponent<ParticleSystem>().main;
+                Color color = GetComponent<SpriteRenderer>().material.GetColor("_PlayerColor");
+                main.startColor = new Color(color.r, color.g, color.b, 1.0f);
+
                 Destroy(_players[data.id]);
                 _players.Remove(data.id);
                 break;

@@ -24,10 +24,11 @@ public class EffectRenderTextureResize : MonoBehaviour
         int width = (int)_mainCamera.pixelRect.width;
         int height = (int)_mainCamera.pixelRect.height;
         Vector2Int currentScreenSize = new Vector2Int(width, height);
-        if (currentScreenSize != _previousScreenSize)
+        if (currentScreenSize != _previousScreenSize || _mainCamera.orthographicSize != _effectCamera.orthographicSize)
         {
-            OnScreenSizeChanged(currentScreenSize);
             _previousScreenSize = currentScreenSize;
+            _effectCamera.orthographicSize = _mainCamera.orthographicSize;
+            OnScreenSizeChanged(currentScreenSize);
         }
     }
 

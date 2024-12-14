@@ -433,6 +433,7 @@ MonoBehaviour:
   _chargeEffect: {fileID: 1602265938586843971}
   _burstEffect: {fileID: 6071783580236914404, guid: 1ff9b1fdaa081e744bbe08a719ec1f52, type: 3}
   _hitEffect: {fileID: 625174201669741959, guid: 17b52d998289eac41950dcc920bd6d7f, type: 3}
+  _deathParticle: {fileID: 5724815087105775678, guid: 4858ecf8a4588504cbd9320d78545c6b, type: 3}
   _playerGravityController: {fileID: 235336249270186263}
   _charge: {fileID: 8300000, guid: 687dd05946b639a4a92a10c6333c6f24, type: 3}
   _hit: {fileID: 8300000, guid: 9c1bc01034fbbf34cb949b3b5c8353ee, type: 3}
