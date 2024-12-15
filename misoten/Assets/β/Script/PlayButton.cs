@@ -11,14 +11,14 @@ public class PlayButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         _playeButton.onClick.AddListener(OnClick);
     }
 
     // Update is called once per frame
     private void OnClick()
     {
-        Screen.fullScreen = true;
+        //Screen.fullScreen = true;
+        //Screen.SetResolution(1920, 1080, true);
 
         GameSceneManager gameSceneManager = GameSceneManager.Instance;
         gameSceneManager.IsFade = false;

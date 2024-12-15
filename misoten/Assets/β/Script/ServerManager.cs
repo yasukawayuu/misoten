@@ -1,12 +1,15 @@
 using System;
 using System.Text;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using NativeWebSocket;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Debug = UnityEngine.Debug;
+using Debug = UnityEngine.Debug;    
 using System.Collections;
+using static UnityEngine.GraphicsBuffer;
+using Unity.VisualScripting;
 
 
 public class ServerManager : SingletonMonoBehaviour<ServerManager>
@@ -16,6 +19,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     [SerializeField] private GameObject _samllGarbage;
     [SerializeField] private GameObject _mediumGarbage;
     [SerializeField] private GameObject _largeGarbage;
+    
+    private int _stateID;
 
     [SerializeField] private Text _pingText;
     float _ping = 0.0f;
@@ -25,7 +30,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
-    private Vector2 _position = Vector2.zero;
+    private Vector2 _targetPosition = Vector2.zero;
 
     public int ClientId
     {
@@ -205,8 +210,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
             case "newPlayer":
             case "existingPlayer":
                 Debug.Log(data.type);
-                Vector2 position = new Vector2(data.state[0].position.x, data.state[0].position.y);
+                Vector3 position = new Vector3(data.state[0].position.x, data.state[0].position.y,0);
                 GameObject player = Instantiate(_player, position, Quaternion.Euler(new Vector3(0, 0, 0)));
+                Debug.Log(data.color);
                 player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
                 {
@@ -241,6 +247,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 break;
             case "playerDisconnected":
                 Debug.Log($"ÉvÉåÉCÉÑÅ[Ç™êÿíf: ID={data.id}");
+
+                GameObject obj = Instantiate(_player.GetComponent<Player>().DeathParticle, _players[data.id].transform.position, Quaternion.identity);
+                var main = obj.GetComponent<ParticleSystem>().main;
+                Color color = _players[data.id].GetComponent<SpriteRenderer>().material.GetColor("_PlayerColor");
+                main.startColor = new Color(color.r, color.g, color.b, 1.0f);
+
                 Destroy(_players[data.id]);
                 _players.Remove(data.id);
                 break;
@@ -254,8 +266,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         foreach (var state in states)
         {
-            _position = state.position;
-            _players[state.id].transform.position = _position;
+            _targetPosition = state.position;
+            _players[state.id].transform.position = _targetPosition;
         }
     }
 

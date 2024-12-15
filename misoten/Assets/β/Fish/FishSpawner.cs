@@ -3,9 +3,11 @@ using TMPro;
 using UnityEngine;
 public class FishSpawner : MonoBehaviour
 {
-    public GameObject[] fishPrefabs; // 複数の魚のプレハブを格納
-    public float spawnInterval = 3f; // 魚の生成間隔
+    [SerializeField]private GameObject[] fishPrefabs; // 複数の魚のプレハブを格納
+    [SerializeField]private float spawnInterval = 3f; // 魚の生成間隔
+    [SerializeField] private float _vertices;
     private GameObject lastSpawnedFishPrefab = null; // 最後に生成された魚のプレハブ（最初のプレハブかどうかを判断）
+   
 
     private void Start()
     {
@@ -26,11 +28,11 @@ public class FishSpawner : MonoBehaviour
 
     private void SpawnFish()
     {
-        // カメラの四隅のスクリーン座標を取得
-        Vector2 screenBottomLeft = new Vector3(-175, 175);
-        Vector2 screenTopRight = new Vector3(175, -175);
+        // マップの四頂点座標を取得
+        Vector2 screenBottomLeft = new Vector3(-_vertices, _vertices);
+        Vector2 screenTopRight = new Vector3(_vertices, -_vertices);
 
-        // ランダムに位置を決定：画面外のどの辺から生成するか（左、右、上、下）
+        // ランダムに位置を決定：マップのどの辺から生成するか（左、右、上、下）
         Vector2 spawnPosition = Vector3.zero;
         Vector2 targetPosition = Vector3.zero;
         int side = Random.Range(0, 4); // 0:左, 1:右, 2:上, 3:下
