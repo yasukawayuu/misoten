@@ -38,7 +38,11 @@ public class Player : Marimo
     [SerializeField] private SpriteRenderer _childSpriteRender;
     [SerializeField] private SpriteRenderer _eyesSpriteRender;
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
+    [SerializeField] private Material _disolveMaterial;
+    [SerializeField] private GameObject[] _disolveObjects;
     [SerializeField] private GameObject _nameText;
+    [SerializeField] private GameObject _chargeEffect;
+    [SerializeField] private GameObject _burstEffect;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
     private float _cameraSize = 0.0f;
@@ -67,6 +71,8 @@ public class Player : Marimo
         _nameText.GetComponent<MeshRenderer>().sortingOrder = 2;
 
         _render.sortingOrder = 2;
+
+        _chargeEffect.SetActive(false);
 
         _playerGravityController.GravitySetteing(this);
 
@@ -154,6 +160,9 @@ public class Player : Marimo
             Vector2 endPoint = _startPos + limitedDirection;
             
             _lineRend.SetPosition(1, endPoint);
+
+            // チャージエフェクト表示
+            if (!_chargeEffect.activeSelf) _chargeEffect.SetActive(true);
         }
 
         // マウスを離したとき
@@ -174,7 +183,10 @@ public class Player : Marimo
             else if(_point > _pointScale[2])
                 HoldPoint(_raito[2], _pointRaito[2]);
 
-            
+            // チャージエフェクト非表示
+            if (_chargeEffect.activeSelf) _chargeEffect.SetActive(false);
+            Instantiate(_burstEffect);
+
             // 力を加える
             if (_maxLineLength > 0.0f)
                 ServerManager.Instance.SendInputToServer(startDirection * _holdPoint);
@@ -204,10 +216,13 @@ public class Player : Marimo
     {
         if(!_isNormal && _isLocalPlayer)
         {
-            ServerManager.Instance.CloseWebSocket();
-            GameSceneManager gameSceneManager = GameSceneManager.Instance;
-            gameSceneManager.IsFade = false;
-            gameSceneManager.SceneName = "Title";
+            GetComponent<Renderer>().material = _disolveMaterial;
+            foreach (GameObject obj in _disolveObjects)
+            {
+                Renderer renderer = obj.GetComponent<Renderer>();
+                renderer.material = _disolveMaterial;
+            }
+            StartCoroutine("Respawn");
         }
 
         _garbageValue += 1;
@@ -248,5 +263,19 @@ public class Player : Marimo
         }
         
 
+    }
+
+    /// <summary>
+    /// 死亡
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(1.75f);
+
+        ServerManager.Instance.CloseWebSocket();
+        GameSceneManager gameSceneManager = GameSceneManager.Instance;
+        gameSceneManager.IsFade = false;
+        gameSceneManager.SceneName = "Title";
     }
 }
