@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
     private AudioSource _bgmSource;
     private AudioSource _seSource3D;
-    private IDictionary<string, AudioSource> _seSources2D = new Dictionary<string, AudioSource>();
 
+    private IDictionary<string, AudioSource> _seSources2D = new Dictionary<string, AudioSource>();
+    [SerializeField] private AudioClip[] _seClips = null;
 
     [SerializeField] private AudioClip _bgm;
-    [SerializeField] private AudioClip _clean;
-    [SerializeField] private AudioClip _charge;
-    [SerializeField] private AudioClip _recovery;
+
 
     private void Start()
     {
@@ -28,18 +28,24 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         _seSource3D.minDistance = 1.0f;
         _seSource3D.maxDistance = 50.0f;
 
-        _seSources2D["charge"] = gameObject.AddComponent<AudioSource>();
-        _seSources2D["charge"].clip = _charge;
-        _seSources2D["clean"] = gameObject.AddComponent<AudioSource>();
-        _seSources2D["clean"].clip = _clean;
-        _seSources2D["recovery"] = gameObject.AddComponent<AudioSource>();
-        _seSources2D["recovery"].clip = _recovery;
+        //インスペクター上で追加した音声ファイルをファイル名で各AudioSourceに追加する
+        for(int i = 0;i < _seClips.Length;i++)
+        {
+            _seSources2D[_seClips[i].name] = gameObject.AddComponent<AudioSource>();
+            _seSources2D[_seClips[i].name].clip = _seClips[i];
+        }
     }
 
     private void Update()
     {
-        if (GameSceneManager.Instance)
-            _bgmSource.volume = GameSceneManager.Instance.MaskProgress;
+        if (GameSceneManager.Instance && GameSceneManager.Instance.Panel.activeSelf)
+        {
+            AudioSource[] audioSources = GetComponents<AudioSource>();
+            for (int i = 0; i < audioSources.Length; i++)
+            {
+                audioSources[i].volume = GameSceneManager.Instance.MaskProgress;
+            }
+        }
     }
 
     public void PlayBGM(AudioClip clip)
@@ -49,18 +55,37 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         _bgmSource.Play();
     }
 
+    /// <summary>
+    /// どこで音がなっているかを知るためのPositon
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="clip"></param>
     public void PlaySE3D(Vector2 position,AudioClip clip) 
     {
         _seSource3D.transform.position = position;
         _seSource3D.PlayOneShot(clip);
     }
 
+    /// <summary>
+    /// なんの音鳴らすのと音の速さを調整
+    /// </summary>
+    /// <param name="clip"></param>
+    /// <param name="pitch"></param>
     public void PlaySE2D(string clip,float pitch = 1.0f)
     {
         _seSources2D[clip].pitch = pitch;
 
         if(!_seSources2D[clip].isPlaying)
             _seSources2D[clip].PlayOneShot(_seSources2D[clip].clip);
+    }
+    
+    public void SetVolume(float volume)
+    {
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        for(int i = 0; i < audioSources.Length; i++) 
+        {
+            audioSources[i].volume = volume;
+        }
     }
 
 }

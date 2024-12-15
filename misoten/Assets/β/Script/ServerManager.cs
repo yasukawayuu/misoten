@@ -9,6 +9,7 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;    
 using System.Collections;
 using static UnityEngine.GraphicsBuffer;
+using Unity.VisualScripting;
 
 
 public class ServerManager : SingletonMonoBehaviour<ServerManager>
@@ -211,6 +212,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 Debug.Log(data.type);
                 Vector3 position = new Vector3(data.state[0].position.x, data.state[0].position.y,0);
                 GameObject player = Instantiate(_player, position, Quaternion.Euler(new Vector3(0, 0, 0)));
+                Debug.Log(data.color);
                 player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
                 if (data.id == _clientId)
                 {
@@ -248,7 +250,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 
                 GameObject obj = Instantiate(_player.GetComponent<Player>().DeathParticle, _players[data.id].transform.position, Quaternion.identity);
                 var main = obj.GetComponent<ParticleSystem>().main;
-                Color color = GetComponent<SpriteRenderer>().material.GetColor("_PlayerColor");
+                Color color = _players[data.id].GetComponent<SpriteRenderer>().material.GetColor("_PlayerColor");
                 main.startColor = new Color(color.r, color.g, color.b, 1.0f);
 
                 Destroy(_players[data.id]);

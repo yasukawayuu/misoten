@@ -28,6 +28,12 @@ public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     {
         get { return _maskProgress; }
     }
+
+    public GameObject Panel
+    {
+        get { return _panel; }
+    }
+
     void Start()
     {
         // マテリアルの _MaskProgress プロパティを 0 に初期化

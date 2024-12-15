@@ -112,9 +112,6 @@ public class Player : Marimo
         // シェーダーに値を設定
         _spriteRenderer.material.SetFloat("_Garadation", gradationValue);
 
-        if (!_isNormal && _isLocalPlayer && _disolvValue > 0)
-            StartCoroutine("Disolv");
-
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
     }
@@ -227,9 +224,12 @@ public class Player : Marimo
     public void EatGarbage()
     {
         if (!_isNormal && _isLocalPlayer)
+        {
+            StartCoroutine("Disolv");
             Respawn();
+        }
 
-         _garbageValue += 1;
+        _garbageValue += 1;
         _scale += _point / 5;
         _point += 1.0f;
         ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
@@ -242,9 +242,9 @@ public class Player : Marimo
             // 衝突位置を取得する
             Vector3 hitPos = collision.contacts[0].point;
 
-            SoundManager.Instance.PlaySE3D(hitPos, _hit);
-
             Instantiate(_hitEffect, hitPos, Quaternion.identity);
+
+            SoundManager.Instance.PlaySE3D(hitPos, _hit);
        }
     }
 
@@ -290,9 +290,12 @@ public class Player : Marimo
 
     private IEnumerator Disolv()
     {
-        yield return new WaitForSeconds(0.1f);
-        _disolvValue -= 0.01f;
-        _spriteRenderer.material.SetFloat("_Disolve", _disolvValue);
+        while(true)
+        {
+            yield return new WaitForSeconds(0.01f);
+            _disolvValue -= 0.01f;
+            _spriteRenderer.material.SetFloat("_Disolve", _disolvValue);
+        }
     }
 
     /// <summary>
