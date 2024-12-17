@@ -11,6 +11,10 @@ public class FishSpawner : MonoBehaviour
 
     private void Start()
     {
+        for(int i = 0;i < 10;i++)
+        {
+            SpawnFish();
+        }
         // 魚を定期的に生成するコルーチンを開始
         StartCoroutine(SpawnFishCoroutine());
     }

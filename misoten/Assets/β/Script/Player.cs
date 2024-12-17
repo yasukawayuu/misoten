@@ -45,10 +45,6 @@ public class Player : Marimo
     [SerializeField] private GameObject _deathParticle;
     [SerializeField] private PlayerGravityController _playerGravityController;
 
-
-    [SerializeField] private AudioClip _hit;
- 
-
     private float _disolvValue = 1.0f;
     private float _cameraSize = 0.0f;
     private float _lineWidth = 1.0f;
@@ -68,6 +64,12 @@ public class Player : Marimo
     {
         get { return _deathParticle; }
     }
+
+    public float DisolvValue
+    {
+        get { return _disolvValue; }
+    }
+
 
     void Start()
     {
@@ -95,16 +97,12 @@ public class Player : Marimo
         if (_isLocalPlayer)
             Move();
 
-        base.Update();
-    }
-
-    void FixedUpdate()
-    {
-        if( _point > 1.0f )
+        if (_point > 1.0f)
             _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
             _scale = 1.0f;
-        transform.localScale = new Vector3(_scale, _scale, 0.0f);
+
+        transform.localScale = new Vector3(_scale, _scale, _scale);
 
         // _garbageValueを最大値に基づいて、-1から1の範囲に変換
         float gradationValue = Mathf.Lerp(-1.0f, 1.0f, _garbageValue / _maxGarbageValue);
@@ -114,6 +112,13 @@ public class Player : Marimo
 
         if (_garbageValue >= _maxGarbageValue)
             _isNormal = false;
+
+        base.Update();
+    }
+
+    void FixedUpdate()
+    {
+
     }
 
     /// <summary>
@@ -168,7 +173,8 @@ public class Player : Marimo
             
             _lineRend.SetPosition(1, endPoint);
 
-            SoundManager.Instance.PlaySE2D("charge", 1.5f);
+            if(_isLocalPlayer)
+                SoundManager.Instance.PlaySE2D("charge", 1.5f);
             // チャージエフェクト表示
             if (!_chargeEffect.activeSelf) _chargeEffect.SetActive(true);
  
@@ -244,7 +250,7 @@ public class Player : Marimo
 
             Instantiate(_hitEffect, hitPos, Quaternion.identity);
 
-            SoundManager.Instance.PlaySE3D(hitPos, _hit);
+            SoundManager.Instance.PlaySE3D("hit", hitPos);
        }
     }
 
@@ -261,7 +267,8 @@ public class Player : Marimo
                 yield return new WaitForSeconds(_cleanTime[0]);
                 if (_garbageValue > 0.0f)
                 {
-                    SoundManager.Instance.PlaySE2D("clean");
+                    if (_isLocalPlayer)
+                        SoundManager.Instance.PlaySE2D("clean");
                     _garbageValue -= 0.1f;
                 }
                     
@@ -273,7 +280,8 @@ public class Player : Marimo
             {
                 yield return new WaitForSeconds(_cleanTime[1]);
                 _garbageValue -= 0.1f;
-                SoundManager.Instance.PlaySE2D("clean", 3);
+                if (_isLocalPlayer)
+                    SoundManager.Instance.PlaySE2D("clean", 3);
 
                 if (_garbageValue <= 0.0f)
                 {
@@ -288,13 +296,16 @@ public class Player : Marimo
 
     }
 
-    private IEnumerator Disolv()
+    public IEnumerator Disolv()
     {
         while(true)
         {
             yield return new WaitForSeconds(0.01f);
             _disolvValue -= 0.01f;
             _spriteRenderer.material.SetFloat("_Disolve", _disolvValue);
+
+            if (_disolvValue < 0.0f)
+                Destroy(this.gameObject);
         }
     }
 

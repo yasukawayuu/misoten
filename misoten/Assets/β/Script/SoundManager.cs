@@ -6,10 +6,12 @@ using UnityEngine.Rendering;
 public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
     private AudioSource _bgmSource;
-    private AudioSource _seSource3D;
 
     private IDictionary<string, AudioSource> _seSources2D = new Dictionary<string, AudioSource>();
-    [SerializeField] private AudioClip[] _seClips = null;
+    private IDictionary<string, AudioSource> _seSources3D = new Dictionary<string, AudioSource>();
+
+    [SerializeField] private AudioClip[] _seClips2D = null;
+    [SerializeField] private AudioClip[] _seClips3D = null;
 
     [SerializeField] private AudioClip _bgm;
 
@@ -20,19 +22,23 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         _bgmSource.clip = _bgm;
         _bgmSource.loop = true;
         _bgmSource.Play();
-
-        //SEを3Dサウンドに設定
-        _seSource3D = gameObject.AddComponent<AudioSource>();
-        _seSource3D.spatialBlend = 1.0f;
-        _seSource3D.rolloffMode = AudioRolloffMode.Linear;
-        _seSource3D.minDistance = 1.0f;
-        _seSource3D.maxDistance = 50.0f;
+       
+        //インスペクター上で追加した音声ファイルをファイル名で各AudioSourceに追加する
+        for (int i = 0; i < _seClips3D.Length; i++)
+        {
+            _seSources3D[_seClips3D[i].name] = gameObject.AddComponent<AudioSource>();
+            _seSources3D[_seClips3D[i].name].spatialBlend = 1.0f;
+            _seSources3D[_seClips3D[i].name].rolloffMode = AudioRolloffMode.Linear;
+            _seSources3D[_seClips3D[i].name].minDistance = 1.0f;
+            _seSources3D[_seClips3D[i].name].maxDistance = 50.0f;
+            _seSources3D[_seClips3D[i].name].clip = _seClips3D[i];
+        }
 
         //インスペクター上で追加した音声ファイルをファイル名で各AudioSourceに追加する
-        for(int i = 0;i < _seClips.Length;i++)
+        for (int i = 0;i < _seClips2D.Length;i++)
         {
-            _seSources2D[_seClips[i].name] = gameObject.AddComponent<AudioSource>();
-            _seSources2D[_seClips[i].name].clip = _seClips[i];
+            _seSources2D[_seClips2D[i].name] = gameObject.AddComponent<AudioSource>();
+            _seSources2D[_seClips2D[i].name].clip = _seClips2D[i];
         }
     }
 
@@ -60,10 +66,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     /// </summary>
     /// <param name="position"></param>
     /// <param name="clip"></param>
-    public void PlaySE3D(Vector2 position,AudioClip clip) 
+    public void PlaySE3D(string clip, Vector2 position) 
     {
-        _seSource3D.transform.position = position;
-        _seSource3D.PlayOneShot(clip);
+        if (!_seSources3D[clip].isPlaying)
+        {
+            _seSources3D[clip].transform.position = position;
+            _seSources3D[clip].PlayOneShot(_seSources3D[clip].clip);
+        }
     }
 
     /// <summary>

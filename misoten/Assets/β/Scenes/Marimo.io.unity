@@ -704,7 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -927,7 +927,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 909a01343be7755488523b823f20f29b, type: 3}
     m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
@@ -1172,8 +1172,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 35
+    m_Font: {fileID: 12800000, guid: 909a01343be7755488523b823f20f29b, type: 3}
+    m_FontSize: 33
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -1256,8 +1256,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 40
+    m_Font: {fileID: 12800000, guid: 909a01343be7755488523b823f20f29b, type: 3}
+    m_FontSize: 33
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
@@ -1268,9 +1268,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '
-
-'
+  m_Text: 
 --- !u!222 &1534255807
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1440,8 +1438,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_Font: {fileID: 12800000, guid: 909a01343be7755488523b823f20f29b, type: 3}
+    m_FontSize: 44
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1452,7 +1450,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'LeaderbBard
+  m_Text: 'Leader Board
 
 '
 --- !u!222 &1597033814
@@ -1528,6 +1526,14 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips2D.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips3D.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
       propertyPath: _seClips.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 86af492cb9a01b5429ed73d098ab8ea3, type: 3}
@@ -1543,6 +1549,22 @@ PrefabInstance:
       propertyPath: _seClips.Array.data[3]
       value: 
       objectReference: {fileID: 8300000, guid: d6bb081691381b74aa3f9e12942a83b6, type: 3}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips2D.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 687dd05946b639a4a92a10c6333c6f24, type: 3}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips2D.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 86af492cb9a01b5429ed73d098ab8ea3, type: 3}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips2D.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: d6bb081691381b74aa3f9e12942a83b6, type: 3}
+    - target: {fileID: 6206054702397335310, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
+      propertyPath: _seClips3D.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 9c1bc01034fbbf34cb949b3b5c8353ee, type: 3}
     - target: {fileID: 8626683340266749690, guid: ff872434469cb174ba15f4bb50dd5d81, type: 3}
       propertyPath: m_Name
       value: SoundManager

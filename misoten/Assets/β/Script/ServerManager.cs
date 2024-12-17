@@ -48,6 +48,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         ConnectToServer();
         StartCoroutine("SendPing");
+        StartCoroutine("SendPoint");
     }
 
     private async void ConnectToServer()
@@ -192,11 +193,30 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         }
     }
 
+    private async void SendPointToServer(float point)
+    {
+        if (_websocket.State == WebSocketState.Open)
+        {
+            // 入力データをサーバーに送信
+            var message = new PointMessage
+            {
+                type = "point",
+                id = _clientId,
+                point = point
+            };
+
+            _pingStopwatch.Restart();
+            string jsonMessage = JsonUtility.ToJson(message);
+            await _websocket.SendText(jsonMessage);
+        }
+    }
+
     private void HandleServerMessage(string message)
     {
         // サーバーからのメッセージをパース
         var data = JsonUtility.FromJson<ServerMessage>(message);
         var garbageData = JsonUtility.FromJson<GarbageMessage>(message);
+        var pointData = JsonUtility.FromJson<PointMessage>(message);
 
         switch (data.type)
         {
@@ -206,6 +226,9 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 break;
             case "playerName":
                 _players[data.id].name = data.name;
+                break;
+            case "point":
+                _players[data.id].GetComponent<Player>().Point = pointData.point;
                 break;
             case "newPlayer":
             case "existingPlayer":
@@ -253,7 +276,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 Color color = _players[data.id].GetComponent<SpriteRenderer>().material.GetColor("_PlayerColor");
                 main.startColor = new Color(color.r, color.g, color.b, 1.0f);
 
-                Destroy(_players[data.id]);
+                StartCoroutine(_players[data.id].GetComponent<Player>().Disolv());
+
                 _players.Remove(data.id);
                 break;
             default:
@@ -275,7 +299,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         if (IsPlayerNearby(new Vector2(data.position.x, data.position.y)))
         {
-            GameObject garbage = Instantiate(gabage, data.position, Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
+            GameObject garbage = Instantiate(gabage,new Vector3(data.position.x,data.position.y,-10.0f), Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f)));
             garbage.GetComponent<Garbage>().ID = data.id;
         }
         else
@@ -307,6 +331,15 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         {
             yield return new WaitForSeconds(1f);
             SendPingToServer();
+        }
+    }
+
+    private IEnumerator SendPoint()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            SendPointToServer(Players[_clientId].GetComponent<Player>().Point);
         }
     }
 
@@ -368,5 +401,13 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         public string type;
         public int id;
         public string name;
+    }
+
+    [Serializable]
+    private class PointMessage
+    {
+        public string type;
+        public int id;
+        public float point;
     }
 }
