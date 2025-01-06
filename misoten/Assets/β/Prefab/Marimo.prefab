@@ -463,7 +463,6 @@ MonoBehaviour:
   _hitEffect: {fileID: 625174201669741959, guid: 17b52d998289eac41950dcc920bd6d7f, type: 3}
   _deathParticle: {fileID: 5724815087105775678, guid: 4858ecf8a4588504cbd9320d78545c6b, type: 3}
   _playerGravityController: {fileID: 235336249270186263}
-  _hit: {fileID: 8300000, guid: 9c1bc01034fbbf34cb949b3b5c8353ee, type: 3}
 --- !u!120 &6224661661609249786
 LineRenderer:
   serializedVersion: 2
@@ -813,11 +812,11 @@ PrefabInstance:
       objectReference: {fileID: 6775279967321589777}
     - target: {fileID: 8472576178038283778, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: _baseGravityScale
-      value: 1.2
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 8472576178038283778, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: _baseCollisionScale
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

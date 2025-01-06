@@ -7,7 +7,7 @@ public class PlayerGravityController : MonoBehaviour
     private Player _player;
 
     [SerializeField] private Transform _marimoBody;
-    [SerializeField] private float _baseGravityScale = 1.5f;
+    [SerializeField] private float _baseGravityScale = 1.2f;
     [SerializeField] private GameObject _gravityForceField;
     [SerializeField] private float _baseCollisionScale = 0.2f;
     [SerializeField] private GameObject _gravityCollision;
@@ -19,17 +19,26 @@ public class PlayerGravityController : MonoBehaviour
         _player = player;
     }
 
+    void Start()
+    {
+        _gravityForceField.transform.localScale = _base * _baseGravityScale;
+        _gravityCollision.transform.localScale = _base * _baseCollisionScale;
+    }
+
     void Update()
     {
         this.transform.position = _marimoBody.position;
 
-        Vector3 point = new Vector3(_player.Point * 0.2f, _player.Point * 0.2f, _player.Point * 0.2f);
-        Vector3 scale = _base * _baseGravityScale + point;
-        _gravityForceField.transform.localScale = scale;
 
-        scale = _base * _baseCollisionScale + point;
-        _gravityCollision.transform.localScale = scale;
-
-        //Debug.Log(_gravityForceField.transform.localScale);
+        if (_player.Point < 20)
+        {
+            _gravityForceField.transform.localScale = _base * (_baseGravityScale - ((0.3f + _baseGravityScale - 1.0f) * (_player.Point / 20.0f)));
+            _gravityCollision.transform.localScale = _base * (_baseCollisionScale + (0.2f * (_player.Point / 20.0f)));
+        }
+        else
+        {
+            _gravityForceField.transform.localScale = _base * 0.7f;
+            _gravityCollision.transform.localScale = _base * (_baseCollisionScale + 0.2f);
+        }
     }
 }
