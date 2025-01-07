@@ -48,13 +48,10 @@ public class Marimo : MonoBehaviour
 
 
         // â§ä•èàóù
-        if(_isKing)
+        if(_isKing && !_crawn.activeSelf)
         { 
-            if (!_crawn.activeSelf)
-            {
-                _crawn.SetActive(true);
-            }
-            _crawn.transform.localPosition = new Vector3(0.5f + _point * 0.008f, 0.5f + _point * 0.008f, 0.0f);
+            _crawn.SetActive(true);
+
         }
         if(!_isKing && _crawn.activeSelf)
         {
