@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
 
 public class Player : Marimo
 {
@@ -36,7 +38,9 @@ public class Player : Marimo
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private SpriteRenderer _eyesSpriteRender;
+    [SerializeField] private SpriteRenderer _mapSpriteRender;
     [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
+    [SerializeField] private Image _grave;
     [SerializeField] private GameObject[] _disolveObjects;
     [SerializeField] private GameObject _nameText;
     [SerializeField] private GameObject _chargeEffect;
@@ -69,6 +73,11 @@ public class Player : Marimo
     {
         get { return _disolvValue; }
     }
+    
+    public SpriteRenderer MapRender
+    {
+        get { return _mapSpriteRender; }
+    }
 
 
     void Start()
@@ -95,14 +104,21 @@ public class Player : Marimo
     protected override void Update()
     {
         if (_isLocalPlayer)
+        {
             Move();
 
+            if(_isNormal)
+                _grave.color = new Color(1.0f, 0.0f, 0.0f, 0.0f);
+            else
+                _grave.color = new Color(1.0f, 0.0f, 0.0f, 0.1f);
+        }
+            
         if (_point > 1.0f)
             _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
             _scale = 1.0f;
 
-        transform.localScale = new Vector3(_scale, _scale, _scale);
+        transform.localScale = new Vector3(_scale, _scale, 0.0f);
 
         // _garbageValueを最大値に基づいて、-1から1の範囲に変換
         float gradationValue = Mathf.Lerp(-1.0f, 1.0f, _garbageValue / _maxGarbageValue);
@@ -154,14 +170,17 @@ public class Player : Marimo
             else if (distance <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
             {
                 _maxLineLength = 4.0f * cameraSizeRatio;
+                _lineRend.material.color = Color.yellow;
             }
             else if (distance <= 6.0f * cameraSizeRatio && _point > _pointScale[1])
             {
                 _maxLineLength = 6.0f * cameraSizeRatio;
+                _lineRend.material.color = Color.green;
             }   
             else if(_point > _pointScale[2])
             {
                 _maxLineLength = 8.0f * cameraSizeRatio;
+                _lineRend.material.color = Color.blue;
             }
 
             // スタート位置からマウス位置までの方向と距離を計算
@@ -207,6 +226,7 @@ public class Player : Marimo
             if (_maxLineLength > 0.0f)
                 ServerManager.Instance.SendInputToServer(startDirection * _holdPoint);
 
+            _lineRend.material.color = Color.white;
             _lineRend.enabled = false;
             _eyesSpriteRender.sprite = _eyesSprite[0];
         }
@@ -280,6 +300,7 @@ public class Player : Marimo
             {
                 yield return new WaitForSeconds(_cleanTime[1]);
                 _garbageValue -= 0.1f;
+
                 if (_isLocalPlayer)
                     SoundManager.Instance.PlaySE2D("clean", 3);
 

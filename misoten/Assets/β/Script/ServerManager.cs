@@ -30,7 +30,11 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     private IDictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     int _clientId = 0;
 
-    private Vector2 _targetPosition = Vector2.zero;
+    private Dictionary<int, Vector3> _targetPositions = new Dictionary<int, Vector3>();
+    private Dictionary<int, Vector3> _currentVelocities = new Dictionary<int, Vector3>();
+
+    private float _lerpSpeed = 10f; // 補間速度
+    private float _latencyCompensation = 0.1f; // 遅延補正時間（秒）
 
     public int ClientId
     {
@@ -89,6 +93,31 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         if (_websocket == null || _websocket.State != WebSocketState.Open)
             return;
+
+        foreach (var playerEntry in _players)
+        {
+            int id = playerEntry.Key;
+            GameObject player = playerEntry.Value;
+
+            if (_targetPositions.ContainsKey(id))
+            {
+                // 現在の位置
+                Vector3 currentPosition = player.transform.position;
+
+                // 目標位置
+                Vector3 targetPosition = _targetPositions[id];
+
+                // 距離に応じた補間速度を動的に計算
+                float distance = Vector3.Distance(currentPosition, targetPosition);
+                float dynamicLerpSpeed = Mathf.Clamp(distance * _lerpSpeed, _lerpSpeed, _lerpSpeed * 2f);
+
+                // スムーズな補間
+                Vector3 smoothedPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * dynamicLerpSpeed);
+
+                // オブジェクトを移動させる
+                player.transform.position = smoothedPosition;
+            }
+        }
 
         //collisionTest();
 
@@ -240,6 +269,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
+                    player.GetComponent<Player>().MapRender.color = Color.red;
                     player.name = SavePlayerName.Instance.PlayerName;
                     player.GetComponent<Player>().NameText.GetComponent<TextMesh>().text = SavePlayerName.Instance.PlayerName;
                     SendNameToServer(player.name);
@@ -290,8 +320,17 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     {
         foreach (var state in states)
         {
-            _targetPosition = state.position;
-            _players[state.id].transform.position = _targetPosition;
+            if (!_players.ContainsKey(state.id))
+            {
+                continue;
+            }
+
+            // 遅延を考慮してターゲット位置を計算
+            Vector3 predictedPosition = state.position + state.velocity * _latencyCompensation;
+
+            // ターゲット位置と速度を保存
+            _targetPositions[state.id] = predictedPosition;
+            _currentVelocities[state.id] = state.velocity; // サーバーからの速度も記録
         }
     }
 
@@ -368,6 +407,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         public int id;
         public Vector2 position;
         public long timestamp;
+        public Vector2 velocity;
     }
 
     [Serializable]
