@@ -58,7 +58,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 
     private async void ConnectToServer()
     {
-        _websocket = new WebSocket("wss://marimo-king.com:8080");
+        _websocket = new WebSocket("ws://localhost:8080");
 
         _websocket.OnOpen += () => {
             Debug.Log("サーバーに接続した");
@@ -115,18 +115,22 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 // スムーズな補間
                 Vector3 smoothedPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * dynamicLerpSpeed);
 
+                //ターゲットに方向を向かせる
                 Vector2 direction = targetPosition - currentPosition;
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 Quaternion rotation = Quaternion.Euler(0, 0, angle - 90);
                 GameObject capsule = player.transform.GetChild(player.transform.childCount - 1).gameObject;
+
+                //カプセルの長さ調整をする
                 capsule.transform.rotation = rotation;
                 CapsuleCollider2D capsuleCollider = capsule.GetComponent<CapsuleCollider2D>();
                 float size = Mathf.Round(distance * 10f) / 10f;
-                capsuleCollider.size = new Vector2(0.5f, size + 0.5f);
-                if (capsuleCollider.size.y > 0.5f)
+                capsuleCollider.size = new Vector2(0.25f, size + 0.25f);
+                if (capsuleCollider.size.y > 0.25f)
                     capsuleCollider.offset = new Vector2(0.0f, -capsuleCollider.size.y / 2);
                 else
                     capsuleCollider.offset = new Vector2(0.0f, 0.0f);
+
                 // オブジェクトを移動させる
                 player.transform.position = smoothedPosition;
             }
