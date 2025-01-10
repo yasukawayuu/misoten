@@ -136,7 +136,7 @@ public class Player : Marimo
                 ServerManager.Instance.SendSclaeToServer(_scale);
             }
 
-        transform.localScale = new Vector3(_scale, _scale, 0.0f);
+        transform.localScale = new Vector3(_scale, _scale, _scale);
 
         // _garbageValue‚ğÅ‘å’l‚ÉŠî‚Ã‚¢‚ÄA-1‚©‚ç1‚Ì”ÍˆÍ‚É•ÏŠ·
         float gradationValue = Mathf.Lerp(-1.0f, 1.0f, _garbageValue / _maxGarbageValue);

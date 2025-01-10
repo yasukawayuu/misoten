@@ -221,7 +221,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1b8b56d7b5dc1cf4da73c746e92629bc, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -259,9 +259,9 @@ TextMesh:
   m_Alignment: 1
   m_TabSize: 4
   m_FontSize: 30
-  m_FontStyle: 0
+  m_FontStyle: 1
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 1b8b56d7b5dc1cf4da73c746e92629bc, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
@@ -1219,15 +1219,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1782699741562716416, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 1782699741562716416, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 1782699741562716416, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 3956838532619083696, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: m_Name
@@ -1279,7 +1279,7 @@ PrefabInstance:
       objectReference: {fileID: 6775279967321589777}
     - target: {fileID: 8472576178038283778, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: _baseGravityScale
-      value: 1.1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8472576178038283778, guid: 6ec0f5ad21cfdb848ac90c89cb475797, type: 3}
       propertyPath: _baseCollisionScale
