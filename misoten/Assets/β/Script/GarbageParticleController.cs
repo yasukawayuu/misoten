@@ -10,7 +10,7 @@ public class GarbageParticleController : MonoBehaviour
     void Start()
     {
         _particleSystem = GetComponent<ParticleSystem>();
-        Invoke(nameof(StopEmitting), 5.0f);
+        //Invoke(nameof(StopEmitting), 5.0f);
     }
 
     void StopEmitting()
@@ -54,6 +54,7 @@ public class GarbageParticleController : MonoBehaviour
         //// 変更したパーティクルを再設定
         //_particleSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
 
+        Debug.Log("入った");
         // トリガー条件に一致するパーティクルを取得
         int numEnter = _particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, _enterParticles);
 
@@ -74,9 +75,9 @@ public class GarbageParticleController : MonoBehaviour
             foreach (var collider in hitColliders)
             {
                 // Player タグを持つオブジェクトの例
-                if (collider.gameObject.tag == "Player")
+                if (collider.gameObject.tag == "Player2")
                 {
-                    collider.gameObject.GetComponent<Player>().EatGarbage();
+                    collider.gameObject.transform.parent.GetComponent<Player>().EatGarbage();
                 }
             }
 

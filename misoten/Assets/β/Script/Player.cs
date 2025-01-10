@@ -30,8 +30,10 @@ public class Player : Marimo
     private Vector2 _startPos;          //マウスの初期位置
     private bool _isDrag = false;       //マウス押してるかどうか
     private bool _isNormal = true;      //上限に達してるか
+    private bool _isInvincible = false;
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
+    private float _oldScale = 1.0f;
     private float _holdPoint = 0.01f;　 //ホールドポイント
 
     [SerializeField] private LineRenderer _lineRend;
@@ -111,12 +113,28 @@ public class Player : Marimo
                 _grave.color = new Color(1.0f, 0.0f, 0.0f, 0.0f);
             else
                 _grave.color = new Color(1.0f, 0.0f, 0.0f, 0.1f);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                _point += 1.0f;
+
+            if (Input.GetKeyDown(KeyCode.I))
+                _isInvincible = true;
+
+            if (Input.GetKeyDown(KeyCode.O))
+                _isInvincible = false;
         }
             
         if (_point > 1.0f)
             _scale = Mathf.Floor(_point) / 5 + 1.0f;
         else
             _scale = 1.0f;
+
+        if (_isLocalPlayer)
+            if (_scale != _oldScale)
+            {
+                _oldScale = _scale;
+                ServerManager.Instance.SendSclaeToServer(_scale);
+            }
 
         transform.localScale = new Vector3(_scale, _scale, 0.0f);
 
@@ -126,7 +144,7 @@ public class Player : Marimo
         // シェーダーに値を設定
         _spriteRenderer.material.SetFloat("_Garadation", gradationValue);
 
-        if (_garbageValue >= _maxGarbageValue)
+        if (_garbageValue >= _maxGarbageValue && !_isInvincible)
             _isNormal = false;
 
         base.Update();
@@ -166,6 +184,7 @@ public class Player : Marimo
             if (distance <= 2.0f * cameraSizeRatio)
             {
                 _maxLineLength = 2.0f * cameraSizeRatio;
+                _lineRend.material.color = Color.white;
             } 
             else if (distance <= 4.0f * cameraSizeRatio && _point > _pointScale[0])
             {
@@ -244,7 +263,7 @@ public class Player : Marimo
         _holdPoint = (Mathf.Floor(_point) / ratio) + _minSpeed;
         _point -= (Mathf.Floor(_point) / pointRaito);
         _point = Mathf.Floor(_point);
-        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
+        
     }
 
     public void EatGarbage()
@@ -255,10 +274,9 @@ public class Player : Marimo
             Respawn();
         }
 
-        _garbageValue += 1;
+        _garbageValue += 1.0f;
         _scale += _point / 5;
         _point += 1.0f;
-        ServerManager.Instance.SendSclaeToServer(this.gameObject.transform.localScale.x);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

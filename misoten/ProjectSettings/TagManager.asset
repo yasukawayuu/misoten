@@ -8,6 +8,7 @@ TagManager:
   - MediumGarbage
   - LargeGarbage
   - SmallGarbage
+  - Player2
   layers:
   - Default
   - TransparentFX
