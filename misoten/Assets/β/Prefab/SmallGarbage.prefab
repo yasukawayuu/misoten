@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4496455857456004404}
   - component: {fileID: 6634276419708460135}
   - component: {fileID: 8098375143094955116}
+  - component: {fileID: 3919436256077986848}
   m_Layer: 3
   m_Name: Particle
   m_TagString: Untagged
@@ -107,7 +108,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -752,7 +753,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.5
+      value: 0.0001
       mode: 0
       spread: 0
       speed:
@@ -4843,6 +4844,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fae727bd8674c24d9a1185b23e54eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3919436256077986848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246446042146038851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d25a3125fc05ca945ad37350bf6af976, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleSystem: {fileID: 4496455857456004404}
+  maxDistance: 3.5
+  centerPosition: {x: 0, y: 0, z: 0}
+  returnSpeed: 5
 --- !u!1 &4352319150858643701
 GameObject:
   m_ObjectHideFlags: 0
