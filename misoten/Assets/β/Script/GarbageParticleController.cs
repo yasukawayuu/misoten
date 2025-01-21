@@ -135,7 +135,7 @@ public class GarbageParticleController : MonoBehaviour
         _particleSystem.SetParticles(particles);
 
         // 次のフレームで削除確認
-        if (_particleSystem.particleCount == 1)
+        if (_particleSystem.particleCount == 1 || _particleSystem.particleCount == 0)
         {
             Destroy(this.gameObject);
         }
