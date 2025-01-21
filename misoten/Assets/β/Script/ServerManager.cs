@@ -20,8 +20,6 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
     [SerializeField] private GameObject _samllGarbage;
     [SerializeField] private GameObject _mediumGarbage;
     [SerializeField] private GameObject _largeGarbage;
-    
-    private int _stateID;
 
     [SerializeField] private Text _pingText;
     float _ping = 0.0f;
@@ -114,9 +112,12 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
 
                 // スムーズな補間
                 Vector3 smoothedPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * dynamicLerpSpeed);
-
+                
                 //ターゲットに方向を向かせる
                 Vector2 direction = targetPosition - currentPosition;
+
+                player.GetComponent<Player>().Direction = direction;
+
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                 Quaternion rotation = Quaternion.Euler(0, 0, angle - 90);
                 GameObject capsule = player.transform.GetChild(player.transform.childCount - 1).gameObject;
@@ -125,8 +126,8 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 capsule.transform.rotation = rotation;
                 CapsuleCollider2D capsuleCollider = capsule.GetComponent<CapsuleCollider2D>();
                 float size = Mathf.Round(distance * 10f) / 10f;
-                capsuleCollider.size = new Vector2(0.25f, size + 0.25f);
-                if (capsuleCollider.size.y > 0.25f)
+                capsuleCollider.size = new Vector2(0.5f, size + 0.5f);
+                if (capsuleCollider.size.y > 0.5f)
                     capsuleCollider.offset = new Vector2(0.0f, -capsuleCollider.size.y / 2);
                 else
                     capsuleCollider.offset = new Vector2(0.0f, 0.0f);
@@ -282,6 +283,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 Vector3 position = new Vector3(data.state[0].position.x, data.state[0].position.y,0);
                 GameObject player = Instantiate(_player, position, Quaternion.Euler(new Vector3(0, 0, 0)));
                 player.GetComponent<SpriteRenderer>().material.SetColor("_PlayerColor", data.color);
+                player.GetComponent<Player>().SetAccessory(data.accessory);
                 if (data.id == _clientId)
                 {
                     player.GetComponent<Player>().IsLocalPlayer = true;
@@ -323,6 +325,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
                 main.startColor = new Color(color.r, color.g, color.b, 1.0f);
 
                 StartCoroutine(_players[data.id].GetComponent<Player>().Disolv());
+                _players[data.id].GetComponent<Player>().SetKillLog();
 
                 _players.Remove(data.id);
                 break;
@@ -414,6 +417,7 @@ public class ServerManager : SingletonMonoBehaviour<ServerManager>
         public int id;
         public string name;
         public Color color;
+        public Vector3 accessory;
         public ServerState[] state;
     }
 
