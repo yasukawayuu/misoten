@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class Player : Marimo
 {
     [CustomLabel("最低移動量")]
-    [SerializeField] private float _minSpeed = 0.01f;
+    [SerializeField] private float _minSpeed = 0.005f;
 
     [CustomLabel("ローカルプレイヤー")]
     [SerializeField] private bool _isLocalPlayer = false;
@@ -34,14 +34,23 @@ public class Player : Marimo
     private float _maxLineLength = 0;   //現在のチャージ
     private float _scale = 1.0f;        //プライヤーの大きさ
     private float _oldScale = 1.0f;
-    private float _holdPoint = 0.01f;　 //ホールドポイント
+    private float _holdPoint = 0.01f;  //ホールドポイント
+    private Vector2 _direction;
+    private Vector2 _curretPosition;
+    private Vector2 _lastPosition;
+    private string _lastHitPlayerName = "";
+    private GameObject _lastHitPlayer;
 
     [SerializeField] private LineRenderer _lineRend;
     [SerializeField] private Renderer _render;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    [SerializeField] private SpriteRenderer _eyesSpriteRender;
     [SerializeField] private SpriteRenderer _mapSpriteRender;
-    [SerializeField] private Sprite[] _eyesSprite = new Sprite[2];
+
+    [SerializeField] private PlayerAccessory _playerEyes;
+    [SerializeField] private PlayerAccessory _playerBoushi;
+    [SerializeField] private PlayerAccessory _playerMegane;
+    [SerializeField] private PlayerAccessory _playerHige;
+
     [SerializeField] private Image _grave;
     [SerializeField] private GameObject[] _disolveObjects;
     [SerializeField] private GameObject _nameText;
@@ -49,6 +58,9 @@ public class Player : Marimo
     [SerializeField] private GameObject _burstEffect;
     [SerializeField] private GameObject _hitEffect;
     [SerializeField] private GameObject _deathParticle;
+
+    [SerializeField] private KillLog _killLog;
+
     [SerializeField] private PlayerGravityController _playerGravityController;
 
     private float _disolvValue = 1.0f;
@@ -75,16 +87,39 @@ public class Player : Marimo
     {
         get { return _disolvValue; }
     }
-    
+
     public SpriteRenderer MapRender
     {
         get { return _mapSpriteRender; }
     }
 
+    public Vector2 Direction
+    {
+        get { return _direction; }
+        set { _direction = value; }
+    }
+
+    public SpriteRenderer EyesSpriteRender
+    {
+        get { return _playerEyes._accessorySpriteRender; }
+    }
+
+    public KillLog KillLOG
+    {
+        get { return _killLog; }
+    }
+
+
+    public void SetAccessory(Vector3 accessory)
+    {
+        _playerBoushi._accessorySpriteRender.sprite = _playerBoushi._accessorySprite[(int)accessory.x];
+        _playerMegane._accessorySpriteRender.sprite = _playerMegane._accessorySprite[(int)accessory.y];
+        _playerHige._accessorySpriteRender.sprite = _playerHige._accessorySprite[(int)accessory.z];
+    }
 
     void Start()
     {
-        _eyesSpriteRender.sprite = _eyesSprite[0]; 
+        _playerEyes._accessorySpriteRender.sprite = _playerEyes._accessorySprite[0]; 
 
         _lineRend.enabled = false;
         _lineRend.positionCount = 2;
@@ -105,6 +140,23 @@ public class Player : Marimo
 
     protected override void Update()
     {
+        _curretPosition = transform.position;
+
+        float distance = Vector2.Distance(_lastPosition, _curretPosition);
+        if (distance < 0.001f)
+        {
+            if (!(Input.GetMouseButton(0) && _isDrag))
+                _playerEyes._accessorySpriteRender.sprite = _playerEyes._accessorySprite[0];
+
+        }
+        else
+        {
+            if (_playerEyes._accessorySpriteRender.sprite  != _playerEyes._accessorySprite[2])
+                _playerEyes._accessorySpriteRender.sprite = _playerEyes._accessorySprite[1];
+        }
+
+        _lastPosition = _curretPosition;
+
         if (_isLocalPlayer)
         {
             Move();
@@ -147,12 +199,8 @@ public class Player : Marimo
         if (_garbageValue >= _maxGarbageValue && !_isInvincible)
             _isNormal = false;
 
+
         base.Update();
-    }
-
-    void FixedUpdate()
-    {
-
     }
 
     /// <summary>
@@ -168,7 +216,7 @@ public class Player : Marimo
             _lineRend.SetPosition(0, _startPos);
             _isDrag = true;
             _maxLineLength = 0.0f;
-            _eyesSpriteRender.sprite = _eyesSprite[1];
+            _playerEyes._accessorySpriteRender.sprite = _playerEyes._accessorySprite[1];
         }
 
         // マウスを押している間
@@ -247,7 +295,6 @@ public class Player : Marimo
 
             _lineRend.material.color = Color.white;
             _lineRend.enabled = false;
-            _eyesSpriteRender.sprite = _eyesSprite[0];
         }
 
         _lineRend.widthMultiplier = _lineWidth * (Camera.main.orthographicSize / _cameraSize);
@@ -283,10 +330,36 @@ public class Player : Marimo
     {
        if(collision.gameObject.tag == "Player")
        {
+            _lastHitPlayer = collision.gameObject;
+            _lastHitPlayerName = collision.gameObject.name;
             // 衝突位置を取得する
             Vector3 hitPos = collision.contacts[0].point;
 
             Instantiate(_hitEffect, hitPos, Quaternion.identity);
+
+            // 自分の位置と相手の位置
+            Vector2 direction = transform.position - collision.gameObject.transform.position;
+
+            // 相手の方向ベクトルが向いている方向
+            Vector2 targetDirection = collision.gameObject.GetComponent<Player>().Direction.normalized;
+
+            // 内積を計算
+            float dotProduct = Vector2.Dot(targetDirection, direction.normalized);
+
+            // dotProduct の値が -1 と 1 の間に収まるように調整
+            float clampedDotProduct = Mathf.Clamp(dotProduct, -1f, 1f);
+
+            // 角度（ラジアン）を計算
+            float angleInRadians = Mathf.Acos(clampedDotProduct);
+
+            // ラジアンから度数に変換
+            float angleInDegrees = angleInRadians * Mathf.Rad2Deg;
+
+            if(angleInDegrees >= 150f) 
+            {
+                collision.gameObject.GetComponent<Player>().EyesSpriteRender.sprite = _playerEyes._accessorySprite[2];
+                StartCoroutine(collision.gameObject.GetComponent<Player>().TrunEyes());
+            }
 
             SoundManager.Instance.PlaySE3D("hit", hitPos);
        }
@@ -309,10 +382,12 @@ public class Player : Marimo
                         SoundManager.Instance.PlaySE2D("clean");
                     _garbageValue -= 0.1f;
                 }
-                    
 
-                if(_garbageValue < 0.0f)
+                if (_garbageValue < 0.0f)
+                {
                     _garbageValue = 0.0f;
+                }
+                    
             }  
             else
             {
@@ -335,6 +410,12 @@ public class Player : Marimo
 
     }
 
+    public IEnumerator TrunEyes()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _playerEyes._accessorySpriteRender.sprite = _playerEyes._accessorySprite[0];
+    }
+
     public IEnumerator Disolv()
     {
         while(true)
@@ -348,6 +429,14 @@ public class Player : Marimo
         }
     }
 
+    public void SetKillLog()
+    {
+        if(_lastHitPlayer != null)
+            _lastHitPlayer.GetComponent<Player>().KillLOG.SetKillLog(_lastHitPlayerName, this.gameObject.name);
+
+        KillLogList.Instance.SetKillLogList(_lastHitPlayerName, this.gameObject.name);
+    }
+
     /// <summary>
     /// 死亡
     /// </summary>
@@ -358,5 +447,12 @@ public class Player : Marimo
         GameSceneManager gameSceneManager = GameSceneManager.Instance;
         gameSceneManager.IsFade = false;
         gameSceneManager.SceneName = "Title";
+    }
+
+    [System.Serializable]
+    private class PlayerAccessory
+    {
+        public SpriteRenderer _accessorySpriteRender;
+        public Sprite[] _accessorySprite;
     }
 }

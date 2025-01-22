@@ -39,12 +39,6 @@ public class Marimo : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        Vector3 currentPos = transform.position;
-
-        currentPos.x = Mathf.Clamp(currentPos.x, -100.0f, 100.0f);
-        currentPos.y = Mathf.Clamp(currentPos.y, -100.0f, 100.0f);
-
-        transform.position = currentPos;
 
 
         // â§ä•èàóù
